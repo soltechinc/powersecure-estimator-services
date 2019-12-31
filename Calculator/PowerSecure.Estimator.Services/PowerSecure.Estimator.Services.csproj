@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DoubleCalculation.cs" />
+    <Compile Remove="Int32Calculation.cs" />
+    <Compile Remove="Int64Calculation.cs" />
+    <Compile Remove="Number.cs" />
+    <Compile Remove="StringCalculation.cs" />
+  </ItemGroup>
+
+</Project>
