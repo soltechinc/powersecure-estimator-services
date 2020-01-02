@@ -1,0 +1,8 @@
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\obj\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.csprojAssemblyReference.cache
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\obj\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.AssemblyInfoInputs.cache
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\obj\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.AssemblyInfo.cs
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\bin\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.deps.json
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\bin\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.dll
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\bin\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.pdb
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\obj\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.dll
+C:\Users\jlgibson\source\repos\PowerSecure\PowerSecure.Estimator.Services\obj\Debug\netcoreapp3.1\PowerSecure.Estimator.Services.pdb

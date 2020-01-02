@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "PowerSecure.Estimator.Services.Components/1.0.0": {
+        "dependencies": {
+          "PowerSecure.Estimator.Services.Interfaces": "1.0.0"
+        },
+        "runtime": {
+          "PowerSecure.Estimator.Services.Components.dll": {}
+        }
+      },
+      "PowerSecure.Estimator.Services.Interfaces/1.0.0": {
+        "runtime": {
+          "PowerSecure.Estimator.Services.Interfaces.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "PowerSecure.Estimator.Services.Components/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PowerSecure.Estimator.Services.Interfaces/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
