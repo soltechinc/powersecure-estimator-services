@@ -2030,14 +2030,27 @@
           "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
       },
-      "PowerSecure.Estimator.Services.Calculator/1.0.0": {
+      "PowerSecure.Estimator.Services.Components/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "PowerSecure.Estimator.Services.Interfaces": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/PowerSecure.Estimator.Services.Components.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PowerSecure.Estimator.Services.Components.dll": {}
+        }
+      },
+      "PowerSecure.Estimator.Services.Interfaces/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "compile": {
-          "bin/placeholder/PowerSecure.Estimator.Services.Calculator.dll": {}
+          "bin/placeholder/PowerSecure.Estimator.Services.Interfaces.dll": {}
         },
         "runtime": {
-          "bin/placeholder/PowerSecure.Estimator.Services.Calculator.dll": {}
+          "bin/placeholder/PowerSecure.Estimator.Services.Interfaces.dll": {}
         }
       }
     }
@@ -6808,10 +6821,15 @@
         "system.xml.xpath.xmldocument.nuspec"
       ]
     },
-    "PowerSecure.Estimator.Services.Calculator/1.0.0": {
+    "PowerSecure.Estimator.Services.Components/1.0.0": {
       "type": "project",
-      "path": "../PowerSecure.Estimator.Services/PowerSecure.Estimator.Services.Calculator.csproj",
-      "msbuildProject": "../PowerSecure.Estimator.Services/PowerSecure.Estimator.Services.Calculator.csproj"
+      "path": "../PowerSecure.Estimator.Services.Components/PowerSecure.Estimator.Services.Components.csproj",
+      "msbuildProject": "../PowerSecure.Estimator.Services.Components/PowerSecure.Estimator.Services.Components.csproj"
+    },
+    "PowerSecure.Estimator.Services.Interfaces/1.0.0": {
+      "type": "project",
+      "path": "../PowerSecure.Estimator.Services.Interfaces/PowerSecure.Estimator.Services.Interfaces.csproj",
+      "msbuildProject": "../PowerSecure.Estimator.Services.Interfaces/PowerSecure.Estimator.Services.Interfaces.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -6819,7 +6837,7 @@
       "MSTest.TestAdapter >= 2.0.0",
       "MSTest.TestFramework >= 2.0.0",
       "Microsoft.NET.Test.Sdk >= 16.2.0",
-      "PowerSecure.Estimator.Services.Calculator >= 1.0.0",
+      "PowerSecure.Estimator.Services.Components >= 1.0.0",
       "coverlet.collector >= 1.0.1"
     ]
   },
@@ -6853,8 +6871,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\jlgibson\\source\\repos\\soltechinc\\powersecure-estimator-services\\PowerSecure.Estimator.Services\\PowerSecure.Estimator.Services.Calculator.csproj": {
-              "projectPath": "C:\\Users\\jlgibson\\source\\repos\\soltechinc\\powersecure-estimator-services\\PowerSecure.Estimator.Services\\PowerSecure.Estimator.Services.Calculator.csproj"
+            "C:\\Users\\jlgibson\\source\\repos\\soltechinc\\powersecure-estimator-services\\PowerSecure.Estimator.Services.Components\\PowerSecure.Estimator.Services.Components.csproj": {
+              "projectPath": "C:\\Users\\jlgibson\\source\\repos\\soltechinc\\powersecure-estimator-services\\PowerSecure.Estimator.Services.Components\\PowerSecure.Estimator.Services.Components.csproj"
             }
           }
         }

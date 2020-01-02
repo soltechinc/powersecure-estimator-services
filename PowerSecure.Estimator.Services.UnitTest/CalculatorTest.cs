@@ -1,9 +1,19 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PowerSecure.Estimator.Services.Calculator;
+using PowerSecure.Estimator.Services.Components;
 
 namespace PowerSecure.Estimator.Services.UnitTest {
     [TestClass]
     public class CalculatorTest {
+
+        [TestMethod]
+        public void CheckDoubleIsZero() {
+            Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
+            var a = -2;
+            var value = cal.IsZero(a);
+            var expectedResult = 0;
+            Assert.AreEqual(value, expectedResult);
+        }
+
         [TestMethod]
         public void CheckDoubleSumProductErrMethod() {
             Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
