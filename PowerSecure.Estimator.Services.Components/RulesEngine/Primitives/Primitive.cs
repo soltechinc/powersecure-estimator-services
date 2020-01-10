@@ -19,11 +19,30 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 .Where(p => typeof(IPrimitive).IsAssignableFrom(p) && p.IsClass)
                 .ForEach(type =>
                 {
-                    IPrimitive primitive = (IPrimitive)Activator.CreateInstance(type);
+                    var primitive = (IPrimitive)Activator.CreateInstance(type);
                     primitives.Add(primitive.Name.ToLower(), primitive);
                 });
 
             return primitives.ToReadonlyDictionary();
+        }
+
+        public static decimal[] ConvertToDecimal(object[] objects)
+        {
+            var list = new List<decimal>();
+
+            foreach(var obj in objects)
+            {
+                string s = obj as string;
+                if(s != null)
+                {
+                    list.Add(decimal.Parse(s));
+                    continue;
+                }
+
+                list.Add(Convert.ToDecimal(obj));
+            }
+
+            return list.ToArray();
         }
     }
 }

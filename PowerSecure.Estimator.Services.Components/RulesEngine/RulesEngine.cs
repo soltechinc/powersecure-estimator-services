@@ -1,8 +1,14 @@
-﻿using System;
+﻿using PowerSecure.Estimator.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine {
-    class RulesEngine {
+    public class RulesEngine : IRulesEngine
+    {
+        public IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet)
+        {
+            return null;
+        }
     }
 }

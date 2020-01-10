@@ -21,7 +21,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
     
             Assert.AreEqual(1, repository.Items.Count);
 
-            InstructionSet instructionSet = repository.Items.Values.First();
+            var instructionSet = repository.Items.Values.First();
             
             Assert.AreEqual(2, instructionSet.Parameters.Count, "Parameter count does not match");
             Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
@@ -37,7 +37,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             
             Assert.AreEqual(2, repository.Items.Count);
 
-            InstructionSet instructionSet = repository.Items["test2"];
+            var instructionSet = repository.Items["test2"];
 
             Assert.AreEqual(0, instructionSet.Parameters.Count, "Parameter count does not match");
             Assert.AreEqual(1, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
@@ -53,7 +53,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             
             Assert.AreEqual(2, repository.Items.Count);
 
-            InstructionSet instructionSet = repository.Items["test2"];
+            var instructionSet = repository.Items["test2"];
 
             Assert.AreEqual(0, instructionSet.Parameters.Count, "Parameter count does not match");
             Assert.AreEqual(1, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
@@ -151,14 +151,12 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_single()
         {
             var repository = new InMemoryRepository();
-            var primitives = new Dictionary<string, IPrimitive>();
-            primitives.Add("find", new TestPrimitive("find", 2, null));
-            primitives.Add("*", new TestPrimitive("*", 2, null));
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", 2, null), ["*"] = new TestPrimitive("*", 2, null) };
             InstructionSet.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , 3 ] }] ] }", repository, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
 
-            InstructionSet instructionSet = repository.Items.Values.First();
+            var instructionSet = repository.Items.Values.First();
 
             Assert.AreEqual(3, instructionSet.Parameters.Count, "Parameter count does not match");
             Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
@@ -168,14 +166,12 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_lotsOfNesting()
         {
             var repository = new InMemoryRepository();
-            var primitives = new Dictionary<string, IPrimitive>();
-            primitives.Add("find", new TestPrimitive("find", 2, null));
-            primitives.Add("*", new TestPrimitive("*", 2, null));
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", 2, null), ["*"] = new TestPrimitive("*", 2, null) };
             InstructionSet.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , ['q', [['b'],2] ]] }] ] }", repository, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
 
-            InstructionSet instructionSet = repository.Items.Values.First();
+            var instructionSet = repository.Items.Values.First();
 
             Assert.AreEqual(5, instructionSet.Parameters.Count, "Parameter count does not match");
             Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");

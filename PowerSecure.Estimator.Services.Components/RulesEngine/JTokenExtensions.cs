@@ -15,7 +15,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     {
                         jObjectAction((JObject)node);
 
-                        foreach (JProperty child in node.Children<JProperty>())
+                        foreach (var child in node.Children<JProperty>())
                         {
                             child.Value.WalkNodes(jObjectAction, jTokenAction);
                         }
@@ -23,7 +23,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     }
                 case JTokenType.Array:
                     {
-                        foreach (JToken child in node.Children())
+                        foreach (var child in node.Children())
                         {
                             child.WalkNodes(jObjectAction, jTokenAction);
                         }

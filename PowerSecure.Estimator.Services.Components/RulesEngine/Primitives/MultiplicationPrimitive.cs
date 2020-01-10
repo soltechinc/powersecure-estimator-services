@@ -12,7 +12,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public decimal Invoke(params object[] parameters)
         {
-            throw new NotImplementedException();
+            var decimals = Primitive.ConvertToDecimal(parameters);
+
+            return decimals[0] * decimals[1];
         }
     }
 }

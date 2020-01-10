@@ -48,8 +48,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 }
 
                 var name = nameList.First();
-                IPrimitive primitive;
-                if(!primitives.TryGetValue(name.ToLower(), out primitive))
+
+                if(!primitives.TryGetValue(name.ToLower(), out IPrimitive primitive))
                 {
                     throw new InvalidOperationException($"The following token is not a defined primitive: {name}");
                 }
@@ -74,9 +74,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             var parameters = new List<string>();
             var childInstructionSets = new List<string>();
 
-            foreach (string terminal in terminals)
+            foreach (var terminal in terminals)
             {
-                if (Decimal.TryParse(terminal, out Decimal d))
+                if (decimal.TryParse(terminal, out decimal d))
                 {
                     continue;
                 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace PowerSecure.Estimator.Services.Interfaces {
-    interface IRulesEngine {
+    public interface IRulesEngine
+    {
+        IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet);
     }
 }
