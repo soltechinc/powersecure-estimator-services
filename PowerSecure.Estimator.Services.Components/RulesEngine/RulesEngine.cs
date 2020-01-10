@@ -1,14 +1,14 @@
 ﻿using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using PowerSecure.Estimator.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     public class RulesEngine : IRulesEngine
     {
-        public IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository dataSheetRepository)
+        public IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository dataSheetRepository)
         {
             var suppliedParameters = new HashSet<string>();
             var missingParameters = new HashSet<string>();
@@ -67,6 +67,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 throw new InvalidOperationException("Missing required parameters");
             }
 
+            var parameters = new Dictionary<string, string>(dataSheet);
             while(instructionSets.Count != 0)
             {
                 foreach(var key in instructionSets.Keys.ToList())
@@ -76,7 +77,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     bool hasParams = true;
                     foreach(var parameter in instructionSet.Parameters)
                     {
-                        if (!suppliedParameters.Contains(parameter))
+                        if (!parameters.ContainsKey(parameter) || parameters[parameter] == null)
                         {
                             hasParams = false;
                         }
@@ -84,12 +85,26 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
 
                     if(hasParams)
                     {
-
+                        var value = instructionSet.Evaluate(dataSheet, primitives);
+                        if(parameters.ContainsKey(key))
+                        {
+                            parameters[key] = value.ToString();
+                        }
+                        else
+                        {
+                            parameters.Add(key, value.ToString());
+                        }
+                        instructionSets.Remove(key);
                     }
                 }
             }
 
-            return null;
+            foreach(var key in missingParameters)
+            {
+                dataSheet[key] = parameters[key];
+            }
+
+            return dataSheet;
         }
     }
 }

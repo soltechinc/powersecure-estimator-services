@@ -17,8 +17,4 @@
     <ProjectReference Include="..\PowerSecure.Estimator.Services.Components\PowerSecure.Estimator.Services.Components.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="RulesEngine\" />
-  </ItemGroup>
-
 </Project>
