@@ -1,7 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PowerSecure.Estimator.Services.Components;
+using PowerSecure.Estimator.Services.Components.Calculator;
 
-namespace PowerSecure.Estimator.Services.UnitTest {
+namespace PowerSecure.Estimator.Services.UnitTest.Calculator {
     [TestClass]
     public class CalculatorTest {
 

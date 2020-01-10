@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace powersecure_instruction_set_engine.Primitives
+namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public static class Primitive
     {

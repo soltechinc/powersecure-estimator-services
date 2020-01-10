@@ -5,7 +5,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Linq;
 
-namespace PowerSecure.Estimator.Services.Components {
+namespace PowerSecure.Estimator.Services.Components.Calculator
+{
     public class Calculator<T> {
         AbstractCalculator<T> _myCalculator;
 

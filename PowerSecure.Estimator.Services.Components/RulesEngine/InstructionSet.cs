@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json.Linq;
-using powersecure_instruction_set_engine.Primitives;
-using powersecure_instruction_set_engine.Repository;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using static powersecure_instruction_set_engine.Primitives.Primitive;
+using static PowerSecure.Estimator.Services.Components.RulesEngine.Primitives.Primitive;
 
-namespace powersecure_instruction_set_engine
+namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public class InstructionSet
     {

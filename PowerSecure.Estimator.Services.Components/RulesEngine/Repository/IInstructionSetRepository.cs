@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace powersecure_instruction_set_engine.Repository
+namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public interface IInstructionSetRepository
     {

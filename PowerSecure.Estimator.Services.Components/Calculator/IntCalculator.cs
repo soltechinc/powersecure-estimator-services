@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PowerSecure.Estimator.Services.Components {
+namespace PowerSecure.Estimator.Services.Components.Calculator
+{
     public class IntCalculator : AbstractCalculator<int> {
         public override int Sum(int paramA, int paramB) {
             return paramA + paramB;

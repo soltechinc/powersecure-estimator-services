@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PowerSecure.Estimator.Services.Components {
+namespace PowerSecure.Estimator.Services.Components.Calculator {
     public abstract class AbstractCalculator<T> {
         public abstract T Sum(T paramA, T paramB);
         public abstract T Difference(T paramA, T paramB);

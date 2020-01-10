@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace powersecure_instruction_set_engine
+namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public static class Linq
     {
