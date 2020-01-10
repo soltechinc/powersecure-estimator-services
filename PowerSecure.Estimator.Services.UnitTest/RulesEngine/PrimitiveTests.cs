@@ -16,5 +16,25 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             Assert.AreNotEqual(0, primitives.Count);
         }
+
+        [TestMethod]
+        public void AdditionPrimitive()
+        {
+            var primitive = new AdditionPrimitive();
+
+            var value = primitive.Invoke("2", "6");
+
+            Assert.AreEqual(8, value, "Addition did not work");
+        }
+
+        [TestMethod]
+        public void MultiplicationPrimitive()
+        {
+            var primitive = new MultiplicationPrimitive();
+
+            var value = primitive.Invoke("2", "6");
+
+            Assert.AreEqual(12, value, "Multiplication did not work");
+        }
     }
 }
