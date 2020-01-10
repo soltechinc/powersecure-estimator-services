@@ -65,8 +65,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 {
                     throw new InvalidOperationException($"Expected a parameter array of length {primitive.ParameterCount}, got the following: {value.Children().Count()}");
                 }
-
-                value.Children().Where(p => p.Type != JTokenType.Object && p.Type != JTokenType.Array).ForEach(child => terminals.Add(child.ToString()));
+            }, jToken =>
+            {
+                terminals.Add(jToken.ToString());
             });
 
             //divide terminals into classes
