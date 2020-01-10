@@ -28,8 +28,54 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
         public ReadOnlyCollection<string> ChildInstructionSets { get; private set; }
 
-        public static void InsertNew(string instructionSetName, string instructionDefinition, IInstructionSetRepository repository, IDictionary<string, IPrimitive> primitives
-            )
+        public decimal Evaluate(IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives)
+        {
+            EvaluationNode rootNode = null;
+            EvaluationNode currentNode = null;
+
+            JObject.Parse(Instructions).DoubleWalkNodes(jObject =>
+            {
+                var primitive = primitives[jObject.Properties().Select(p => p.Name).First()];
+                var node = new EvaluationNode();
+                node.Parent = currentNode;
+                if(currentNode != null)
+                {
+                    ((Tuple<IPrimitive, List<EvaluationNode>>)currentNode.Value).Item2.Add(node);
+                }
+                node.Value = Tuple.Create(primitive, new List<EvaluationNode>());
+                if(rootNode == null)
+                {
+                    rootNode = node;
+                }
+                currentNode = node;
+            },
+            jObject =>
+            {
+                var node = currentNode;
+                var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)node.Value;
+                var value = tuple.Item1.Invoke(tuple.Item2.Select(p => p.Value.ToString()).ToArray());
+                node.Value = value.ToString();
+                currentNode = node.Parent;
+            },
+            jToken =>
+            {
+                var node = new EvaluationNode();
+                ((Tuple<IPrimitive, List<EvaluationNode>>)currentNode.Value).Item2.Add(node);
+                
+                if (jToken.Type == JTokenType.String)
+                {
+                    node.Value = parameters[jToken.ToString()];
+                }
+                else
+                {
+                    node.Value = jToken.ToString();
+                }
+            });
+
+            return decimal.Parse(rootNode.Value.ToString());
+        }
+
+        public static void InsertNew(string instructionSetName, string instructionDefinition, IInstructionSetRepository repository, IDictionary<string, IPrimitive> primitives)
         {
             if (instructionSetName == null) throw new ArgumentNullException("instructionSetName");
             if (instructionDefinition == null) throw new ArgumentNullException("instructionDefinition");
@@ -65,7 +111,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 {
                     throw new InvalidOperationException($"Expected a parameter array of length {primitive.ParameterCount}, got the following: {value.Children().Count()}");
                 }
-            }, jToken =>
+            }, 
+            jToken =>
             {
                 terminals.Add(jToken.ToString());
             });

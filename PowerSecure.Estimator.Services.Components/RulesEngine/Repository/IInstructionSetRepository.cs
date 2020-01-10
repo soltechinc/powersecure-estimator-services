@@ -8,6 +8,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
     {
         IEnumerable<InstructionSet> SelectByKey(params string[] instructionSetNames);
 
+        IEnumerable<InstructionSet> SelectByKey(IEnumerable<string> instructionSetNames);
+
         IEnumerable<InstructionSet> SelectByParameter(string parameter);
 
         void Insert(InstructionSet instructionSet);

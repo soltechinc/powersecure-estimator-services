@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
-    public interface IDataSheetRepository
+    public interface IReferenceDataRepository
     {
     }
 }

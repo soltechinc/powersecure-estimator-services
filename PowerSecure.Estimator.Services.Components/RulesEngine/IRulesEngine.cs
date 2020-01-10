@@ -6,6 +6,6 @@ using System.Text;
 namespace PowerSecure.Estimator.Services.Interfaces {
     public interface IRulesEngine
     {
-        IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IInstructionSetRepository instructionSetRepository, IDataSheetRepository dataSheetRepository);
+        IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository dataSheetRepository);
     }
 }

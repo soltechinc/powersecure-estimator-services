@@ -176,5 +176,63 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             Assert.AreEqual(5, instructionSet.Parameters.Count, "Parameter count does not match");
             Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
+
+        [TestMethod]
+        public void Evaluate_simple()
+        {
+            var instructionSet = new InstructionSet("test", "{ '*': [ 2, 3 ]}", new string[] { }, new string[] { });
+            var primitives = Primitive.LoadFromAssembly();
+
+            decimal value = instructionSet.Evaluate(null, primitives);
+
+            Assert.AreEqual(6, value, "Calculation failed");
+        }
+
+        [TestMethod]
+        public void Evaluate_withParameter()
+        {
+            var instructionSet = new InstructionSet("test", "{ '*': [ 'a', 3 ]}", new string[] { "a" }, new string[] { });
+            var primitives = Primitive.LoadFromAssembly();
+            var dataTable = new Dictionary<string, string> { ["a"] = "2" };
+
+            decimal value = instructionSet.Evaluate(dataTable, primitives);
+
+            Assert.AreEqual(6, value, "Calculation failed");
+        }
+
+        [TestMethod]
+        public void Evaluate_withNestedPrimitive()
+        {
+            var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'a', 3] } ]}", new string[] { "a" }, new string[] { });
+            var primitives = Primitive.LoadFromAssembly();
+            var dataTable = new Dictionary<string, string> { ["a"] = "2" };
+
+            decimal value = instructionSet.Evaluate(dataTable, primitives);
+
+            Assert.AreEqual(10, value, "Calculation failed");
+        }
+
+        [TestMethod]
+        public void Evaluate_withNestedPrimitiveAndMultipleParameters()
+        {
+            var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a" }, new string[] { });
+            var primitives = Primitive.LoadFromAssembly();
+            var dataTable = new Dictionary<string, string> { ["a"] = "2", ["b"] = "6" };
+
+            decimal value = instructionSet.Evaluate(dataTable, primitives);
+
+            Assert.AreEqual(18, value, "Calculation failed");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(KeyNotFoundException))]
+        public void Evaluate_withMissingParameter()
+        {
+            var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a" }, new string[] { });
+            var primitives = Primitive.LoadFromAssembly();
+            var dataTable = new Dictionary<string, string> { ["a"] = "2" };
+
+            decimal value = instructionSet.Evaluate(dataTable, primitives);
+        }
     }
 }

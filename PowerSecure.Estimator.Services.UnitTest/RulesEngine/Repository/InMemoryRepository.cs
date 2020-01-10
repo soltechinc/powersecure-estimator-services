@@ -39,7 +39,12 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
         public IEnumerable<InstructionSet> SelectByKey(params string[] instructionSetNames)
         {
-            foreach(string instructionSetName in instructionSetNames)
+            return SelectByKey(instructionSetNames.AsEnumerable());
+        }
+
+        public IEnumerable<InstructionSet> SelectByKey(IEnumerable<string> instructionSetNames)
+        {
+            foreach (string instructionSetName in instructionSetNames)
             {
                 if (Items.TryGetValue(instructionSetName, out InstructionSet instructionSet))
                 {
