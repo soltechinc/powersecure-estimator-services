@@ -68,34 +68,17 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             }
 
             var parameters = new Dictionary<string, string>(dataSheet);
-            while(instructionSets.Count != 0)
+            
+            foreach (InstructionSet instructionSet in instructionSets.Values.OrderBy(p => p.Sequence))
             {
-                foreach(var key in instructionSets.Keys.ToList())
+                var value = instructionSet.Evaluate(dataSheet, primitives);
+                if (parameters.ContainsKey(instructionSet.Name))
                 {
-                    var instructionSet = instructionSets[key];
-
-                    bool hasParams = true;
-                    foreach(var parameter in instructionSet.Parameters)
-                    {
-                        if (!parameters.ContainsKey(parameter) || parameters[parameter] == null)
-                        {
-                            hasParams = false;
-                        }
-                    }
-
-                    if(hasParams)
-                    {
-                        var value = instructionSet.Evaluate(dataSheet, primitives);
-                        if(parameters.ContainsKey(key))
-                        {
-                            parameters[key] = value.ToString();
-                        }
-                        else
-                        {
-                            parameters.Add(key, value.ToString());
-                        }
-                        instructionSets.Remove(key);
-                    }
+                    parameters[instructionSet.Name] = value.ToString();
+                }
+                else
+                {
+                    parameters.Add(instructionSet.Name, value.ToString());
                 }
             }
 

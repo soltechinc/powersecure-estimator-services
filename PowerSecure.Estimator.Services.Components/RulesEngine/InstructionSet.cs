@@ -12,12 +12,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public class InstructionSet
     {
-        public InstructionSet(string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets)
+        public InstructionSet(string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets, int sequence)
         {
             Name = name;
             Instructions = instructions;
             Parameters = new ReadOnlyCollection<string>(parameters.ToList());
             ChildInstructionSets = new ReadOnlyCollection<string>(childInstructionSets.ToList());
+            Sequence = sequence;
         }
 
         public string Name { get; private set; }
@@ -27,6 +28,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public ReadOnlyCollection<string> Parameters { get; private set; }
 
         public ReadOnlyCollection<string> ChildInstructionSets { get; private set; }
+
+        public int Sequence { get; private set; }
 
         public decimal Evaluate(IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives)
         {
@@ -138,14 +141,24 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 }
             }
 
-            repository.Insert(new InstructionSet(instructionSetName, instructionDefinition, parameters, childInstructionSets));
+            int maxSequence = -1;
+            foreach(InstructionSet instructionSet in repository.SelectByKey(childInstructionSets))
+            {
+                if(instructionSet.Sequence > maxSequence)
+                {
+                    maxSequence = instructionSet.Sequence;
+                }
+            }
+            
+            repository.Insert(new InstructionSet(instructionSetName, instructionDefinition, parameters, childInstructionSets, maxSequence + 1));
 
             //update existing instruction sets 
             repository.SelectByParameter(instructionSetName)
                       .ForEach(instructionSet => repository.Update(new InstructionSet(instructionSet.Name,
                         instructionSet.Instructions,
                         instructionSet.Parameters.Where(x => x != instructionSetName),
-                        instructionSet.ChildInstructionSets.Union(new List<string> { instructionSetName }))));
+                        instructionSet.ChildInstructionSets.Union(new List<string> { instructionSetName }),
+                        maxSequence + 2)));
         }
     }
 }
