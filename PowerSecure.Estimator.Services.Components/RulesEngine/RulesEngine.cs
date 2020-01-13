@@ -71,7 +71,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             
             foreach (InstructionSet instructionSet in instructionSets.Values.OrderBy(p => p.Sequence))
             {
-                var value = instructionSet.Evaluate(dataSheet, primitives, referenceDataRepository);
+                var value = instructionSet.Evaluate(parameters, primitives, referenceDataRepository);
                 if (parameters.ContainsKey(instructionSet.Name))
                 {
                     parameters[instructionSet.Name] = value.ToString();
