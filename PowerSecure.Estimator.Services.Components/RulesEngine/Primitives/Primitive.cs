@@ -7,15 +7,15 @@ using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public static class Primitive
+    public static partial class Primitive
     {
         public delegate Decimal ParamsFunc(params object[] parameters);
 
-        public static IDictionary<string, IPrimitive> LoadFromAssembly()
+        public static IDictionary<string, IPrimitive> LoadFromAssembly(Assembly assembly)
         {
             var primitives = new Dictionary<string, IPrimitive>();
 
-            Assembly.GetAssembly(typeof(Primitive)).GetTypes()
+            assembly.GetTypes()
                 .Where(p => typeof(IPrimitive).IsAssignableFrom(p) && p.IsClass)
                 .ForEach(type =>
                 {
@@ -32,14 +32,19 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             foreach(var obj in objects)
             {
-                string s = obj as string;
-                if(s != null)
+                switch(obj)
                 {
-                    list.Add(decimal.Parse(s));
-                    continue;
+                    case string s:
+                        {
+                            list.Add(decimal.Parse(s));
+                            break;
+                        }
+                    default:
+                        {
+                            list.Add(Convert.ToDecimal(obj));
+                            break;
+                        }
                 }
-
-                list.Add(Convert.ToDecimal(obj));
             }
 
             return list.ToArray();

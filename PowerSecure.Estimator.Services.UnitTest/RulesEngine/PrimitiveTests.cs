@@ -12,7 +12,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void PrimitiveLoad_fromAssembly()
         {
-            var primitives = Primitive.LoadFromAssembly();
+            var primitives = Primitive.Load();
 
             Assert.AreNotEqual(0, primitives.Count);
         }

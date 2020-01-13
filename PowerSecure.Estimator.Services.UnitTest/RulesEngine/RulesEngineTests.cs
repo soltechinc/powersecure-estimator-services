@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void HappyPathTest()
         {
             var repository = new InMemoryRepository();
-            var primitives = Primitive.LoadFromAssembly();
+            var primitives = Primitive.Load();
             InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
             
             var engine = new Components.RulesEngine.RulesEngine();
@@ -29,7 +29,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void FullDataSheet()
         {
             var repository = new InMemoryRepository();
-            var primitives = Primitive.LoadFromAssembly();
+            var primitives = Primitive.Load();
             InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
 
             var engine = new Components.RulesEngine.RulesEngine();
