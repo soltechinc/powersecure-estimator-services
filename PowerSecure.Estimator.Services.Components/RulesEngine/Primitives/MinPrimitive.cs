@@ -1,15 +1,15 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Linq;
+using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class AdditionPrimitive : IPrimitive
+    public class MinPrimitive : IPrimitive
     {
-        public string Name => "+";
+        public string Name => "min";
 
         public bool ResolveParameters => true;
 
@@ -17,7 +17,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         {
             var decimals = Primitive.ConvertToDecimal(parameters);
 
-            return decimals.Sum();
+            return decimals.Min();
         }
 
         public Tuple<bool, string> Validate(JToken jToken)
