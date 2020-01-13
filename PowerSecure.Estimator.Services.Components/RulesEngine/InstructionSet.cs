@@ -109,10 +109,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 {
                     throw new InvalidOperationException($"Expected a parameter array, got the following: {value.ToString()}");
                 }
+
+                (bool isValid, string message) = primitive.Validate(value);
                 
-                if(value.Children().Count() != primitive.ParameterCount)
+                if(!isValid)
                 {
-                    throw new InvalidOperationException($"Expected a parameter array of length {primitive.ParameterCount}, got the following: {value.Children().Count()}");
+                    throw new InvalidOperationException(message);
                 }
             }, 
             jToken =>
@@ -158,7 +160,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                         instructionSet.Instructions,
                         instructionSet.Parameters.Where(x => x != instructionSetName),
                         instructionSet.ChildInstructionSets.Union(new List<string> { instructionSetName }),
-                        maxSequence + 2)));
+                        Math.Max(instructionSet.Sequence, maxSequence + 2))));
         }
     }
 }

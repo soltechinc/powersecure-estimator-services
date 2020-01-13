@@ -147,14 +147,14 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryRepository();
             var primitives = Primitive.LoadFromAssembly();
-            InstructionSet.InsertNew("test", "{ '*': [ 'y', { '+': [ 'x' ] } ]}", repository, primitives);
+            InstructionSet.InsertNew("test", "{ '+': [ 'y', { '*': [ 'x' ] } ]}", repository, primitives);
         }
 
         [TestMethod]
         public void AllowArrayParameters_single()
         {
             var repository = new InMemoryRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", 2, null), ["*"] = new TestPrimitive("*", 2, null) };
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", null, p => Tuple.Create(true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => Tuple.Create(true, string.Empty)) };
             InstructionSet.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , 3 ] }] ] }", repository, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
@@ -169,7 +169,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_lotsOfNesting()
         {
             var repository = new InMemoryRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", 2, null), ["*"] = new TestPrimitive("*", 2, null) };
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", null, p => Tuple.Create(true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => Tuple.Create(true, string.Empty)) };
             InstructionSet.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , ['q', [['b'],2] ]] }] ] }", repository, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
@@ -218,7 +218,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void Evaluate_withNestedPrimitiveAndMultipleParameters()
         {
-            var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a" }, new string[] { }, 0);
+            var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a", "b" }, new string[] { }, 0);
             var primitives = Primitive.LoadFromAssembly();
             var dataTable = new Dictionary<string, string> { ["a"] = "2", ["b"] = "6" };
 

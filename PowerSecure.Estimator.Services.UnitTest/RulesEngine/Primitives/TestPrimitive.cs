@@ -1,4 +1,5 @@
-﻿using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+﻿using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,22 +9,28 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 {
     public class TestPrimitive : IPrimitive
     {
-        private ParamsFunc _func;
+        public delegate Tuple<bool, string> ValidationFunc(JToken jToken);
 
-        public TestPrimitive(string name, int parameterCount, ParamsFunc func)
+        private ParamsFunc _paramsFunc;
+        private ValidationFunc _validationFunc;
+
+        public TestPrimitive(string name, ParamsFunc paramsFunc, ValidationFunc validationFunc)
         {
             Name = name;
-            ParameterCount = parameterCount;
-            _func = func;
+            _paramsFunc = paramsFunc;
+            _validationFunc = validationFunc;
         }
 
         public string Name { get; private set; }
 
-        public int ParameterCount { get; private set; }
-
         public decimal Invoke(params object[] parameters)
         {
-            return _func.Invoke(parameters);
+            return _paramsFunc.Invoke(parameters);
+        }
+
+        public Tuple<bool, string> Validate(JToken jToken)
+        {
+            return _validationFunc.Invoke(jToken);
         }
     }
 }

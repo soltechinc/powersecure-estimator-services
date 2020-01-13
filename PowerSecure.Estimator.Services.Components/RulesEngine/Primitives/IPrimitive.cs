@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,8 +9,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     {
         string Name { get; }
 
-        int ParameterCount { get; }
-
         Decimal Invoke(params object[] parameters);
+
+        Tuple<bool, string> Validate(JToken jToken);
     }
 }
