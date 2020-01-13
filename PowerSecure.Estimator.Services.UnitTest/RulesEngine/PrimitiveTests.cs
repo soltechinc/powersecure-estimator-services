@@ -22,7 +22,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var primitive = new AdditionPrimitive();
 
-            var value = primitive.Invoke("2", "6");
+            var value = primitive.Invoke(new object[] { "2", "6" }, null);
 
             Assert.AreEqual(8, value, "Addition did not work");
         }
@@ -32,7 +32,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var primitive = new MultiplicationPrimitive();
 
-            var value = primitive.Invoke("2", "6");
+            var value = primitive.Invoke(new object[] { "2", "6" }, null);
 
             Assert.AreEqual(12, value, "Multiplication did not work");
         }

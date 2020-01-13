@@ -31,41 +31,80 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
         public int Sequence { get; private set; }
 
-        public decimal Evaluate(IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives)
+        public decimal Evaluate(IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives, IReferenceDataRepository referenceDataRepository)
         {
             EvaluationNode rootNode = null;
             EvaluationNode currentNode = null;
 
-            JObject.Parse(Instructions).DoubleWalkNodes(jObject =>
+            JObject.Parse(Instructions).DoubleWalkNodes(jToken =>
             {
-                var primitive = primitives[jObject.Properties().Select(p => p.Name).First()];
+                if(!(jToken.Type == JTokenType.Object || (jToken.Type == JTokenType.Array && jToken.Parent.Type == JTokenType.Array)))
+                {
+                    return;
+                }
+
                 var node = new EvaluationNode();
                 node.Parent = currentNode;
-                if(currentNode != null)
+                if (currentNode != null)
                 {
                     ((Tuple<IPrimitive, List<EvaluationNode>>)currentNode.Value).Item2.Add(node);
                 }
-                node.Value = Tuple.Create(primitive, new List<EvaluationNode>());
-                if(rootNode == null)
+                if (rootNode == null)
                 {
                     rootNode = node;
                 }
                 currentNode = node;
+
+                switch (jToken)
+                {
+                    case JObject jObject:
+                        {
+                            var primitive = primitives[jObject.Properties().Select(p => p.Name).First()];
+                            node.Value = Tuple.Create(primitive, new List<EvaluationNode>());
+                            break;
+                        }
+                    case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
+                        {
+                            node.Value = Tuple.Create((IPrimitive)null, new List<EvaluationNode>());
+                            break;
+                        }
+                }
             },
-            jObject =>
+            jToken =>
             {
+                if (!(jToken.Type == JTokenType.Object || (jToken.Type == JTokenType.Array && jToken.Parent.Type == JTokenType.Array)))
+                {
+                    return;
+                }
+
                 var node = currentNode;
-                var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)node.Value;
-                var value = tuple.Item1.Invoke(tuple.Item2.Select(p => p.Value.ToString()).ToArray());
-                node.Value = value.ToString();
+                
+                switch (jToken)
+                {
+                    case JObject jObject:
+                        {
+                            var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)node.Value;
+                            var value = tuple.Item1.Invoke(tuple.Item2.Select(p => p.Value).ToArray(), referenceDataRepository);
+                            node.Value = value.ToString();
+                            break;
+                        }
+                    case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
+                        {
+                            var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)node.Value;
+                            node.Value = tuple.Item2.Select(p => p.Value.ToString()).ToArray();
+                            break;
+                        }
+                }
+
                 currentNode = node.Parent;
             },
             jToken =>
             {
                 var node = new EvaluationNode();
-                ((Tuple<IPrimitive, List<EvaluationNode>>)currentNode.Value).Item2.Add(node);
+                var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)currentNode.Value;
+                tuple.Item2.Add(node);
                 
-                if (jToken.Type == JTokenType.String)
+                if (jToken.Type == JTokenType.String && !(tuple.Item1 == null || !tuple.Item1.ResolveParameters))
                 {
                     node.Value = parameters[jToken.ToString()];
                 }
@@ -87,34 +126,41 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
             var terminals = new SortedSet<string>();
 
-            JObject.Parse(instructionDefinition).WalkNodes(jObject =>
+            JObject.Parse(instructionDefinition).WalkNodes(jToken =>
             {
-                var nameList = jObject.Properties().Select(p => p.Name).ToList();
-
-                if (nameList.Count != 1)
+                switch(jToken)
                 {
-                    throw new InvalidOperationException($"Expected one primitive, found {nameList.Count}");
-                }
+                    case JObject jObject:
+                        {
+                            var nameList = jObject.Properties().Select(p => p.Name).ToList();
 
-                var name = nameList.First();
+                            if (nameList.Count != 1)
+                            {
+                                throw new InvalidOperationException($"Expected one primitive, found {nameList.Count}");
+                            }
 
-                if(!primitives.TryGetValue(name.ToLower(), out IPrimitive primitive))
-                {
-                    throw new InvalidOperationException($"The following token is not a defined primitive: {name}");
-                }
-                
-                var value = jObject.GetValue(name);
+                            var name = nameList.First();
 
-                if (value.Type != JTokenType.Array)
-                {
-                    throw new InvalidOperationException($"Expected a parameter array, got the following: {value.ToString()}");
-                }
+                            if (!primitives.TryGetValue(name.ToLower(), out IPrimitive primitive))
+                            {
+                                throw new InvalidOperationException($"The following token is not a defined primitive: {name}");
+                            }
 
-                (bool isValid, string message) = primitive.Validate(value);
-                
-                if(!isValid)
-                {
-                    throw new InvalidOperationException(message);
+                            var value = jObject.GetValue(name);
+
+                            if (value.Type != JTokenType.Array)
+                            {
+                                throw new InvalidOperationException($"Expected a parameter array, got the following: {value.ToString()}");
+                            }
+
+                            (bool isValid, string message) = primitive.Validate(value);
+
+                            if (!isValid)
+                            {
+                                throw new InvalidOperationException(message);
+                            }
+                            break;
+                        }
                 }
             }, 
             jToken =>

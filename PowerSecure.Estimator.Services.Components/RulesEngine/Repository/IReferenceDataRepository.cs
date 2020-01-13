@@ -6,5 +6,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public interface IReferenceDataRepository
     {
+        decimal Lookup(string dataSetName, string[] criteria, string returnFieldName);
     }
 }

@@ -3,14 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class AdditionPrimitive : IPrimitive
     {
         public string Name => "+";
-    
-        public decimal Invoke(params object[] parameters)
+
+        public bool ResolveParameters => true;
+
+        public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var decimals = Primitive.ConvertToDecimal(parameters);
 

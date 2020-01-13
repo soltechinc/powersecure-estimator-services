@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     {
         string Name { get; }
 
-        Decimal Invoke(params object[] parameters);
+        bool ResolveParameters { get; }
+
+        decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository);
 
         Tuple<bool, string> Validate(JToken jToken);
     }

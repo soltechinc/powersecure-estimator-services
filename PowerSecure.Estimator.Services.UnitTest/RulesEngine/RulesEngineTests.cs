@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +14,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void HappyPathTest()
         {
-            var repository = new InMemoryRepository();
+            var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
             InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
             
@@ -28,7 +29,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void FullDataSheet()
         {
-            var repository = new InMemoryRepository();
+            var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
             InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
 

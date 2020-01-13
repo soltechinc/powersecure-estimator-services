@@ -6,9 +6,9 @@ using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
-namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
+namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 {
-    public class InMemoryRepository : IInstructionSetRepository
+    public class InMemoryInstructionSetRepository : IInstructionSetRepository
     {
         public Dictionary<string, InstructionSet> Items { get; } = new Dictionary<string, InstructionSet>();
 

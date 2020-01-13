@@ -8,7 +8,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     public class RulesEngine : IRulesEngine
     {
-        public IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository dataSheetRepository)
+        public IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
         {
             var suppliedParameters = new HashSet<string>();
             var missingParameters = new HashSet<string>();
@@ -71,7 +71,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             
             foreach (InstructionSet instructionSet in instructionSets.Values.OrderBy(p => p.Sequence))
             {
-                var value = instructionSet.Evaluate(dataSheet, primitives);
+                var value = instructionSet.Evaluate(dataSheet, primitives, referenceDataRepository);
                 if (parameters.ContainsKey(instructionSet.Name))
                 {
                     parameters[instructionSet.Name] = value.ToString();

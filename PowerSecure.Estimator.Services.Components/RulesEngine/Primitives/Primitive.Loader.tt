@@ -11,9 +11,6 @@
 <#
 	IServiceProvider serviceProvider = (IServiceProvider)this.Host;
     EnvDTE.DTE dte = serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
-	//Project project = dte.Solutions.Projects.Where(p => p.Name == "PowerSecure.Estimator.Services.Components");
-
-    //Array projects = dte.Solution.Projects.
 	var project = dte.Solution.FindProjectItem(this.Host.TemplateFile).ContainingProject as EnvDTE.Project;
 	string root = Host.ResolvePath("");
 	var projectItems = GetProjectItemsRecursively(project.ProjectItems);
