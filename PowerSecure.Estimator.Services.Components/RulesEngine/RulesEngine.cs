@@ -28,12 +28,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             var childInstructionSetNames = new HashSet<string>();
             var instructionSets = new Dictionary<string, InstructionSet>();
             var neededParameters = new HashSet<string>();
-            foreach(var instructionSet in instructionSetRepository.SelectByKey(dataSheet.Where(p => p.Value == null).Select(p => p.Key)))
+            foreach(var instructionSet in instructionSetRepository.SelectByKey(missingParameters))
             {
                 instructionSets.Add(instructionSet.Name, instructionSet);
                 foreach(var childInstructionSetName in instructionSet.ChildInstructionSets)
                 {
-                    if(!childInstructionSetNames.Contains(childInstructionSetName))
+                    if(!childInstructionSetNames.Contains(childInstructionSetName) && !suppliedParameters.Contains(childInstructionSetName))
                     {
                         childInstructionSetNames.Add(childInstructionSetName);
                     }

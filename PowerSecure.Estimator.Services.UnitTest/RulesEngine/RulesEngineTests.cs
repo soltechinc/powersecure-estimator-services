@@ -43,6 +43,36 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ErrorTest_missingParameter()
+        {
+            var repository = new InMemoryInstructionSetRepository();
+            var primitives = Primitive.Load();
+            InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
+            InstructionSet.InsertNew("test2", "{ '*': [ 3, 'test' ]}", repository, primitives);
+
+            var engine = new Components.RulesEngine.RulesEngine();
+
+            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, string> { ["x"] = "2", ["test2"] = null }, primitives, repository, null);
+        }
+
+        [TestMethod]
+        public void PartialDataSheet()
+        {
+            var repository = new InMemoryInstructionSetRepository();
+            var primitives = Primitive.Load();
+            InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
+            InstructionSet.InsertNew("test2", "{ '*': [ 3, 'test' ]}", repository, primitives);
+
+            var engine = new Components.RulesEngine.RulesEngine();
+
+            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, string> { ["x"] = "2", ["test"] = "4", ["test2"] = null }, primitives, repository, null);
+
+            Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
+            Assert.AreEqual("12", dataSheet["test2"], "Calculation is incorrect");
+        }
+
+        [TestMethod]
         public void FullDataSheet()
         {
             var repository = new InMemoryInstructionSetRepository();
