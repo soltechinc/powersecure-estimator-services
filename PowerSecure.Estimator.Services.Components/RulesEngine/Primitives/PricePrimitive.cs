@@ -1,4 +1,5 @@
-﻿using System;
+﻿// 2, 3, or 4 parameters. Parameter 1 is cost, parameter 2 is tax, parameter 3 is margin, parameter 4 is a boolean specifying whether to apply the margin
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;

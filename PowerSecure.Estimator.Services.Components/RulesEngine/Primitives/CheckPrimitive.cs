@@ -1,4 +1,5 @@
-﻿using System;
+﻿// 3 parameters. Parameter 1 is a boolean, parameter 2 is the value returned if true, parameter 3 is the value returned if false.
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;

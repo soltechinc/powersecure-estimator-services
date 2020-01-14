@@ -20,18 +20,34 @@
     public void ListFiles(List<string> projectItems)
 	{
 		var root = Host.ResolvePath("");
-		
-		var fileNames = Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories)
+		/*
+		var filenames = Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories)
 			.Select(f => f.Replace("\\", "/"))
 			.Where(f => projectItems.Any(p => p.Equals(f, StringComparison.OrdinalIgnoreCase)))
 			.Select(f => f.Substring(root.Length+1).Replace(".cs",string.Empty))
 			.Where(f => f != "Primitive" && f != "IPrimitive" && f.EndsWith("Primitive"))
 			.OrderBy(f => f)
-			.ToList();
+			.ToList();*/
 
-		foreach(string fileName in fileNames)
+		foreach(string fileuri in Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories)
+			.OrderBy(f => f))
 		{
-			WriteLine(fileName.Replace("Primitive",""));
+			string filename = fileuri.Replace("\\", "/");
+			if(!projectItems.Any(p => p.Equals(filename, StringComparison.OrdinalIgnoreCase)))
+			{
+				continue;
+			}
+			filename = filename.Substring(root.Length+1).Replace(".cs",string.Empty);
+			if(filename == "Primitive" || filename == "IPrimitive" || !filename.EndsWith("Primitive"))
+			{
+				continue;
+			}
+			string firstLine;
+			using(StreamReader reader = new StreamReader(fileuri)) 
+			{
+				firstLine = reader.ReadLine();
+			}
+			WriteLine(filename.Replace("Primitive","") + " -" + firstLine.Replace("//",""));
 		}
 	}
 

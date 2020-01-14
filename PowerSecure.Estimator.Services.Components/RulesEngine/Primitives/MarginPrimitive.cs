@@ -1,4 +1,5 @@
-﻿using System;
+﻿// 2 or 3 parameters. Parameter 1 is price, parameter 2 is cost, parameter 3 is an optionally-applied margin.
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;

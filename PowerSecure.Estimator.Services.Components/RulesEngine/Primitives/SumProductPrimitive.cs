@@ -1,4 +1,5 @@
-﻿using System;
+﻿// 2 parameters. Both parameters are equal-sized arrays of numerics.
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;

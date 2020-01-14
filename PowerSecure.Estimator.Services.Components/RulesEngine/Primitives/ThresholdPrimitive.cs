@@ -1,4 +1,5 @@
-﻿using System;
+﻿// 4 parameters. If parameter 1 is greater than or equal to parameter 2, parameter 3 is returned. Otherwise, parameter 4 is returned.
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;

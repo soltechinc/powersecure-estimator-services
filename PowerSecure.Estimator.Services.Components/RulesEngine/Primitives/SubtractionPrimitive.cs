@@ -1,4 +1,5 @@
-﻿using System;
+﻿// 1 or more parameters.
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;

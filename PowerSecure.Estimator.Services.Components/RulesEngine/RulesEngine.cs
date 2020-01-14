@@ -10,6 +10,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     {
         public IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
         {
+            dataSheet["true"] = "1";
+            dataSheet["false"] = "0";
+
             var suppliedParameters = new HashSet<string>();
             var missingParameters = new HashSet<string>();
 

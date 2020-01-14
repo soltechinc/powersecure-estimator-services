@@ -1,4 +1,5 @@
-﻿using System;
+﻿// 3 parameters. Parameter 1 is the data set name, Parmeter 2 is the criteria array, Parameter 3 is the return field name
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;
