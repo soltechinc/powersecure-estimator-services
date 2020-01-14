@@ -46,6 +46,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 return Tuple.Create(false, "Expected parameter arrays to be equal in length.");
             }
 
+            if(list[0].Children().Count() == 0)
+            {
+                return Tuple.Create(false, "Expected parameter arrays to have entries.");
+            }
+
             return Tuple.Create(true, string.Empty);
         }
     }

@@ -353,3 +353,4 @@ MigrationBackup/
 .ionide/
 
 PowerSecure.Estimator.Services.Components/RulesEngine/Primitives/Primitive.Loader.cs
+PowerSecure.Estimator.Services.Components/RulesEngine/Primitives/PrimitiveList.txt

@@ -24,7 +24,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         {
             if (jToken.Children().Count() != 4)
             {
-                return Tuple.Create(false, $"Expected a parameter array of length 2, 3, or 4, got the following: {jToken.Children().Count()}");
+                return Tuple.Create(false, $"Expected a parameter array of length 4, got the following: {jToken.Children().Count()}");
             }
 
             if (jToken.Children().Any(p => p.Type == JTokenType.Array))
