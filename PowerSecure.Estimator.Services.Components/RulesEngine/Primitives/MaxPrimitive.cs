@@ -15,9 +15,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            var decimals = Primitive.ConvertToDecimal(parameters);
-
-            return decimals.Max();
+            return parameters.ToDecimal().Max();
         }
 
         public Tuple<bool, string> Validate(JToken jToken)

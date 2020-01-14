@@ -11,7 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     {
         public delegate Decimal ParamsFunc(params object[] parameters);
 
-        public static IDictionary<string, IPrimitive> LoadFromAssembly(Assembly assembly)
+        public static IDictionary<string, IPrimitive> Load(Assembly assembly)
         {
             var primitives = new Dictionary<string, IPrimitive>();
 
@@ -26,28 +26,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return primitives.ToReadonlyDictionary();
         }
 
-        public static decimal[] ConvertToDecimal(object[] objects)
+        public static decimal[] ConvertToDecimal(params object[] objects)
         {
-            var list = new List<decimal>();
-
-            foreach(var obj in objects)
-            {
-                switch(obj)
-                {
-                    case string s:
-                        {
-                            list.Add(decimal.Parse(s));
-                            break;
-                        }
-                    default:
-                        {
-                            list.Add(Convert.ToDecimal(obj));
-                            break;
-                        }
-                }
-            }
-
-            return list.ToArray();
+            return new List<decimal>(objects.ToDecimal()).ToArray();
         }
     }
 }

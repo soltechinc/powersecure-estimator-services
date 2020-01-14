@@ -15,10 +15,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            var decimals = Primitive.ConvertToDecimal(parameters);
-
             decimal value = 1;
-            decimals.ForEach(p => value *= p);
+            parameters.ToDecimal().ForEach(p => value *= p);
             return value;
         }
 

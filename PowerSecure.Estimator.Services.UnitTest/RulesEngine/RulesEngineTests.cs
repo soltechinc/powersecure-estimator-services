@@ -66,9 +66,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var engine = new Components.RulesEngine.RulesEngine();
 
-            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, string> { ["x"] = "2", ["test"] = "4", ["test2"] = null }, primitives, repository, null);
+            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, string> { ["test"] = "4", ["test2"] = null }, primitives, repository, null);
 
-            Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
+            Assert.AreEqual(2, dataSheet.Count, "Count of items in data sheet is incorrect");
             Assert.AreEqual("12", dataSheet["test2"], "Calculation is incorrect");
         }
 

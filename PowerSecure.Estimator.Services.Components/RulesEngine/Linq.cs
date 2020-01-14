@@ -16,5 +16,25 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 action(item);
             }
         }
+
+        public static IEnumerable<decimal> ToDecimal(this IEnumerable<object> objects)
+        {
+            foreach(var obj in objects)
+            {
+                switch (obj)
+                {
+                    case string s:
+                        {
+                            yield return decimal.Parse(s);
+                            break;
+                        }
+                    default:
+                        {
+                            yield return Convert.ToDecimal(obj);
+                            break;
+                        }
+                }
+            }
+        }
     }
 }
