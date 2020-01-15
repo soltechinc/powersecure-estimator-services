@@ -242,7 +242,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void FindTest()
         {
-            var instructionSet = new InstructionSet("test", "{ 'find': [ 'dataSetName', ['search','value'], 'returnValueAttribute' ]}", new string[] { }, new string[] { }, 0);
+            var instructionSet = new InstructionSet("test", "{ 'find': [ 'dataSetName', [['search','value'], ['search2','value2']], 'returnValueAttribute' ]}", new string[] { }, new string[] { }, 0);
             var primitives = Primitive.Load();
 
             decimal value = instructionSet.Evaluate(null, primitives, new InMemoryReferenceDataRepository());

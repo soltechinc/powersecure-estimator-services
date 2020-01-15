@@ -91,7 +91,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
                         {
                             var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)node.Value;
-                            node.Value = tuple.Item2.Select(p => p.Value.ToString()).ToArray();
+                            node.Value = tuple.Item2.Select(p => p.Value).ToArray();
                             break;
                         }
                 }

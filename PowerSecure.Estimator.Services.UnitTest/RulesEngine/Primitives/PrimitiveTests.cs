@@ -399,11 +399,31 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
+        public void FindPrimitive_validateCriteriaArrayWithEmptyPair()
+        {
+            var primitive = new FindPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', [ [ ] ], '2' ]"));
+
+            Assert.IsFalse(success, "Find arguments did validate");
+        }
+
+        [TestMethod]
+        public void FindPrimitive_validateCriteriaArrayWithTriad()
+        {
+            var primitive = new FindPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', [ [ '2', '2', '2' ] ], '2' ]"));
+
+            Assert.IsFalse(success, "Find arguments did validate");
+        }
+
+        [TestMethod]
         public void FindPrimitive_validate()
         {
             var primitive = new FindPrimitive();
 
-            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', [ '3', '4' ], '2' ]"));
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', [ ['3', '4'],['5','6'] ], '2' ]"));
 
             Assert.IsTrue(success, "Find arguments did not validate");
         }

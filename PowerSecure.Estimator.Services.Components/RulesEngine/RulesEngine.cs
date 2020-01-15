@@ -10,10 +10,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     {
         public IDictionary<string, string> EvaluateDataSheet(IDictionary<string, string> dataSheet, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
         {
-            dataSheet["true"] = "1";
-            dataSheet["false"] = "0";
-
-            var suppliedParameters = new HashSet<string>();
+            var suppliedParameters = new HashSet<string>() { "true", "false" };
             var missingParameters = new HashSet<string>();
 
             foreach(var parameter in dataSheet)
@@ -71,6 +68,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             }
 
             var parameters = new Dictionary<string, string>(dataSheet);
+            parameters["true"] = "1";
+            parameters["false"] = "0";
             
             foreach (InstructionSet instructionSet in instructionSets.Values.OrderBy(p => p.Sequence))
             {

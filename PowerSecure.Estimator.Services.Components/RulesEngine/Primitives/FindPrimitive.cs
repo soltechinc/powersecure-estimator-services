@@ -16,7 +16,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return referenceDataRepository.Lookup((string)parameters[0], (string[])parameters[1], (string)parameters[2]);
+            var list = new List<KeyValuePair<string, string>>();
+            var criteria = (object[])parameters[1];
+            foreach(object obj in criteria)
+            {
+                var pair = (object[])obj;
+                list.Add(new KeyValuePair<string,string>(pair[0].ToString(), pair[1].ToString()));
+            }
+            return referenceDataRepository.Lookup((string)parameters[0], list.ToArray(), (string)parameters[2]);
         }
 
         public Tuple<bool, string> Validate(JToken jToken)
@@ -38,14 +45,28 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 return Tuple.Create(false, "Expected criteria array as the second parameter.");
             }
 
-            if (children[1].Children().Count() == 0)
+            var criteria = children[1].Children();
+            if (criteria.Count() == 0)
             {
                 return Tuple.Create(false, "Expected entries in the criteria array.");
             }
 
-            if (children[1].Children().Count() % 2 != 0)
+            foreach(JToken jTokenCriteriaPair in criteria)
             {
-                return Tuple.Create(false, "Expected an even number of entries in the criteria array.");
+                if(jTokenCriteriaPair.Type != JTokenType.Array)
+                {
+                    return Tuple.Create(false, "Expected criteria array to contain only key-value pair arrays.");
+                }
+
+                if (jTokenCriteriaPair.Children().Count() != 2)
+                {
+                    return Tuple.Create(false, "Expected criteria array to contain only key-value pair arrays.");
+                }
+
+                if (jTokenCriteriaPair.Children().Any(p => p.Type == JTokenType.Array))
+                {
+                    return Tuple.Create(false, "Expected criteria array to contain only key-value pair arrays.");
+                }
             }
 
             return Tuple.Create(true, string.Empty);
