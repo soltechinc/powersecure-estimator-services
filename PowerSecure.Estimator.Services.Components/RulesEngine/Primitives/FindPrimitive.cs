@@ -14,15 +14,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            var list = new List<(string SearchParam, string Value)>();
-            var criteria = (object[])parameters[1];
-            foreach(object obj in criteria)
-            {
-                var pair = (object[])obj;
-                list.Add((pair[0].ToString(), pair[1].ToString()));
-            }
-            //start here
-            return referenceDataRepository.Lookup((string)parameters[0], list.ToArray(), (string)parameters[2]);
+            return referenceDataRepository.Lookup(parameters[0].ToRawString(), ((object[])parameters[1]).Select(p => (object[])p).Select(p => (p[0].ToRawString(), p[1].ToRawString())).ToArray(), parameters[2].ToRawString());
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

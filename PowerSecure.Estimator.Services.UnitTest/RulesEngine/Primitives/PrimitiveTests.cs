@@ -241,9 +241,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new EqualPrimitive();
 
-            var value = primitive.Invoke(new object[] { "6", "2", "-3", "7" }, null);
+            var value = primitive.Invoke(new object[] { "6", "2", "trueValue", "falseValue" }, null);
 
-            Assert.AreEqual(7, (decimal)value, "Equal did not work");
+            Assert.AreEqual("falseValue", value, "Equal did not work");
         }
 
         [TestMethod]
@@ -251,9 +251,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new EqualPrimitive();
 
-            var value = primitive.Invoke(new object[] { "2", "2", "-3", "7" }, null);
+            var value = primitive.Invoke(new object[] { "2", "2", "trueValue", "falseValue" }, null);
 
-            Assert.AreEqual(-3, (decimal)value, "Equal did not work");
+            Assert.AreEqual("trueValue", value, "Equal did not work");
         }
 
         [TestMethod]

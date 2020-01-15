@@ -59,5 +59,51 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     }
             }
         }
+
+        public static string ToRawString(this object obj)
+        {
+            switch (obj)
+            {
+                case string s when s.StartsWith('$'):
+                    {
+                        return s.Substring(1);
+                    }
+                default:
+                    {
+                        return obj.ToString();
+                    }
+            }
+        }
+
+        public static IEnumerable<string> ToRawString(this IEnumerable<object> objects)
+        {
+            foreach (var obj in objects)
+            {
+                yield return obj.ToRawString();
+            }
+        }
+
+        public static string ToStringLiteral(this object obj)
+        {
+            switch (obj)
+            {
+                case string s when s.StartsWith('$'):
+                    {
+                        return s;
+                    }
+                default:
+                    {
+                        return "$" + obj.ToString();
+                    }
+            }
+        }
+
+        public static IEnumerable<string> ToStringLiteral(this IEnumerable<object> objects)
+        {
+            foreach (var obj in objects)
+            {
+                yield return obj.ToStringLiteral();
+            }
+        }
     }
 }
