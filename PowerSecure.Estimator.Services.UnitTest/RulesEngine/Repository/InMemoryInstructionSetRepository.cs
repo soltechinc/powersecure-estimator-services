@@ -10,9 +10,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 {
     public class InMemoryInstructionSetRepository : IInstructionSetRepository
     {
-        public Dictionary<string, InstructionSet> Items { get; } = new Dictionary<string, InstructionSet>();
+        public Dictionary<string, IInstructionSet> Items { get; } = new Dictionary<string, IInstructionSet>();
 
-        public void Insert(InstructionSet instructionSet)
+        public void Insert(IInstructionSet instructionSet)
         {
             if (Items.ContainsKey(instructionSet.Name))
             {
@@ -22,7 +22,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             Items.Add(instructionSet.Name, instructionSet);
         }
     
-        public void Update(InstructionSet instructionSet)
+        public void Update(IInstructionSet instructionSet)
         {
             if(!Items.ContainsKey(instructionSet.Name))
             {
@@ -37,16 +37,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             return Items.ContainsKey(key);
         }
 
-        public IEnumerable<InstructionSet> SelectByKey(params string[] instructionSetNames)
+        public IEnumerable<IInstructionSet> SelectByKey(params string[] instructionSetNames)
         {
             return SelectByKey(instructionSetNames.AsEnumerable());
         }
 
-        public IEnumerable<InstructionSet> SelectByKey(IEnumerable<string> instructionSetNames)
+        public IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetNames)
         {
             foreach (string instructionSetName in instructionSetNames)
             {
-                if (Items.TryGetValue(instructionSetName, out InstructionSet instructionSet))
+                if (Items.TryGetValue(instructionSetName, out IInstructionSet instructionSet))
                 {
                     yield return instructionSet;
                 }
@@ -57,7 +57,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             }
         }
 
-        public IEnumerable<InstructionSet> SelectByParameter(string parameter)
+        public IEnumerable<IInstructionSet> SelectByParameter(string parameter)
         {
             return Items.Select(x => x.Value)
                         .Where(x => x.Parameters.Contains(parameter))

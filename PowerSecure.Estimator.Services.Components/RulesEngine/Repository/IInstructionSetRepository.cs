@@ -6,15 +6,15 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public interface IInstructionSetRepository
     {
-        IEnumerable<InstructionSet> SelectByKey(params string[] instructionSetNames);
+        IEnumerable<IInstructionSet> SelectByKey(params string[] instructionSetNames);
 
-        IEnumerable<InstructionSet> SelectByKey(IEnumerable<string> instructionSetNames);
+        IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetNames);
 
-        IEnumerable<InstructionSet> SelectByParameter(string parameter);
+        IEnumerable<IInstructionSet> SelectByParameter(string parameter);
 
-        void Insert(InstructionSet instructionSet);
+        void Insert(IInstructionSet instructionSet);
 
-        void Update(InstructionSet instructionSet);
+        void Update(IInstructionSet instructionSet);
 
         bool ContainsKey(string key);
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
+            repository.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", InstructionSet.Create, primitives);
             
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -31,8 +32,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
-            InstructionSet.InsertNew("test2", "{ '*': [ 3, 'test' ]}", repository, primitives);
+            repository.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", InstructionSet.Create, primitives);
+            repository.InsertNew("test2", "{ '*': [ 3, 'test' ]}", InstructionSet.Create, primitives);
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -48,8 +49,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
-            InstructionSet.InsertNew("test2", "{ '*': [ 3, 'test' ]}", repository, primitives);
+            repository.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", InstructionSet.Create, primitives);
+            repository.InsertNew("test2", "{ '*': [ 3, 'test' ]}", InstructionSet.Create, primitives);
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -61,8 +62,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
-            InstructionSet.InsertNew("test2", "{ '*': [ 3, 'test' ]}", repository, primitives);
+            repository.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", InstructionSet.Create, primitives);
+            repository.InsertNew("test2", "{ '*': [ 3, 'test' ]}", InstructionSet.Create, primitives);
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -77,7 +78,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            InstructionSet.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", repository, primitives);
+            repository.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", InstructionSet.Create, primitives);
 
             var engine = new Components.RulesEngine.RulesEngine();
 

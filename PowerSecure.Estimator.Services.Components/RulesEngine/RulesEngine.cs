@@ -26,7 +26,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             }
 
             var childInstructionSetNames = new HashSet<string>();
-            var instructionSets = new Dictionary<string, InstructionSet>();
+            var instructionSets = new Dictionary<string, IInstructionSet>();
             var neededParameters = new HashSet<string>();
             foreach(var instructionSet in instructionSetRepository.SelectByKey(missingParameters))
             {
@@ -71,7 +71,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             parameters["true"] = "1";
             parameters["false"] = "0";
             
-            foreach (InstructionSet instructionSet in instructionSets.Values.OrderBy(p => p.Sequence))
+            foreach (IInstructionSet instructionSet in instructionSets.Values.OrderBy(p => p.Sequence))
             {
                 var value = instructionSet.Evaluate(parameters, primitives, referenceDataRepository);
                 if (parameters.ContainsKey(instructionSet.Name))
