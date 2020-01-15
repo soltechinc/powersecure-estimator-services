@@ -49,7 +49,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 {
                     case JObject jObject:
                         {
-                            var primitive = primitives[jObject.Properties().Select(p => p.Name).First()];
+                            var primitive = primitives[jObject.Properties().Select(p => p.Name.ToLower()).First()];
                             node.Value = new PrimitiveValuePair() { Primitive = primitive, Children = new List<EvaluationNode>() };
                             break;
                         }
@@ -96,11 +96,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                 if (jToken.Type == JTokenType.String && !(pair.Primitive == null || !pair.Primitive.ResolveParameters))
                 {
-                    node.Value = parameters[jToken.ToString()];
+                    node.Value = parameters[jToken.ToString().ToLower()];
                 }
                 else
                 {
-                    node.Value = jToken.ToString();
+                    node.Value = jToken.ToString().ToLower();
                 }
             });
 

@@ -26,7 +26,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			IPrimitive primitive;
 			var dict = new Dictionary<string, IPrimitive>();
 <# ListFiles(projectItems); #>
-			return dict;
+			return dict.ToReadonlyDictionary();
 		}
 	}
 }
@@ -46,7 +46,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 		foreach(string fileName in fileNames)
 		{
 			WriteLine(string.Format("\t\t\tprimitive = new {0}();", fileName));
-			WriteLine("\t\t\tdict.Add(primitive.Name, primitive);");
+			WriteLine("\t\t\tdict.Add(primitive.Name.ToLower(), primitive);");
 		}
 	}
 

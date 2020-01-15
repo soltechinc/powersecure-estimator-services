@@ -67,7 +67,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 throw new InvalidOperationException("Missing required parameters");
             }
 
-            var parameters = new Dictionary<string, string>(dataSheet);
+            var parameters = new Dictionary<string, string>();
+            foreach(var pair in dataSheet)
+            {
+                parameters.Add(pair.Key?.ToLower(), pair.Value?.ToLower());
+            }
             parameters["true"] = "1";
             parameters["false"] = "0";
             

@@ -32,7 +32,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                                 throw new InvalidOperationException($"Expected one primitive, found {nameList.Count}");
                             }
 
-                            var name = nameList.First();
+                            var name = nameList[0];
 
                             if (!primitives.TryGetValue(name.ToLower(), out IPrimitive primitive))
                             {
@@ -59,7 +59,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             null,
             jToken =>
             {
-                terminals.Add(jToken.ToString());
+                terminals.Add(jToken.ToString().ToLower());
             });
 
             //divide terminals into classes
@@ -92,7 +92,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                 }
             }
 
-            repository.Insert(instructionSetFactory(instructionSetName, instructionDefinition, parameters, childInstructionSets, maxSequence + 1));
+            repository.Insert(instructionSetFactory(instructionSetName.ToLower(), instructionDefinition, parameters, childInstructionSets, maxSequence + 1));
 
             //update existing instruction sets 
             repository.SelectByParameter(instructionSetName)
