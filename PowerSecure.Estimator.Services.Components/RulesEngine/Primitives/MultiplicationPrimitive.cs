@@ -21,19 +21,19 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return value;
         }
 
-        public Tuple<bool, string> Validate(JToken jToken)
+        public (bool success, string message) Validate(JToken jToken)
         {
             if (jToken.Children().Count() < 2)
             {
-                return Tuple.Create(false, $"Expected a parameter array of length 2 or more, got the following: {jToken.Children().Count()}");
+                return (false, $"Expected a parameter array of length 2 or more, got the following: {jToken.Children().Count()}");
             }
 
             if(jToken.Children().Any(p => p.Type == JTokenType.Array))
             {
-                return Tuple.Create(false, "Did not expect any arrays as parameters.");
+                return (false, "Did not expect any arrays as parameters.");
             }
 
-            return Tuple.Create(true, string.Empty);
+            return (true, string.Empty);
         }
     }
 }

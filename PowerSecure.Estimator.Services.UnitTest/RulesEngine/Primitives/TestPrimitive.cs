@@ -10,7 +10,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 {
     public class TestPrimitive : IPrimitive
     {
-        public delegate Tuple<bool, string> ValidationFunc(JToken jToken);
+        public delegate (bool success, string message) ValidationFunc(JToken jToken);
 
         private ParamsFunc _paramsFunc;
         private ValidationFunc _validationFunc;
@@ -32,7 +32,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
             return _paramsFunc.Invoke(parameters);
         }
 
-        public Tuple<bool, string> Validate(JToken jToken)
+        public (bool success, string message) Validate(JToken jToken)
         {
             return _validationFunc.Invoke(jToken);
         }

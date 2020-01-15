@@ -157,7 +157,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_single()
         {
             var repository = new InMemoryInstructionSetRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", true, null, p => Tuple.Create(true, string.Empty)), ["*"] = new TestPrimitive("*", true, null, p => Tuple.Create(true, string.Empty)) };
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", true, null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", true, null, p => (true, string.Empty)) };
             repository.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , 3 ] }] ] }", InstructionSet.Create, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
@@ -172,7 +172,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_lotsOfNesting()
         {
             var repository = new InMemoryInstructionSetRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", true, null, p => Tuple.Create(true, string.Empty)), ["*"] = new TestPrimitive("*", true, null, p => Tuple.Create(true, string.Empty)) };
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", true, null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", true, null, p => (true, string.Empty)) };
             repository.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , ['q', [['b'],2] ]] }] ] }", InstructionSet.Create, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);

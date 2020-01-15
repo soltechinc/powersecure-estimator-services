@@ -21,19 +21,19 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return decimals[0] == decimals[1] ? decimals[2] : decimals[3];
         }
 
-        public Tuple<bool, string> Validate(JToken jToken)
+        public (bool success, string message) Validate(JToken jToken)
         {
             if (jToken.Children().Count() != 4)
             {
-                return Tuple.Create(false, $"Expected a parameter array of length 4, got the following: {jToken.Children().Count()}");
+                return (false, $"Expected a parameter array of length 4, got the following: {jToken.Children().Count()}");
             }
 
             if (jToken.Children().Any(p => p.Type == JTokenType.Array))
             {
-                return Tuple.Create(false, "Did not expect any arrays as parameters.");
+                return (false, "Did not expect any arrays as parameters.");
             }
 
-            return Tuple.Create(true, string.Empty);
+            return (true, string.Empty);
         }
     }
 }

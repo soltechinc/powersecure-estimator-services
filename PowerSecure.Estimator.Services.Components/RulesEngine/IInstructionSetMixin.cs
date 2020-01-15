@@ -10,6 +10,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public static class IInstructionSetMixin
     {
+        private class EvaluationNode
+        {
+            public EvaluationNode Parent { get; set; }
+            public object Value { get; set; }
+        }
+
+        private class PrimitiveValuePair
+        {
+            public IPrimitive Primitive { get; set; }
+            public IList<EvaluationNode> Children { get; set; }
+        }
+
         public static decimal Evaluate(this IInstructionSet instructionSet, IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives, IReferenceDataRepository referenceDataRepository)
         {
             EvaluationNode rootNode = null;
@@ -26,7 +38,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 node.Parent = currentNode;
                 if (currentNode != null)
                 {
-                    ((Tuple<IPrimitive, List<EvaluationNode>>)currentNode.Value).Item2.Add(node);
+                    ((PrimitiveValuePair)currentNode.Value).Children.Add(node);
                 }
                 if (rootNode == null)
                 {
@@ -39,12 +51,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     case JObject jObject:
                         {
                             var primitive = primitives[jObject.Properties().Select(p => p.Name).First()];
-                            node.Value = Tuple.Create(primitive, new List<EvaluationNode>());
+                            node.Value = new PrimitiveValuePair() { Primitive = primitive, Children = new List<EvaluationNode>() };
                             break;
                         }
                     case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
                         {
-                            node.Value = Tuple.Create((IPrimitive)null, new List<EvaluationNode>());
+                            node.Value = new PrimitiveValuePair() { Primitive = null, Children = new List<EvaluationNode>() };
                             break;
                         }
                 }
@@ -62,15 +74,15 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 {
                     case JObject jObject:
                         {
-                            var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)node.Value;
-                            var value = tuple.Item1.Invoke(tuple.Item2.Select(p => p.Value).ToArray(), referenceDataRepository);
+                            var pair = (PrimitiveValuePair)node.Value;
+                            var value = pair.Primitive.Invoke(pair.Children.Select(p => p.Value).ToArray(), referenceDataRepository);
                             node.Value = value.ToString();
                             break;
                         }
                     case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
                         {
-                            var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)node.Value;
-                            node.Value = tuple.Item2.Select(p => p.Value).ToArray();
+                            var pair = (PrimitiveValuePair)node.Value;
+                            node.Value = pair.Children.Select(p => p.Value).ToArray();
                             break;
                         }
                 }
@@ -80,10 +92,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             jToken =>
             {
                 var node = new EvaluationNode();
-                var tuple = (Tuple<IPrimitive, List<EvaluationNode>>)currentNode.Value;
-                tuple.Item2.Add(node);
+                var pair = (PrimitiveValuePair)currentNode.Value;
+                pair.Children.Add(node);
 
-                if (jToken.Type == JTokenType.String && !(tuple.Item1 == null || !tuple.Item1.ResolveParameters))
+                if (jToken.Type == JTokenType.String && !(pair.Primitive == null || !pair.Primitive.ResolveParameters))
                 {
                     node.Value = parameters[jToken.ToString()];
                 }

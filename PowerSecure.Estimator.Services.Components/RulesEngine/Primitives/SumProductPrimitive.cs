@@ -29,30 +29,30 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return value;
         }
 
-        public Tuple<bool, string> Validate(JToken jToken)
+        public (bool success, string message) Validate(JToken jToken)
         {
             if (jToken.Children().Count() != 2)
             {
-                return Tuple.Create(false, $"Expected a parameter array of length 2, got the following: {jToken.Children().Count()}");
+                return (false, $"Expected a parameter array of length 2, got the following: {jToken.Children().Count()}");
             }
 
             if (!jToken.Children().All(p => p.Type == JTokenType.Array))
             {
-                return Tuple.Create(false, "Expected all parameters to be arrays.");
+                return (false, "Expected all parameters to be arrays.");
             }
 
             var list = new List<JToken>(jToken.Children());
             if(list[0].Children().Count() != list[1].Children().Count())
             {
-                return Tuple.Create(false, "Expected parameter arrays to be equal in length.");
+                return (false, "Expected parameter arrays to be equal in length.");
             }
 
             if(list[0].Children().Count() == 0)
             {
-                return Tuple.Create(false, "Expected parameter arrays to have entries.");
+                return (false, "Expected parameter arrays to have entries.");
             }
 
-            return Tuple.Create(true, string.Empty);
+            return (true, string.Empty);
         }
     }
 }

@@ -26,50 +26,50 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return referenceDataRepository.Lookup((string)parameters[0], list.ToArray(), (string)parameters[2]);
         }
 
-        public Tuple<bool, string> Validate(JToken jToken)
+        public (bool success, string message) Validate(JToken jToken)
         {
             JToken[] children = jToken.Children().ToArray();
 
             if (children.Count() != 3)
             {
-                return Tuple.Create(false, $"Expected a parameter array of length 3, got the following: {jToken.Children().Count()}");
+                return (false, $"Expected a parameter array of length 3, got the following: {jToken.Children().Count()}");
             }
 
             if(children[0].Type == JTokenType.Array || children[2].Type == JTokenType.Array)
             {
-                return Tuple.Create(false, "Did not expect an array as the first or third parameter.");
+                return (false, "Did not expect an array as the first or third parameter.");
             }
 
             if (children[1].Type != JTokenType.Array)
             {
-                return Tuple.Create(false, "Expected criteria array as the second parameter.");
+                return (false, "Expected criteria array as the second parameter.");
             }
 
             var criteria = children[1].Children();
             if (criteria.Count() == 0)
             {
-                return Tuple.Create(false, "Expected entries in the criteria array.");
+                return (false, "Expected entries in the criteria array.");
             }
 
             foreach(JToken jTokenCriteriaPair in criteria)
             {
                 if(jTokenCriteriaPair.Type != JTokenType.Array)
                 {
-                    return Tuple.Create(false, "Expected criteria array to contain only key-value pair arrays.");
+                    return (false, "Expected criteria array to contain only key-value pair arrays.");
                 }
 
                 if (jTokenCriteriaPair.Children().Count() != 2)
                 {
-                    return Tuple.Create(false, "Expected criteria array to contain only key-value pair arrays.");
+                    return (false, "Expected criteria array to contain only key-value pair arrays.");
                 }
 
                 if (jTokenCriteriaPair.Children().Any(p => p.Type == JTokenType.Array))
                 {
-                    return Tuple.Create(false, "Expected criteria array to contain only key-value pair arrays.");
+                    return (false, "Expected criteria array to contain only key-value pair arrays.");
                 }
             }
 
-            return Tuple.Create(true, string.Empty);
+            return (true, string.Empty);
         }
     }
 }
