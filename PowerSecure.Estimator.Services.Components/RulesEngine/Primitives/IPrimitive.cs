@@ -14,6 +14,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository);
 
-        (bool success, string message) Validate(JToken jToken);
+        (bool Success, string Message) Validate(JToken jToken);
     }
 }

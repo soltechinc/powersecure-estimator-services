@@ -37,7 +37,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return value;
         }
 
-        public (bool success, string message) Validate(JToken jToken)
+        public (bool Success, string Message) Validate(JToken jToken)
         {
             if (jToken.Children().Count() < 1)
             {

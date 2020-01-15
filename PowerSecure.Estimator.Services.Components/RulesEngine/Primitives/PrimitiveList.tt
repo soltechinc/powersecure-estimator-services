@@ -20,14 +20,6 @@
     public void ListFiles(List<string> projectItems)
 	{
 		var root = Host.ResolvePath("");
-		/*
-		var filenames = Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories)
-			.Select(f => f.Replace("\\", "/"))
-			.Where(f => projectItems.Any(p => p.Equals(f, StringComparison.OrdinalIgnoreCase)))
-			.Select(f => f.Substring(root.Length+1).Replace(".cs",string.Empty))
-			.Where(f => f != "Primitive" && f != "IPrimitive" && f.EndsWith("Primitive"))
-			.OrderBy(f => f)
-			.ToList();*/
 
 		foreach(string fileuri in Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories)
 			.OrderBy(f => f))

@@ -16,17 +16,17 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            var list = new List<KeyValuePair<string, string>>();
+            var list = new List<(string SearchParam, string Value)>();
             var criteria = (object[])parameters[1];
             foreach(object obj in criteria)
             {
                 var pair = (object[])obj;
-                list.Add(new KeyValuePair<string,string>(pair[0].ToString(), pair[1].ToString()));
+                list.Add((pair[0].ToString(), pair[1].ToString()));
             }
             return referenceDataRepository.Lookup((string)parameters[0], list.ToArray(), (string)parameters[2]);
         }
 
-        public (bool success, string message) Validate(JToken jToken)
+        public (bool Success, string Message) Validate(JToken jToken)
         {
             JToken[] children = jToken.Children().ToArray();
 

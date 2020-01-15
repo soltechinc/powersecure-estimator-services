@@ -10,7 +10,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 {
     public class TestPrimitive : IPrimitive
     {
-        public delegate (bool success, string message) ValidationFunc(JToken jToken);
+        public delegate (bool Success, string Message) ValidationFunc(JToken jToken);
 
         private Func<object[], IReferenceDataRepository, decimal> _invokeFunc;
         private ValidationFunc _validateFunc;
@@ -32,7 +32,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
             return _invokeFunc?.Invoke(parameters, referenceDataRepository) ?? decimal.MinValue;
         }
 
-        public (bool success, string message) Validate(JToken jToken)
+        public (bool Success, string Message) Validate(JToken jToken)
         {
             return _validateFunc?.Invoke(jToken) ?? (false, "No validation logic");
         }

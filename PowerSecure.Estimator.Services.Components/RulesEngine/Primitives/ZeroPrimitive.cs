@@ -21,7 +21,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return decimals[0] < 0 ? 0 : decimals[0];
         }
 
-        public (bool success, string message) Validate(JToken jToken)
+        public (bool Success, string Message) Validate(JToken jToken)
         {
             if (jToken.Children().Count() != 1)
             {

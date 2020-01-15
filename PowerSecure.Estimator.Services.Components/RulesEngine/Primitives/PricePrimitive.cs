@@ -31,7 +31,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             return (cost/(1-(margin * applyMargin)))+tax;
         }
 
-        public (bool success, string message) Validate(JToken jToken)
+        public (bool Success, string Message) Validate(JToken jToken)
         {
             if (jToken.Children().Count() != 2 && jToken.Children().Count() != 3 && jToken.Children().Count() != 4)
             {
