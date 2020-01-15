@@ -34,8 +34,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     return;
                 }
 
-                var node = new EvaluationNode();
-                node.Parent = currentNode;
+                var node = new EvaluationNode() { Parent = currentNode };
                 if (currentNode != null)
                 {
                     ((PrimitiveValuePair)currentNode.Value).Children.Add(node);
@@ -91,7 +90,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             },
             jToken =>
             {
-                var node = new EvaluationNode();
+                var node = new EvaluationNode() { Parent = currentNode };
                 var pair = (PrimitiveValuePair)currentNode.Value;
                 pair.Children.Add(node);
 

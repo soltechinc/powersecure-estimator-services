@@ -9,8 +9,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public static partial class Primitive
     {
-        public delegate Decimal ParamsFunc(params object[] parameters);
-
         public static IDictionary<string, IPrimitive> Load(Assembly assembly)
         {
             var primitives = new Dictionary<string, IPrimitive>();

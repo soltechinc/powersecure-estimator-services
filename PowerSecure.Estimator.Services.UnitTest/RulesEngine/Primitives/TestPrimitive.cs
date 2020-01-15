@@ -12,15 +12,15 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
     {
         public delegate (bool success, string message) ValidationFunc(JToken jToken);
 
-        private ParamsFunc _paramsFunc;
-        private ValidationFunc _validationFunc;
+        private Func<object[], IReferenceDataRepository, decimal> _invokeFunc;
+        private ValidationFunc _validateFunc;
 
-        public TestPrimitive(string name, bool resolveParameters, ParamsFunc paramsFunc, ValidationFunc validationFunc)
+        public TestPrimitive(string name, bool resolveParameters, Func<object[], IReferenceDataRepository, decimal> invokeFunc, ValidationFunc validateFunc)
         {
             Name = name;
             ResolveParameters = resolveParameters;
-            _paramsFunc = paramsFunc;
-            _validationFunc = validationFunc;
+            _invokeFunc = invokeFunc;
+            _validateFunc = validateFunc;
         }
 
         public string Name { get; private set; }
@@ -29,12 +29,12 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
         public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return _paramsFunc.Invoke(parameters);
+            return _invokeFunc?.Invoke(parameters, referenceDataRepository) ?? decimal.MinValue;
         }
 
         public (bool success, string message) Validate(JToken jToken)
         {
-            return _validationFunc.Invoke(jToken);
+            return _validateFunc?.Invoke(jToken) ?? (false, "No validation logic");
         }
     }
 }

@@ -17,7 +17,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             if (instructionSetFactory == null) throw new ArgumentNullException("instructionSetFactory");
             if (primitives == null) throw new ArgumentNullException("primitives");
 
-            var terminals = new SortedSet<string>();
+            var terminals = new HashSet<string>();
 
             JObject.Parse(instructionDefinition).WalkNodes(jToken =>
             {
