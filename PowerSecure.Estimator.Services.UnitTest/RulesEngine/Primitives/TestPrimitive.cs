@@ -27,7 +27,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
         public bool ResolveParameters { get; private set; }
 
-        public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
+        public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return _invokeFunc?.Invoke(parameters, referenceDataRepository) ?? decimal.MinValue;
         }

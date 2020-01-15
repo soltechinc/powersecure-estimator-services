@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public bool ResolveParameters => true;
 
-        public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
+        public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var values = Primitive.ConvertToDecimal((string[])parameters[0]);
             var factors = Primitive.ConvertToDecimal((string[])parameters[1]);

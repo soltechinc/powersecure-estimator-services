@@ -12,7 +12,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         bool ResolveParameters { get; }
 
-        decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository);
+        object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository);
 
         (bool Success, string Message) Validate(JToken jToken);
     }

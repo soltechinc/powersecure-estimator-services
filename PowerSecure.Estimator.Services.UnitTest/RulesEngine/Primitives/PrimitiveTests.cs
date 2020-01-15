@@ -63,7 +63,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "6" }, null);
 
-            Assert.AreEqual(8, value, "Addition did not work");
+            Assert.AreEqual(8, (decimal)value, "Addition did not work");
         }
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2" }, null);
 
-            Assert.AreEqual(2, value, "Addition did not work");
+            Assert.AreEqual(2, (decimal)value, "Addition did not work");
         }
 
         [TestMethod]
@@ -131,7 +131,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "1", "6", "-8" }, null);
 
-            Assert.AreEqual(6, value, "Check (true value) did not work");
+            Assert.AreEqual(6, (decimal)value, "Check (true value) did not work");
         }
 
         [TestMethod]
@@ -141,7 +141,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "0", "6", "-8" }, null);
 
-            Assert.AreEqual(-8, value, "Check (false value) did not work");
+            Assert.AreEqual(-8, (decimal)value, "Check (false value) did not work");
         }
 
         [TestMethod]
@@ -199,7 +199,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "6", "2" }, null);
 
-            Assert.AreEqual(3, value, "Division did not work");
+            Assert.AreEqual(3, (decimal)value, "Division did not work");
         }
 
         [TestMethod]
@@ -209,7 +209,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "30", "3", "2" }, null);
 
-            Assert.AreEqual(5, value, "Division did not work");
+            Assert.AreEqual(5, (decimal)value, "Division did not work");
         }
 
         [TestMethod]
@@ -267,7 +267,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "6", "2", "-3", "7" }, null);
 
-            Assert.AreEqual(7, value, "Equal did not work");
+            Assert.AreEqual(7, (decimal)value, "Equal did not work");
         }
 
         [TestMethod]
@@ -277,7 +277,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "2", "-3", "7" }, null);
 
-            Assert.AreEqual(-3, value, "Equal did not work");
+            Assert.AreEqual(-3, (decimal)value, "Equal did not work");
         }
 
         [TestMethod]
@@ -541,7 +541,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "-3", "2" }, null);
 
-            Assert.AreEqual(2, value, "Max did not work");
+            Assert.AreEqual(2, (decimal)value, "Max did not work");
         }
 
         [TestMethod]
@@ -589,7 +589,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "-3", "2" }, null);
 
-            Assert.AreEqual(-3, value, "Min did not work");
+            Assert.AreEqual(-3, (decimal)value, "Min did not work");
         }
 
         [TestMethod]
@@ -637,7 +637,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "6" }, null);
 
-            Assert.AreEqual(12, value, "Multiplication did not work");
+            Assert.AreEqual(12, (decimal)value, "Multiplication did not work");
         }
 
         [TestMethod]
@@ -705,7 +705,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "6" }, null);
 
-            Assert.AreEqual(8, value, "Price did not work");
+            Assert.AreEqual(8, (decimal)value, "Price did not work");
         }
 
         [TestMethod]
@@ -715,7 +715,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "6", "0.5" }, null);
 
-            Assert.AreEqual(10, value, "Price did not work");
+            Assert.AreEqual(10, (decimal)value, "Price did not work");
         }
 
         [TestMethod]
@@ -725,7 +725,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "6", "0.5", "0" }, null);
 
-            Assert.AreEqual(8, value, "Price did not work");
+            Assert.AreEqual(8, (decimal)value, "Price did not work");
         }
 
         [TestMethod]
@@ -803,7 +803,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2" }, null);
 
-            Assert.AreEqual(3, value, "Step did not work");
+            Assert.AreEqual(3, (decimal)value, "Step did not work");
         }
 
         [TestMethod]
@@ -861,7 +861,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "6" }, null);
 
-            Assert.AreEqual(-4, value, "Subtraction did not work");
+            Assert.AreEqual(-4, (decimal)value, "Subtraction did not work");
         }
 
         [TestMethod]
@@ -871,7 +871,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2" }, null);
 
-            Assert.AreEqual(-2, value, "Subtraction did not work");
+            Assert.AreEqual(-2, (decimal)value, "Subtraction did not work");
         }
 
         [TestMethod]
@@ -929,7 +929,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { new string[] { "2", "5" }, new string[] { "6", "3" } }, null);
 
-            Assert.AreEqual(27, value, "SumProduct did not work");
+            Assert.AreEqual(27, (decimal)value, "SumProduct did not work");
         }
 
         [TestMethod]
@@ -1017,7 +1017,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "3", "3", "-4", "19" }, null);
 
-            Assert.AreEqual(-4, value, "Threshold did not work");
+            Assert.AreEqual(-4, (decimal)value, "Threshold did not work");
         }
 
         [TestMethod]
@@ -1027,7 +1027,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2", "3", "-4", "19" }, null);
 
-            Assert.AreEqual(19, value, "Threshold did not work");
+            Assert.AreEqual(19, (decimal)value, "Threshold did not work");
         }
 
         [TestMethod]
@@ -1085,7 +1085,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "-3" }, null);
 
-            Assert.AreEqual(0, value, "Zero did not work");
+            Assert.AreEqual(0, (decimal)value, "Zero did not work");
         }
 
         [TestMethod]
@@ -1095,7 +1095,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "0" }, null);
 
-            Assert.AreEqual(0, value, "Zero did not work");
+            Assert.AreEqual(0, (decimal)value, "Zero did not work");
         }
 
         [TestMethod]
@@ -1105,7 +1105,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             var value = primitive.Invoke(new object[] { "2" }, null);
 
-            Assert.AreEqual(2, value, "Zero did not work");
+            Assert.AreEqual(2, (decimal)value, "Zero did not work");
         }
 
         [TestMethod]

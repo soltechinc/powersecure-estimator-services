@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public bool ResolveParameters => false;
 
-        public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
+        public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var list = new List<(string SearchParam, string Value)>();
             var criteria = (object[])parameters[1];

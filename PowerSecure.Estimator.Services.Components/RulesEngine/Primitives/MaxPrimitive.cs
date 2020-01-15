@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public bool ResolveParameters => true;
 
-        public decimal Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
+        public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters.ToDecimal().Max();
         }
