@@ -27,7 +27,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             EvaluationNode rootNode = null;
             EvaluationNode currentNode = null;
 
-            JObject.Parse(instructionSet.Instructions).DoubleWalkNodes(jToken =>
+            JObject.Parse(instructionSet.Instructions).WalkNodes(jToken =>
             {
                 if (!(jToken.Type == JTokenType.Object || (jToken.Type == JTokenType.Array && jToken.Parent.Type == JTokenType.Array)))
                 {

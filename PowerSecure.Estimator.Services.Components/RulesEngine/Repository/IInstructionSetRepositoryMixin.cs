@@ -56,6 +56,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                         }
                 }
             },
+            null,
             jToken =>
             {
                 terminals.Add(jToken.ToString());
