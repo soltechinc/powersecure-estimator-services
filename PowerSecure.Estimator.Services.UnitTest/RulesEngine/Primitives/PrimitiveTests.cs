@@ -25,15 +25,6 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
-        public void Load_onlyFindIsSpecial()
-        {
-            var primitives = Primitive.Load().Values.Where(p => !p.ResolveParameters).ToArray();
-
-            Assert.AreEqual(1, primitives.Length, "More than one primitive that does not resolve parameters");
-            Assert.IsTrue(primitives[0] is FindPrimitive, "The primitive that does not resolve parameters is not FindPrimitive");
-        }
-
-        [TestMethod]
         public void ConvertToDecimal_happyPath()
         {
             var decimals = Primitive.ConvertToDecimal("3","16.2", "0.14", "-2");
@@ -426,6 +417,74 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
             (var success, var message) = primitive.Validate(JToken.Parse("[ '2', [ ['3', '4'],['5','6'] ], '2' ]"));
 
             Assert.IsTrue(success, "Find arguments did not validate");
+        }
+        
+        [TestMethod]
+        public void IsNullPrimitive_name()
+        {
+            var primitive = new IsNullPrimitive();
+
+            Assert.AreEqual("isnull", primitive.Name, "IsNull name changed");
+        }
+
+        [TestMethod]
+        public void IsNullPrimitive_invokeValue()
+        {
+            var primitive = new IsNullPrimitive();
+
+            var value = primitive.Invoke(new object[] { "-3" }, null);
+
+            Assert.AreEqual(0, (decimal)value, "IsNull did not work");
+        }
+
+        [TestMethod]
+        public void IsNullPrimitive_invokeIsNull()
+        {
+            var primitive = new IsNullPrimitive();
+
+            var value = primitive.Invoke(new object[] { null }, null);
+
+            Assert.AreEqual(1, (decimal)value, "IsNull did not work");
+        }
+
+        [TestMethod]
+        public void IsNullPrimitive_validateTooFewArguments()
+        {
+            var primitive = new IsNullPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[  ]"));
+
+            Assert.IsFalse(success, "IsNull (too few) arguments did validate");
+        }
+
+        [TestMethod]
+        public void IsNullPrimitive_validateTooManyArguments()
+        {
+            var primitive = new IsNullPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', '2' ]"));
+
+            Assert.IsFalse(success, "IsNull (too many) arguments did validate");
+        }
+
+        [TestMethod]
+        public void IsNullPrimitive_validateArrayArguments()
+        {
+            var primitive = new IsNullPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [] ]"));
+
+            Assert.IsFalse(success, "IsNull array arguments did validate");
+        }
+
+        [TestMethod]
+        public void IsNullPrimitive_validate()
+        {
+            var primitive = new IsNullPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '3' ]"));
+
+            Assert.IsTrue(success, "IsNull arguments did not validate");
         }
 
         [TestMethod]

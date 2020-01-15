@@ -11,9 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public class PricePrimitive : IPrimitive
     {
         public string Name => "price";
-
-        public bool ResolveParameters => true;
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var decimals = Primitive.ConvertToDecimal(parameters);

@@ -11,9 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public class AdditionPrimitive : IPrimitive
     {
         public string Name => "+";
-
-        public bool ResolveParameters => true;
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters.ToDecimal().Sum();

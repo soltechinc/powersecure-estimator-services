@@ -20,6 +20,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             {
                 switch (obj)
                 {
+                    case decimal d:
+                        {
+                            yield return d;
+                            break;
+                        }
                     case string s:
                         {
                             yield return decimal.Parse(s);

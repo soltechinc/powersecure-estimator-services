@@ -9,9 +9,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public interface IPrimitive
     {
         string Name { get; }
-
-        bool ResolveParameters { get; }
-
+        
         object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository);
 
         (bool Success, string Message) Validate(JToken jToken);

@@ -11,9 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public class SumProductPrimitive : IPrimitive
     {
         public string Name => "sumproduct";
-
-        public bool ResolveParameters => true;
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var values = Primitive.ConvertToDecimal((string[])parameters[0]);

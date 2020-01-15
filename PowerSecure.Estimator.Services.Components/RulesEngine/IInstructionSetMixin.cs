@@ -22,7 +22,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             public IList<EvaluationNode> Children { get; set; }
         }
 
-        public static decimal Evaluate(this IInstructionSet instructionSet, IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives, IReferenceDataRepository referenceDataRepository)
+        public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives, IReferenceDataRepository referenceDataRepository)
         {
             EvaluationNode rootNode = null;
             EvaluationNode currentNode = null;
@@ -74,8 +74,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     case JObject jObject:
                         {
                             var pair = (PrimitiveValuePair)node.Value;
-                            var value = pair.Primitive.Invoke(pair.Children.Select(p => p.Value).ToArray(), referenceDataRepository);
-                            node.Value = value.ToString();
+                            node.Value = pair.Primitive.Invoke(pair.Children.Select(p => p.Value).ToArray(), referenceDataRepository);
                             break;
                         }
                     case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
@@ -94,17 +93,30 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 var pair = (PrimitiveValuePair)currentNode.Value;
                 pair.Children.Add(node);
 
-                if (jToken.Type == JTokenType.String && !(pair.Primitive == null || !pair.Primitive.ResolveParameters))
+                if (jToken.Type == JTokenType.String)
                 {
-                    node.Value = parameters[jToken.ToString().ToLower()];
+                    
+                    string value = jToken.ToString();
+                    if (value.StartsWith('$')) //these are string literals
+                    {
+                        node.Value = value;
+                    }
+                    else //these should be resolved against the parameters
+                    {
+                        node.Value = parameters[jToken.ToString().ToLower()];
+                    }
+                }
+                else if (jToken.Type == JTokenType.Null)
+                {
+                    node.Value = null;
                 }
                 else
                 {
-                    node.Value = jToken.ToString().ToLower();
+                    node.Value = decimal.Parse(jToken.ToString());
                 }
             });
 
-            return decimal.Parse(rootNode.Value.ToString());
+            return rootNode.Value;
         }
     }
 }

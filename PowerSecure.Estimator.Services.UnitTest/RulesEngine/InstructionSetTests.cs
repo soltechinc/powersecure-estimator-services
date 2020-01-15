@@ -157,7 +157,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_single()
         {
             var repository = new InMemoryInstructionSetRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", true, null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", true, null, p => (true, string.Empty)) };
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
             repository.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , 3 ] }] ] }", InstructionSet.Create, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
@@ -172,7 +172,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_lotsOfNesting()
         {
             var repository = new InMemoryInstructionSetRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", true, null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", true, null, p => (true, string.Empty)) };
+            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
             repository.InsertNew("test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , ['q', [['b'],2] ]] }] ] }", InstructionSet.Create, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
@@ -189,7 +189,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var instructionSet = new InstructionSet("test", "{ '*': [ 2, 3 ]}", new string[] { }, new string[] { }, 0);
             var primitives = Primitive.Load();
 
-            decimal value = instructionSet.Evaluate(null, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(null, primitives, null);
 
             Assert.AreEqual(6, value, "Calculation failed");
         }
@@ -201,7 +201,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, string> { ["a"] = "2" };
 
-            decimal value = instructionSet.Evaluate(dataTable, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
 
             Assert.AreEqual(6, value, "Calculation failed");
         }
@@ -213,7 +213,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, string> { ["a"] = "2" };
 
-            decimal value = instructionSet.Evaluate(dataTable, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
 
             Assert.AreEqual(10, value, "Calculation failed");
         }
@@ -225,7 +225,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, string> { ["a"] = "2", ["b"] = "6" };
 
-            decimal value = instructionSet.Evaluate(dataTable, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
 
             Assert.AreEqual(18, value, "Calculation failed");
         }
@@ -238,16 +238,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, string> { ["a"] = "2" };
 
-            decimal value = instructionSet.Evaluate(dataTable, primitives, null);
+            var value = instructionSet.Evaluate(dataTable, primitives, null);
         }
 
         [TestMethod]
         public void FindTest()
         {
-            var instructionSet = new InstructionSet("test", "{ 'find': [ 'dataSetName', [['search','value'], ['search2','value2']], 'returnValueAttribute' ]}", new string[] { }, new string[] { }, 0);
+            var instructionSet = new InstructionSet("test", "{ 'find': [ '$dataSetName', [['$search','$value'], ['$search2','$value2']], '$returnValueAttribute' ]}", new string[] { }, new string[] { }, 0);
             var primitives = Primitive.Load();
 
-            decimal value = instructionSet.Evaluate(null, primitives, new InMemoryReferenceDataRepository());
+            var value = (decimal)instructionSet.Evaluate(null, primitives, new InMemoryReferenceDataRepository());
 
             Assert.AreEqual(0, value, "Calculation failed");
         }

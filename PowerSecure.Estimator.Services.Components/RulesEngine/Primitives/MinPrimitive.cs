@@ -11,9 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public class MinPrimitive : IPrimitive
     {
         public string Name => "min";
-
-        public bool ResolveParameters => true;
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters.ToDecimal().Min();

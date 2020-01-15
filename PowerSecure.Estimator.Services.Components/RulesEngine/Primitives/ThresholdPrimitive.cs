@@ -11,9 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public class ThresholdPrimitive : IPrimitive
     {
         public string Name => "threshold";
-
-        public bool ResolveParameters => true;
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var decimals = Primitive.ConvertToDecimal(parameters);

@@ -11,9 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public class FindPrimitive : IPrimitive
     {
         public string Name => "find";
-
-        public bool ResolveParameters => false;
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var list = new List<(string SearchParam, string Value)>();

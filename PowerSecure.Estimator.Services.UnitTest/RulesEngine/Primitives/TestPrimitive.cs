@@ -15,18 +15,15 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         private Func<object[], IReferenceDataRepository, decimal> _invokeFunc;
         private ValidationFunc _validateFunc;
 
-        public TestPrimitive(string name, bool resolveParameters, Func<object[], IReferenceDataRepository, decimal> invokeFunc, ValidationFunc validateFunc)
+        public TestPrimitive(string name, Func<object[], IReferenceDataRepository, decimal> invokeFunc, ValidationFunc validateFunc)
         {
             Name = name;
-            ResolveParameters = resolveParameters;
             _invokeFunc = invokeFunc;
             _validateFunc = validateFunc;
         }
 
         public string Name { get; private set; }
-
-        public bool ResolveParameters { get; private set; }
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return _invokeFunc?.Invoke(parameters, referenceDataRepository) ?? decimal.MinValue;
