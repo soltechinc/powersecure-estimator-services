@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
-    public static class Linq
+    public static class ConversionExtensions
     {
-        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action = null)
-        {
-            foreach (T item in source)
-            {
-                action?.Invoke(item);
-            }
-        }
-
         public static decimal ToDecimal(this object obj)
         {
             switch (obj)
@@ -26,18 +19,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     {
                         return decimal.Parse(s);
                     }
+                case bool b:
+                    {
+                        return b ? 1m : 0m;
+                    }
                 default:
                     {
                         return Convert.ToDecimal(obj);
                     }
-            }
-        }
-
-        public static IEnumerable<decimal> ToDecimal(this IEnumerable<object> objects)
-        {
-            foreach(var obj in objects)
-            {
-                yield return obj.ToDecimal();
             }
         }
 
@@ -75,14 +64,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             }
         }
 
-        public static IEnumerable<string> ToRawString(this IEnumerable<object> objects)
-        {
-            foreach (var obj in objects)
-            {
-                yield return obj.ToRawString();
-            }
-        }
-
         public static string ToStringLiteral(this object obj)
         {
             switch (obj)
@@ -95,14 +76,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     {
                         return "$" + obj.ToString();
                     }
-            }
-        }
-
-        public static IEnumerable<string> ToStringLiteral(this IEnumerable<object> objects)
-        {
-            foreach (var obj in objects)
-            {
-                yield return obj.ToStringLiteral();
             }
         }
     }

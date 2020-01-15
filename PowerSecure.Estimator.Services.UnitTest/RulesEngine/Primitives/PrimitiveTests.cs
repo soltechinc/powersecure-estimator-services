@@ -1059,9 +1059,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new ThresholdPrimitive();
 
-            var value = primitive.Invoke(new object[] { "3", "3", "-4", "19" }, null);
+            var value = primitive.Invoke(new object[] { "3", "3", "trueValue", "falseValue" }, null);
 
-            Assert.AreEqual(-4, (decimal)value, "Threshold did not work");
+            Assert.AreEqual("trueValue", value, "Threshold did not work");
         }
 
         [TestMethod]
@@ -1069,9 +1069,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new ThresholdPrimitive();
 
-            var value = primitive.Invoke(new object[] { "2", "3", "-4", "19" }, null);
+            var value = primitive.Invoke(new object[] { "2", "3", "trueValue", "falseValue" }, null);
 
-            Assert.AreEqual(19, (decimal)value, "Threshold did not work");
+            Assert.AreEqual("falseValue", value, "Threshold did not work");
         }
 
         [TestMethod]
