@@ -23,10 +23,5 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             return primitives.ToReadonlyDictionary();
         }
-
-        public static decimal[] ConvertToDecimal(params object[] objects)
-        {
-            return new List<decimal>(objects.ToDecimal()).ToArray();
-        }
     }
 }

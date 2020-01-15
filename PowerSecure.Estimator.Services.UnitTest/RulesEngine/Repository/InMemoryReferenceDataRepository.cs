@@ -7,9 +7,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 {
     public class InMemoryReferenceDataRepository : IReferenceDataRepository
     {
-        public decimal Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, string returnFieldName)
+        public object Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, string returnFieldName)
         {
-            return 0;
+            return 0m;
         }
     }
 }

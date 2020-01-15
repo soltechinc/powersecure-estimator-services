@@ -16,7 +16,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return parameters[0] == null ? 1m : 0m;
+            return parameters[0] == null;
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

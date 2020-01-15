@@ -25,21 +25,6 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
-        public void ConvertToDecimal_happyPath()
-        {
-            var decimals = Primitive.ConvertToDecimal("3","16.2", "0.14", "-2");
-
-            Assert.AreEqual(4, decimals.Length, "Failed to convert all of the strings to decimals." );
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
-        public void ConvertToDecimal_errorString()
-        {
-            var decimals = Primitive.ConvertToDecimal("3", "not a decimal", "0.14", "-2");
-        }
-
-        [TestMethod]
         public void AdditionPrimitive_name()
         {
             var primitive = new AdditionPrimitive();
@@ -120,7 +105,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new CheckPrimitive();
 
-            var value = primitive.Invoke(new object[] { "1", "6", "-8" }, null);
+            var value = primitive.Invoke(new object[] { true, 6m, -8m }, null);
 
             Assert.AreEqual(6, (decimal)value, "Check (true value) did not work");
         }
@@ -130,7 +115,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new CheckPrimitive();
 
-            var value = primitive.Invoke(new object[] { "0", "6", "-8" }, null);
+            var value = primitive.Invoke(new object[] { false, 6m, -8m }, null);
 
             Assert.AreEqual(-8, (decimal)value, "Check (false value) did not work");
         }
@@ -432,9 +417,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new IsNullPrimitive();
 
-            var value = primitive.Invoke(new object[] { "-3" }, null);
+            var value = (bool)primitive.Invoke(new object[] { "-3" }, null);
 
-            Assert.AreEqual(0, (decimal)value, "IsNull did not work");
+            Assert.AreEqual(false, value, "IsNull did not work");
         }
 
         [TestMethod]
@@ -442,9 +427,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new IsNullPrimitive();
 
-            var value = primitive.Invoke(new object[] { null }, null);
+            var value = (bool)primitive.Invoke(new object[] { null }, null);
 
-            Assert.AreEqual(1, (decimal)value, "IsNull did not work");
+            Assert.AreEqual(true, value, "IsNull did not work");
         }
 
         [TestMethod]

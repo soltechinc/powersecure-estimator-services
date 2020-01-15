@@ -14,28 +14,49 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             }
         }
 
+        public static decimal ToDecimal(this object obj)
+        {
+            switch (obj)
+            {
+                case decimal d:
+                    {
+                        return d;
+                    }
+                case string s:
+                    {
+                        return decimal.Parse(s);
+                    }
+                default:
+                    {
+                        return Convert.ToDecimal(obj);
+                    }
+            }
+        }
+
         public static IEnumerable<decimal> ToDecimal(this IEnumerable<object> objects)
         {
             foreach(var obj in objects)
             {
-                switch (obj)
-                {
-                    case decimal d:
-                        {
-                            yield return d;
-                            break;
-                        }
-                    case string s:
-                        {
-                            yield return decimal.Parse(s);
-                            break;
-                        }
-                    default:
-                        {
-                            yield return Convert.ToDecimal(obj);
-                            break;
-                        }
-                }
+                yield return obj.ToDecimal();
+            }
+        }
+
+        public static bool ToBoolean(this object obj)
+        {
+            switch (obj)
+            {
+                case bool b:
+                    {
+                        return b;
+                    }
+                case decimal d:
+                    {
+                        return d != 0m;
+                    }
+                default:
+                    {
+                        return Convert.ToBoolean(obj);
+                    }
             }
         }
     }

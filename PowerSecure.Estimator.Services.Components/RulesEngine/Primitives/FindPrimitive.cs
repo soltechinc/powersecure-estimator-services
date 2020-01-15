@@ -21,6 +21,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 var pair = (object[])obj;
                 list.Add((pair[0].ToString(), pair[1].ToString()));
             }
+            //start here
             return referenceDataRepository.Lookup((string)parameters[0], list.ToArray(), (string)parameters[2]);
         }
 
