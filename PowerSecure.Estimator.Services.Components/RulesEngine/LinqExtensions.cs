@@ -22,6 +22,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             }
         }
 
+        public static IEnumerable<bool> ToBoolean(this IEnumerable<object> objects)
+        {
+            foreach(var obj in objects)
+            {
+                yield return obj.ToBoolean();
+            }
+        }
+
         public static IEnumerable<string> ToRawString(this IEnumerable<object> objects)
         {
             foreach (var obj in objects)
