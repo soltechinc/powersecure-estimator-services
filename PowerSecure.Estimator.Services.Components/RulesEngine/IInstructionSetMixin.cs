@@ -22,7 +22,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             public IList<EvaluationNode> Children { get; set; }
         }
 
-        public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, string> parameters, IDictionary<string, IPrimitive> primitives, IReferenceDataRepository referenceDataRepository)
+        public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, object> parameters, IDictionary<string, IPrimitive> primitives, IReferenceDataRepository referenceDataRepository)
         {
             EvaluationNode rootNode = null;
             EvaluationNode currentNode = null;

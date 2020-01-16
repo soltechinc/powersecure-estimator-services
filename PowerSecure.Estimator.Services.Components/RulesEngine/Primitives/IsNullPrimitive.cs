@@ -11,9 +11,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
     public class IsNullPrimitive : IPrimitive
     {
         public string Name => "isnull";
-
-        public bool ResolveParameters => true;
-
+        
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters[0] == null;

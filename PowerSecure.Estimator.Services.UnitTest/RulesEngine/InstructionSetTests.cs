@@ -199,7 +199,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var instructionSet = new InstructionSet("test", "{ '*': [ 'a', 3 ]}", new string[] { "a" }, new string[] { }, 0);
             var primitives = Primitive.Load();
-            var dataTable = new Dictionary<string, string> { ["a"] = "2" };
+            var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
             var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
 
@@ -211,7 +211,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'a', 3] } ]}", new string[] { "a" }, new string[] { }, 0);
             var primitives = Primitive.Load();
-            var dataTable = new Dictionary<string, string> { ["a"] = "2" };
+            var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
             var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
 
@@ -223,7 +223,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a", "b" }, new string[] { }, 0);
             var primitives = Primitive.Load();
-            var dataTable = new Dictionary<string, string> { ["a"] = "2", ["b"] = "6" };
+            var dataTable = new Dictionary<string, object> { ["a"] = "2", ["b"] = "6" };
 
             var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
 
@@ -236,7 +236,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var instructionSet = new InstructionSet("test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a" }, new string[] { }, 0);
             var primitives = Primitive.Load();
-            var dataTable = new Dictionary<string, string> { ["a"] = "2" };
+            var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
             var value = instructionSet.Evaluate(dataTable, primitives, null);
         }
