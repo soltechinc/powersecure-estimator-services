@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         {
             switch (obj)
             {
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.Resolve().ToDecimal();
+                    }
                 case decimal d:
                     {
                         return d;
@@ -34,6 +39,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         {
             switch (obj)
             {
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.Resolve().ToBoolean();
+                    }
                 case bool b:
                     {
                         return b;
@@ -53,6 +62,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         {
             switch (obj)
             {
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.Resolve().ToRawString();
+                    }
                 case string s when s.StartsWith('$'):
                     {
                         return s.Substring(1);
@@ -68,6 +81,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         {
             switch (obj)
             {
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.Resolve().ToStringLiteral();
+                    }
                 case string s when s.StartsWith('$'):
                     {
                         return s;
