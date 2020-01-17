@@ -27,94 +27,100 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             EvaluationNode rootNode = null;
             EvaluationNode currentNode = null;
 
-            JObject.Parse(instructionSet.Instructions).WalkNodes(jToken =>
-            {
-                if (!(jToken.Type == JTokenType.Object || (jToken.Type == JTokenType.Array && jToken.Parent.Type == JTokenType.Array)))
+            JObject.Parse(instructionSet.Instructions).WalkNodes(
+            PreOrder: jToken =>
                 {
-                    return;
-                }
-
-                var node = new EvaluationNode() { Parent = currentNode };
-                if (currentNode != null)
-                {
-                    ((PrimitiveValuePair)currentNode.Value).Children.Add(node);
-                }
-                if (rootNode == null)
-                {
-                    rootNode = node;
-                }
-                currentNode = node;
-
-                switch (jToken)
-                {
-                    case JObject jObject:
-                        {
-                            var primitive = primitives[jObject.Properties().Select(p => p.Name.ToLower()).First()];
-                            node.Value = new PrimitiveValuePair() { Primitive = primitive, Children = new List<EvaluationNode>() };
-                            break;
-                        }
-                    case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
-                        {
-                            node.Value = new PrimitiveValuePair() { Primitive = null, Children = new List<EvaluationNode>() };
-                            break;
-                        }
-                }
-            },
-            jToken =>
-            {
-                if (!(jToken.Type == JTokenType.Object || (jToken.Type == JTokenType.Array && jToken.Parent.Type == JTokenType.Array)))
-                {
-                    return;
-                }
-
-                var node = currentNode;
-
-                switch (jToken)
-                {
-                    case JObject jObject:
-                        {
-                            var pair = (PrimitiveValuePair)node.Value;
-                            node.Value = pair.Primitive.Invoke(pair.Children.Select(p => p.Value).ToArray(), referenceDataRepository);
-                            break;
-                        }
-                    case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
-                        {
-                            var pair = (PrimitiveValuePair)node.Value;
-                            node.Value = pair.Children.Select(p => p.Value).ToArray();
-                            break;
-                        }
-                }
-
-                currentNode = node.Parent;
-            },
-            jToken =>
-            {
-                var node = new EvaluationNode() { Parent = currentNode };
-                var pair = (PrimitiveValuePair)currentNode.Value;
-                pair.Children.Add(node);
-
-                if (jToken.Type == JTokenType.String)
-                {
-                    
-                    string value = jToken.ToString();
-                    if (value.StartsWith('$')) //these are string literals
+                    if (!(jToken.Type == JTokenType.Object || (jToken.Type == JTokenType.Array && jToken.Parent.Type == JTokenType.Array)))
                     {
-                        node.Value = value;
+                        return;
                     }
-                    else //these should be resolved against the parameters
+
+                    var node = new EvaluationNode() { Parent = currentNode };
+                    if (currentNode != null)
                     {
-                        node.Value = parameters[jToken.ToString().ToLower()];
+                        ((PrimitiveValuePair)currentNode.Value).Children.Add(node);
+                    }
+                    if (rootNode == null)
+                    {
+                        rootNode = node;
+                    }
+                    currentNode = node;
+
+                    switch (jToken)
+                    {
+                        case JObject jObject:
+                            {
+                                var primitive = primitives[jObject.Properties().Select(p => p.Name.ToLower()).First()];
+                                node.Value = new PrimitiveValuePair() { Primitive = primitive, Children = new List<EvaluationNode>() };
+                                break;
+                            }
+                        case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
+                            {
+                                node.Value = new PrimitiveValuePair() { Primitive = null, Children = new List<EvaluationNode>() };
+                                break;
+                            }
+                    }
+                },
+            PostOrder: jToken =>
+                {
+                    if (!(jToken.Type == JTokenType.Object || (jToken.Type == JTokenType.Array && jToken.Parent.Type == JTokenType.Array)))
+                    {
+                        return;
+                    }
+
+                    var node = currentNode;
+
+                    switch (jToken)
+                    {
+                        case JObject jObject:
+                            {
+                                var pair = (PrimitiveValuePair)node.Value;
+                                node.Value = pair.Primitive.Invoke(pair.Children.Select(p => p.Value).ToArray(), referenceDataRepository);
+                                break;
+                            }
+                        case JToken j when j.Type == JTokenType.Array && j.Parent.Type == JTokenType.Array:
+                            {
+                                var pair = (PrimitiveValuePair)node.Value;
+                                node.Value = pair.Children.Select(p => p.Value).ToArray();
+                                break;
+                            }
+                    }
+
+                    currentNode = node.Parent;
+                },
+            Visit: jToken =>
+                {
+                    var node = new EvaluationNode() { Parent = currentNode };
+                    var pair = (PrimitiveValuePair)currentNode.Value;
+                    pair.Children.Add(node);
+
+                    if (jToken.Type == JTokenType.String)
+                    {
+                        string value = jToken.ToString();
+                        if (value.StartsWith('$')) //these are string literals
+                        {
+                            node.Value = value;
+                        }
+                        else //these should be resolved against the parameters
+                        {
+                            string key = jToken.ToString().ToLower();
+                            if(parameters[key] is IInstructionSet childInstructionSet)
+                            {
+                                parameters[key] = childInstructionSet.Evaluate(parameters, primitives, referenceDataRepository);
+                            }
+                            node.Value = parameters[jToken.ToString().ToLower()];
+                        }
+                    }
+                    else if (jToken.Type == JTokenType.Null)
+                    {
+                        node.Value = null;
+                    }
+                    else
+                    {
+                        node.Value = decimal.Parse(jToken.ToString());
                     }
                 }
-                else if (jToken.Type == JTokenType.Null)
-                {
-                    node.Value = null;
-                }
-                else
-                {
-                    node.Value = decimal.Parse(jToken.ToString());
-                }
-            });
+            );
 
             return rootNode.Value;
         }

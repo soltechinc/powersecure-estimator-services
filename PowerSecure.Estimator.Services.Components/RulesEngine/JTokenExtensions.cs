@@ -7,38 +7,38 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public static class JTokenExtensions
     {
-        public static void WalkNodes(this JToken node, Action<JToken> jObjectPreAction, Action<JToken> jObjectPostAction, Action<JToken> jTokenAction)
+        public static void WalkNodes(this JToken node, Action<JToken> PreOrder = null, Action<JToken> Visit = null, Action<JToken> PostOrder = null)
         {
             switch (node.Type)
             {
                 case JTokenType.Object:
                     {
-                        jObjectPreAction?.Invoke(node);
+                        PreOrder?.Invoke(node);
 
                         foreach (var child in node.Children<JProperty>())
                         {
-                            child.Value.WalkNodes(jObjectPreAction, jObjectPostAction, jTokenAction);
+                            child.Value.WalkNodes(PreOrder, Visit, PostOrder);
                         }
 
-                        jObjectPostAction?.Invoke(node);
+                        PostOrder?.Invoke(node);
 
                         break;
                     }
                 case JTokenType.Array:
                     {
-                        jObjectPreAction?.Invoke(node);
+                        PreOrder?.Invoke(node);
 
                         foreach (var child in node.Children())
                         {
-                            child.WalkNodes(jObjectPreAction, jObjectPostAction, jTokenAction);
+                            child.WalkNodes(PreOrder, Visit, PostOrder);
                         }
 
-                        jObjectPostAction?.Invoke(node);
+                        PostOrder?.Invoke(node);
                     }
                     break;
                 default:
                     {
-                        jTokenAction?.Invoke(node);
+                        Visit?.Invoke(node);
                         break;
                     }
             }

@@ -8,6 +8,5 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         string Instructions { get; }
         ReadOnlyCollection<string> Parameters { get; }
         ReadOnlyCollection<string> ChildInstructionSets { get; }
-        int Sequence { get; }
     }
 }

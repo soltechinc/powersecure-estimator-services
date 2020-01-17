@@ -75,22 +75,25 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             parameters["true"] = "1";
             parameters["false"] = "0";
             
-            foreach (IInstructionSet instructionSet in instructionSets.Values.OrderBy(p => p.Sequence))
+            foreach (var instructionSet in instructionSets.Values)
             {
-                var value = instructionSet.Evaluate(parameters, primitives, referenceDataRepository);
-                if (parameters.ContainsKey(instructionSet.Name))
+                if(!parameters.ContainsKey(instructionSet.Name))
                 {
-                    parameters[instructionSet.Name] = value.ToString();
+                    parameters.Add(instructionSet.Name, instructionSet);
                 }
-                else
+                else if (parameters[instructionSet.Name] == null)
                 {
-                    parameters.Add(instructionSet.Name, value.ToString());
+                    parameters[instructionSet.Name] = instructionSet;
                 }
             }
 
-            foreach(var key in missingParameters)
+            foreach (var key in missingParameters)
             {
-                dataSheet[key] = parameters[key];
+                if (parameters[key] is IInstructionSet instructionSet)
+                {
+                    parameters[key] = instructionSet.Evaluate(parameters, primitives, referenceDataRepository);
+                }
+                dataSheet[key] = parameters[key].ToRawString();
             }
 
             return dataSheet;
