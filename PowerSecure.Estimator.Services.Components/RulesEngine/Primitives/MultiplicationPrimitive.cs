@@ -1,4 +1,4 @@
-﻿// 2 or more parameters.
+﻿// 2 or more parameters, or 1 parameter if it is an array.
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,21 +14,37 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            decimal value = 1;
-            parameters.ToDecimal().ForEach(p => value *= p);
-            return value;
+            return parameters.Length > 1 ?
+                parameters.ToDecimal().Aggregate(1m, (value, current) => value * current) :
+                ((object[])parameters[0]).ToDecimal().Aggregate(1m, (value, current) => value * current);
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
         {
-            if (jToken.Children().Count() < 2)
+            if (jToken.Children().Any(p => p.Type == JTokenType.Array))
             {
-                return (false, $"Expected a parameter array of length 2 or more, got the following: {jToken.Children().Count()}");
-            }
+                if (jToken.Children().Count() > 1)
+                {
+                    return (false, "Did not expect any arrays as parameters.");
+                }
 
-            if(jToken.Children().Any(p => p.Type == JTokenType.Array))
+                var child = jToken.Children().First();
+                if (child.Children().Count() < 2)
+                {
+                    return (false, $"Expected an array of length 2 or more as a parameter, got the following: {child.Children().Count()}");
+                }
+
+                if (child.Children().Any(p => p.Type == JTokenType.Array))
+                {
+                    return (false, "Did not expect any nested arrays as parameters.");
+                }
+            }
+            else
             {
-                return (false, "Did not expect any arrays as parameters.");
+                if (jToken.Children().Count() < 2)
+                {
+                    return (false, $"Expected a parameter array of length 2 or more, got the following: {jToken.Children().Count()}");
+                }
             }
 
             return (true, string.Empty);

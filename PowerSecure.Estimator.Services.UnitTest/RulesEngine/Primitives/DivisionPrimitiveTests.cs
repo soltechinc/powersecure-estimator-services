@@ -21,6 +21,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
+        public void DivisionPrimitive_unaryArrayInvoke()
+        {
+            var primitive = new DivisionPrimitive();
+
+            var value = primitive.Invoke(new object[] { new object[] { "6", "2" } }, null);
+
+            Assert.AreEqual(3, (decimal)value, "Division did not work");
+        }
+
+        [TestMethod]
         public void DivisionPrimitive_binaryInvoke()
         {
             var primitive = new DivisionPrimitive();
@@ -71,13 +81,43 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
-        public void DivisionPrimitive_validateArrayArguments()
+        public void DivisionPrimitive_validateMultipleArrayArguments()
         {
             var primitive = new DivisionPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[ [], '2' ]"));
 
             Assert.IsFalse(success, "Division array arguments did validate");
+        }
+
+        [TestMethod]
+        public void DivisionPrimitive_validateEmptyArrayArguments()
+        {
+            var primitive = new DivisionPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [] ]"));
+
+            Assert.IsFalse(success, "Division array arguments did validate");
+        }
+
+        [TestMethod]
+        public void DivisionPrimitive_validateArrayTooShortArguments()
+        {
+            var primitive = new DivisionPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [ '2' ] ]"));
+
+            Assert.IsFalse(success, "Division array arguments did validate");
+        }
+
+        [TestMethod]
+        public void DivisionPrimitive_validateArrayArguments()
+        {
+            var primitive = new DivisionPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [ '2', '2' ] ]"));
+
+            Assert.IsTrue(success, "Division array arguments did not validate");
         }
     }
 }

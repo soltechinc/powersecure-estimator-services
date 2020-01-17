@@ -41,6 +41,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
+        public void ConcatenatePrimitive_unaryArrayInvoke()
+        {
+            var primitive = new ConcatenatePrimitive();
+
+            var value = primitive.Invoke(new object[] { new object[] { "2", 6, "Hello", "World" } }, null);
+
+            Assert.AreEqual("$26HelloWorld", value.ToString(), "Concatenate did not work");
+        }
+
+        [TestMethod]
         public void ConcatenatePrimitive_validateBinaryArguments()
         {
             var primitive = new ConcatenatePrimitive();
@@ -69,9 +79,29 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             Assert.IsFalse(success, "Concatenate zero arguments did validate");
         }
-
+        
         [TestMethod]
         public void ConcatenatePrimitive_validateArrayArguments()
+        {
+            var primitive = new ConcatenatePrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [ '4' ] ]"));
+
+            Assert.IsTrue(success, "Concatenate array arguments did not validate");
+        }
+
+        [TestMethod]
+        public void ConcatenatePrimitive_validateMultipleArrayArguments()
+        {
+            var primitive = new ConcatenatePrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '4', [] ]"));
+
+            Assert.IsFalse(success, "Concatenate array arguments did validate");
+        }
+
+        [TestMethod]
+        public void ConcatenatePrimitive_validateEmptyArrayArguments()
         {
             var primitive = new ConcatenatePrimitive();
 

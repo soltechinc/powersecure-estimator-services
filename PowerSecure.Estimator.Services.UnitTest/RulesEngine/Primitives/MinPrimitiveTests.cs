@@ -31,6 +31,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
+        public void MinPrimitive_unaryArraynvoke()
+        {
+            var primitive = new MinPrimitive();
+
+            var value = primitive.Invoke(new object[] { new object[] { "-3", "2" } }, null);
+
+            Assert.AreEqual(-3, (decimal)value, "Min did not work");
+        }
+
+        [TestMethod]
         public void MinPrimitive_validateTooFewArguments()
         {
             var primitive = new MinPrimitive();
@@ -51,11 +61,31 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
-        public void MinPrimitive_validateArrayArguments()
+        public void MinPrimitive_validateEmptyArrayArgument()
         {
             var primitive = new MinPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[ [] ]"));
+
+            Assert.IsFalse(success, "Min array arguments did validate");
+        }
+
+        [TestMethod]
+        public void MinPrimitive_validateArrayArguments()
+        {
+            var primitive = new MinPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ ['3', '2'] ]"));
+
+            Assert.IsTrue(success, "Min array arguments did not validate");
+        }
+
+        [TestMethod]
+        public void MinPrimitive_validateMultipleArrayArguments()
+        {
+            var primitive = new MinPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [], '2' ]"));
 
             Assert.IsFalse(success, "Min array arguments did validate");
         }

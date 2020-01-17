@@ -41,6 +41,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
+        public void SubtractionPrimitive_unaryArrayInvoke()
+        {
+            var primitive = new SubtractionPrimitive();
+
+            var value = primitive.Invoke(new object[] { new object[] { "2", "6" } }, null);
+
+            Assert.AreEqual(-4, (decimal)value, "Subtraction did not work");
+        }
+
+        [TestMethod]
         public void SubtractionPrimitive_validateBinaryArguments()
         {
             var primitive = new SubtractionPrimitive();
@@ -71,13 +81,33 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
-        public void SubtractionPrimitive_validateArrayArguments()
+        public void SubtractionPrimitive_validateEmptyArrayArgument()
         {
             var primitive = new SubtractionPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[ [] ]"));
 
             Assert.IsFalse(success, "Subtraction array arguments did validate");
+        }
+
+        [TestMethod]
+        public void SubtractionPrimitive_validateMultipleArrayArguments()
+        {
+            var primitive = new SubtractionPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', ['2'] ]"));
+
+            Assert.IsFalse(success, "Subtraction array arguments did validate");
+        }
+
+        [TestMethod]
+        public void SubtractionPrimitive_validateArrayArguments()
+        {
+            var primitive = new SubtractionPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ ['2', '2'] ]"));
+
+            Assert.IsTrue(success, "Subtraction array arguments did not validate");
         }
     }
 }

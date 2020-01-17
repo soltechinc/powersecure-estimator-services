@@ -41,6 +41,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
+        public void AdditionPrimitive_unaryArrayInvoke()
+        {
+            var primitive = new AdditionPrimitive();
+
+            var value = primitive.Invoke(new object[] { new object[] { 2, 4, 7 } }, null);
+
+            Assert.AreEqual(13, (decimal)value, "Addition did not work");
+        }
+
+        [TestMethod]
         public void AdditionPrimitive_validateBinaryArguments()
         {
             var primitive = new AdditionPrimitive();
@@ -71,11 +81,31 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
-        public void AdditionPrimitive_validateArrayArguments()
+        public void AdditionPrimitive_validateSingleArrayArgument()
         {
             var primitive = new AdditionPrimitive();
 
-            (var success, var message) = primitive.Validate(JToken.Parse("[ [] ]"));
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [ '2', '5', '7'] ]"));
+
+            Assert.IsTrue(success, "Addition array arguments did not validate");
+        }
+
+        [TestMethod]
+        public void AdditionPrimitive_validateSingleEmptyArrayArgument()
+        {
+            var primitive = new AdditionPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [ ] ]"));
+
+            Assert.IsFalse(success, "Addition array arguments did validate");
+        }
+
+        [TestMethod]
+        public void AdditionPrimitive_validateMultipleArrayArguments()
+        {
+            var primitive = new AdditionPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', '5', ['7'] ]"));
 
             Assert.IsFalse(success, "Addition array arguments did validate");
         }

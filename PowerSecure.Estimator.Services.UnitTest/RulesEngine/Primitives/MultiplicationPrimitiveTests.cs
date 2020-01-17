@@ -31,6 +31,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
+        public void MultiplicationPrimitive_unaryArrayInvoke()
+        {
+            var primitive = new MultiplicationPrimitive();
+
+            var value = primitive.Invoke(new object[] { new object[] { "2", "6" } }, null);
+
+            Assert.AreEqual(12, (decimal)value, "Multiplication did not work");
+        }
+
+        [TestMethod]
         public void MultiplicationPrimitive_validate()
         {
             var primitive = new MultiplicationPrimitive();
@@ -51,13 +61,33 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         }
 
         [TestMethod]
-        public void MultiplicationPrimitive_validateArrayArguments()
+        public void MultiplicationPrimitive_validateMultipleArrayArguments()
         {
             var primitive = new MultiplicationPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[ [], '2' ]"));
 
             Assert.IsFalse(success, "Multiplication array arguments did validate");
+        }
+
+        [TestMethod]
+        public void MultiplicationPrimitive_validateEmptyArrayArgument()
+        {
+            var primitive = new MultiplicationPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ [] ]"));
+
+            Assert.IsFalse(success, "Multiplication array arguments did validate");
+        }
+
+        [TestMethod]
+        public void MultiplicationPrimitive_validateArrayArguments()
+        {
+            var primitive = new MultiplicationPrimitive();
+
+            (var success, var message) = primitive.Validate(JToken.Parse("[ ['5', '2'] ]"));
+
+            Assert.IsTrue(success, "Multiplication array arguments did not validate");
         }
     }
 }

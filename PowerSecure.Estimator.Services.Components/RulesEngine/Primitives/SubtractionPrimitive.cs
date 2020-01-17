@@ -14,25 +14,22 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            var decimals = parameters.ToDecimal().ToArray();
-
-            if(decimals.Length == 1)
+            if (parameters.Length > 1)
             {
-                return -decimals[0];
+                return parameters.ToDecimal().Aggregate((decimal?)null,(acc, current) => acc == null ? current : acc - current);
             }
 
-            decimal value = decimal.MinValue;
-            decimals.ForEach(p => {
-                if (value == decimal.MinValue)
-                {
-                    value = p;
-                }
-                else
-                {
-                    value -= p;
-                }
-            });
-            return value;
+            switch (parameters[0])
+            {
+                case object[] objs:
+                    {
+                        return objs.ToDecimal().Aggregate((decimal?)null, (acc, current) => acc == null ? current : acc - current);
+                    }
+                default:
+                    {
+                        return -parameters[0].ToDecimal();
+                    }
+            }
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
@@ -44,7 +41,21 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             if (jToken.Children().Any(p => p.Type == JTokenType.Array))
             {
-                return (false, "Did not expect any arrays as parameters.");
+                if (jToken.Children().Count() > 1)
+                {
+                    return (false, "Did not expect any arrays as parameters.");
+                }
+
+                var child = jToken.Children().First();
+                if (child.Children().Count() < 1)
+                {
+                    return (false, $"Expected an array of length 1 or more as a parameter, got the following: {child.Children().Count()}");
+                }
+
+                if (child.Children().Any(p => p.Type == JTokenType.Array))
+                {
+                    return (false, "Did not expect any nested arrays as parameters.");
+                }
             }
 
             return (true, string.Empty);

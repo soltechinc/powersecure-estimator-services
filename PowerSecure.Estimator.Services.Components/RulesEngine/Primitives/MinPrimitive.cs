@@ -14,7 +14,22 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return parameters.ToDecimal().Min();
+            if (parameters.Length > 1)
+            {
+                return parameters.ToDecimal().Min();
+            }
+
+            switch (parameters[0])
+            {
+                case object[] objs:
+                    {
+                        return objs.ToDecimal().Min();
+                    }
+                default:
+                    {
+                        return parameters[0].ToDecimal();
+                    }
+            }
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
@@ -26,7 +41,21 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             if (jToken.Children().Any(p => p.Type == JTokenType.Array))
             {
-                return (false, "Did not expect any arrays as parameters.");
+                if (jToken.Children().Count() > 1)
+                {
+                    return (false, "Did not expect any arrays as parameters.");
+                }
+
+                var child = jToken.Children().First();
+                if (child.Children().Count() < 1)
+                {
+                    return (false, $"Expected an array of length 1 or more as a parameter, got the following: {child.Children().Count()}");
+                }
+
+                if (child.Children().Any(p => p.Type == JTokenType.Array))
+                {
+                    return (false, "Did not expect any nested arrays as parameters.");
+                }
             }
 
             return (true, string.Empty);
