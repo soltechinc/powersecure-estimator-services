@@ -44,6 +44,41 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         }
 
         [TestMethod]
+        public void HappyPathTest_shortCircuit()
+        {
+            var repository = new InMemoryInstructionSetRepository();
+            var primitives = Primitive.Load();
+            repository.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", InstructionSet.Create, primitives);
+            repository.InsertNew("test2", "{ 'if': [ true, 'test', 'test3' ]}", InstructionSet.Create, primitives);
+            repository.InsertNew("test3", "{ '*': [ 'z', 'z' ]}", InstructionSet.Create, primitives);
+
+            var engine = new Components.RulesEngine.RulesEngine();
+
+            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = 2, ["y"] = "3", ["z"] = "nan", ["test2"] = null }, primitives, repository, null);
+
+            Assert.AreEqual(4, dataSheet.Count, "Count of items in data sheet is incorrect");
+            Assert.AreEqual("12", dataSheet["test2"], "Calculation is incorrect");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void ErrorTest_parameterTypingError()
+        {
+            var repository = new InMemoryInstructionSetRepository();
+            var primitives = Primitive.Load();
+            repository.InsertNew("test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", InstructionSet.Create, primitives);
+            repository.InsertNew("test2", "{ 'if': [ true, 'test', 'test3' ]}", InstructionSet.Create, primitives);
+            repository.InsertNew("test3", "{ '*': [ 'z', 'z' ]}", InstructionSet.Create, primitives);
+
+            var engine = new Components.RulesEngine.RulesEngine();
+
+            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = 2, ["y"] = "3", ["z"] = "nan", ["test3"] = null }, primitives, repository, null);
+
+            Assert.AreEqual(4, dataSheet.Count, "Count of items in data sheet is incorrect");
+            Assert.AreEqual("12", dataSheet["test2"], "Calculation is incorrect");
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void ErrorTest_missingParameter()
         {

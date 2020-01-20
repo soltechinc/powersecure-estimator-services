@@ -95,5 +95,20 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     }
             }
         }
+
+        public static object[] ToObjectArray(this object obj)
+        {
+            switch (obj)
+            {
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.Resolve().ToObjectArray();
+                    }
+                default:
+                    {
+                        return (object[])obj;
+                    }
+            }
+        }
     }
 }

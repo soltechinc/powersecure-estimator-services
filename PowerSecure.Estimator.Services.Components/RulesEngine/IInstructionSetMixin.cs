@@ -73,6 +73,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     {
                         return null;
                     }
+                case JTokenType.Boolean:
+                    {
+                        return bool.Parse(Token.ToString());
+                    }
                 default:
                     {
                         return decimal.Parse(Token.ToString());
