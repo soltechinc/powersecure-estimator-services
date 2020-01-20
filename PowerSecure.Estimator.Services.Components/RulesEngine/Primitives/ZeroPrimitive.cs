@@ -14,9 +14,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            var decimals = parameters.ToDecimal().ToArray();
+            var value = parameters.ToDecimal().First();
 
-            return decimals[0] < 0 ? 0 : decimals[0];
+            return value < 0 ? 0 : value;
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

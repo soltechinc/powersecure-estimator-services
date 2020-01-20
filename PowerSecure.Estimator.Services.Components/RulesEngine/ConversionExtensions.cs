@@ -110,5 +110,20 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     }
             }
         }
+
+        public static IComparable ToComparable(this object obj)
+        {
+            switch (obj)
+            {
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.Resolve().ToComparable();
+                    }
+                default:
+                    {
+                        return (IComparable)obj;
+                    }
+            }
+        }
     }
 }

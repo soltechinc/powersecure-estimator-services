@@ -14,8 +14,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            var values = ((object[])parameters[0]).ToDecimal().ToArray();
-            var factors = ((object[])parameters[1]).ToDecimal().ToArray();
+            var values = parameters[0].ToObjectArray().ToDecimal().ToArray();
+            var factors = parameters[1].ToObjectArray().ToDecimal().ToArray();
 
             decimal value = 0;
 

@@ -16,7 +16,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         {
             return parameters.Length > 1 ?
                 parameters.ToDecimal().Aggregate((decimal?)null, (acc, current) => acc == null ? current : acc / current) :
-                ((object[])parameters[0]).ToDecimal().Aggregate((decimal?)null, (acc, current) => acc == null ? current : acc / current);
+                parameters[0].ToObjectArray().ToDecimal().Aggregate((decimal?)null, (acc, current) => acc == null ? current : acc / current);
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

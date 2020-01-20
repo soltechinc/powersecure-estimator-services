@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return parameters[0] == parameters[1] ? parameters[2] : parameters[3];
+            return parameters[0].ToComparable().CompareTo(parameters[1].ToComparable()) == 0 ? parameters[2] : parameters[3];
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
