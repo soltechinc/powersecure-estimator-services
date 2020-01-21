@@ -1,4 +1,4 @@
-﻿//3 parameters - a value, an array of 2-element arrays, each with a value to match and a value to return if matched, and a value to return if there are no matches.
+﻿// 3 parameters - a value, an array of 2-element arrays, each with a value to match and a value to return if matched, and a value to return if there are no matches.
 using System;
 using System.Collections.Generic;
 using System.Linq;

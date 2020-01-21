@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using CsvHelper;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
 namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
@@ -62,6 +66,24 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             return Items.Select(x => x.Value)
                         .Where(x => x.Parameters.Contains(parameter))
                         .ToList(); /* have to project to a new list to allow dictionary modification*/
+        }
+        
+        public void Load(string csvFilename, IDictionary<string, IPrimitive> primitives)
+        {
+            //get csv data
+            using (var stream = new FileStream(csvFilename, FileMode.Open))
+            using (var reader = new StreamReader(stream))
+            using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csvReader.Read();
+                csvReader.ReadHeader();
+                string[] headerRow = csvReader.Context.HeaderRecord;
+
+                while (csvReader.Read())
+                {
+                    this.InsertNew(csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), InstructionSet.Create, primitives);
+                }
+            }
         }
     }
 }

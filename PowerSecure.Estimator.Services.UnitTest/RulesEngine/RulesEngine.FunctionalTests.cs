@@ -10,7 +10,7 @@ using System.Text;
 namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 {
     [TestClass]
-    public class RulesEngineTests
+    public class RulesEngineFunctionalTests
     {
         [TestMethod]
         public void HappyPathTest_singleInstruction()

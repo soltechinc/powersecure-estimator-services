@@ -1,0 +1,121 @@
+﻿Module,ComponentType,Size,Unit,Group,Type,SearchParameter,SearchValue,ReturnAttribute,ReturnValue
+All,,,,Installation,Burden,,,OverheadEPCFraction,0.18
+All,,,,,,,,FringeFraction,0.258
+All,,,,Installation,,,,DefaultInstallRate,27
+All,,,,Installation,,,,EPCConstructionSiteInstallationFirmBaseUnitManHour ,1
+All,,,,Installation,,,,EPCConstructionSiteInstallationUnitManHour,1
+All,,,,Manufacturing,Labor,,,GenerationRate,79.59366
+All,,,,Manufacturing,Labor,,,SwitchgearRate,79.59366
+All,,,,Manufacturing,Labor,,,QCTestRate,108.91764
+All,,,,Manufacturing,Labor,,,ShippingLogisticsProcurementRate,96.35022
+All,,,,Manufacturing,Labor,,,EngineeringRate,150.80904
+All,,,,Installation,Tax,USState,ALABAMA,StateTaxRate,0.0914
+All,,,,Installation,Tax,USState,ALASKA,StateTaxRate,0
+All,,,,Installation,Tax,USState,ARIZONA,StateTaxRate,0
+All,,,,Installation,Tax,USState,ARKANSAS,StateTaxRate,0.0943
+All,,,,Installation,Tax,USState,CALIFORNIA,StateTaxRate,0
+All,,,,Installation,Tax,USState,COLORADO,StateTaxRate,0.0763
+All,,,,Installation,Tax,USState,CONNECTICUT,StateTaxRate,0.0635
+All,,,,Installation,Tax,USState,DELAWARE,StateTaxRate,0
+All,,,,Installation,Tax,USState,FLORIDA,StateTaxRate,0.0705
+All,,,,Installation,Tax,USState,GEORGIA,StateTaxRate,0.0729
+All,,,,Installation,Tax,USState,HAWAII,StateTaxRate,0.0441
+All,,,,Installation,Tax,USState,IDAHO,StateTaxRate,0
+All,,,,Installation,Tax,USState,ILLINOIS,StateTaxRate,0.0874
+All,,,,Installation,Tax,USState,INDIANA,StateTaxRate,0
+All,,,,Installation,Tax,USState,IOWA,StateTaxRate,0
+All,,,,Installation,Tax,USState,KANSAS,StateTaxRate,0.0867
+All,,,,Installation,Tax,USState,KENTUCKY,StateTaxRate,0.06
+All,,,,Installation,Tax,USState,LOUISIANA,StateTaxRate,0.0945
+All,,,,Installation,Tax,USState,MAINE,StateTaxRate,0
+All,,,,Installation,Tax,USState,MARYLAND,StateTaxRate,0
+All,,,,Installation,Tax,USState,MASSACHUSSETS,StateTaxRate,0.0625
+All,,,,Installation,Tax,USState,MICHIGAN,StateTaxRate,0.06
+All,,,,Installation,Tax,USState,MINNESOTA,StateTaxRate,0.0743
+All,,,,Installation,Tax,USState,MISSISSIPPI,StateTaxRate,0
+All,,,,Installation,Tax,USState,MISSOURI,StateTaxRate,0.0813
+All,,,,Installation,Tax,USState,MONTANA,StateTaxRate,0
+All,,,,Installation,Tax,USState,NEBRASKA,StateTaxRate,0
+All,,,,Installation,Tax,USState,NEVADA,StateTaxRate,0.0814
+All,,,,Installation,Tax,USState,NEW HAMPSHIRE,StateTaxRate,0
+All,,,,Installation,Tax,USState,NEW JERSEY,StateTaxRate,0.066
+All,,,,Installation,Tax,USState,NEW MEXICO,StateTaxRate,0
+All,,,,Installation,Tax,USState,NEW YORK,StateTaxRate,0.0849
+All,,,,Installation,Tax,USState,NORTH CAROLINA,StateTaxRate,0.0697
+All,,,,Installation,Tax,USState,NORTH DAKOTA,StateTaxRate,0.0685
+All,,,,Installation,Tax,USState,OHIO,StateTaxRate,0
+All,,,,Installation,Tax,USState,OKLAHOMA,StateTaxRate,0.0892
+All,,,,Installation,Tax,USState,OREGON,StateTaxRate,0
+All,,,,Installation,Tax,USState,PENNSYLVANIA,StateTaxRate,0.0634
+All,,,,Installation,Tax,USState,RHODE ISLAND,StateTaxRate,0
+All,,,,Installation,Tax,USState,SOUTH CAROLINA,StateTaxRate,0.0743
+All,,,,Installation,Tax,USState,SOUTH DAHOTA,StateTaxRate,0.064
+All,,,,Installation,Tax,USState,TENNESSEE,StateTaxRate,0.0947
+All,,,,Installation,Tax,USState,TEXAS,StateTaxRate,0.0819
+All,,,,Installation,Tax,USState,UTAH,StateTaxRate,0
+All,,,,Installation,Tax,USState,VERMONT,StateTaxRate,0
+All,,,,Installation,Tax,USState,VIRGINIA,StateTaxRate,0.0565
+All,,,,Installation,Tax,USState,WASHINGTON,StateTaxRate,0
+All,,,,Installation,Tax,USState,"WASHINGTON, D.C.",StateTaxRate,0.06
+All,,,,Installation,Tax,USState,WEST VIRGINIA,StateTaxRate,0.0639
+All,,,,Installation,Tax,USState,WISCONSIN,StateTaxRate,0.0544
+All,,,,Installation,Tax,USState,WYOMING,StateTaxRate,0
+All,,,,Installation,Tax,USState,Non-U.S. State,StateTaxRate,0
+All,,,,,,,,OutsideEquipmentPercentage,0.2
+All,,,,,,,,SoundAttenuation3UpgradeMargin,0.4
+All,,,,Installation,Labor,,,EPCConstructionSiteFullRate,40.07988
+All,,,,,,,,Margin,0.35
+All,,,,,,,,PadsCostTaxablePercentage,0.4
+All,,,,,,,,CubicFeetPerCubicYard,27
+All,,,,,Tax,USState,ALABAMA,StateEquipmentSalesTax,0.0914
+All,,,,,Tax,USState,ALASKA,StateEquipmentSalesTax,0.0143
+All,,,,,Tax,USState,ARIZONA,StateEquipmentSalesTax,0.0837
+All,,,,,Tax,USState,ARKANSAS,StateEquipmentSalesTax,0.0943
+All,,,,,Tax,USState,CALIFORNIA,StateEquipmentSalesTax,0.0856
+All,,,,,Tax,USState,COLORADO,StateEquipmentSalesTax,0.0763
+All,,,,,Tax,USState,CONNECTICUT,StateEquipmentSalesTax,0.0635
+All,,,,,Tax,USState,DELAWARE,StateEquipmentSalesTax,0
+All,,,,,Tax,USState,FLORIDA,StateEquipmentSalesTax,0.0705
+All,,,,,Tax,USState,GEORGIA,StateEquipmentSalesTax,0.0729
+All,,,,,Tax,USState,HAWAII,StateEquipmentSalesTax,0.0441
+All,,,,,Tax,USState,IDAHO,StateEquipmentSalesTax,0.0603
+All,,,,,Tax,USState,ILLINOIS,StateEquipmentSalesTax,0.0874
+All,,,,,Tax,USState,INDIANA,StateEquipmentSalesTax,0.07
+All,,,,,Tax,USState,IOWA,StateEquipmentSalesTax,0.0682
+All,,,,,Tax,USState,KANSAS,StateEquipmentSalesTax,0.0867
+All,,,,,Tax,USState,KENTUCKY,StateEquipmentSalesTax,0.06
+All,,,,,Tax,USState,LOUISIANA,StateEquipmentSalesTax,0.0945
+All,,,,,Tax,USState,MAINE,StateEquipmentSalesTax,0.055
+All,,,,,Tax,USState,MARYLAND,StateEquipmentSalesTax,0.06
+All,,,,,Tax,USState,MASSACHUSSETS,StateEquipmentSalesTax,0.0625
+All,,,,,Tax,USState,MICHIGAN,StateEquipmentSalesTax,0.06
+All,,,,,Tax,USState,MINNESOTA,StateEquipmentSalesTax,0.0743
+All,,,,,Tax,USState,MISSISSIPPI,StateEquipmentSalesTax,0.0707
+All,,,,,Tax,USState,MISSOURI,StateEquipmentSalesTax,0.0813
+All,,,,,Tax,USState,MONTANA,StateEquipmentSalesTax,0
+All,,,,,Tax,USState,NEBRASKA,StateEquipmentSalesTax,0.0685
+All,,,,,Tax,USState,NEVADA,StateEquipmentSalesTax,0.0814
+All,,,,,Tax,USState,NEW HAMPSHIRE,StateEquipmentSalesTax,0
+All,,,,,Tax,USState,NEW JERSEY,StateEquipmentSalesTax,0.066
+All,,,,,Tax,USState,NEW MEXICO,StateEquipmentSalesTax,0.0782
+All,,,,,Tax,USState,NEW YORK,StateEquipmentSalesTax,0.0849
+All,,,,,Tax,USState,NORTH CAROLINA,StateEquipmentSalesTax,0.0697
+All,,,,,Tax,USState,NORTH DAKOTA,StateEquipmentSalesTax,0.0685
+All,,,,,Tax,USState,OHIO,StateEquipmentSalesTax,0.0717
+All,,,,,Tax,USState,OKLAHOMA,StateEquipmentSalesTax,0.0892
+All,,,,,Tax,USState,OREGON,StateEquipmentSalesTax,0
+All,,,,,Tax,USState,PENNSYLVANIA,StateEquipmentSalesTax,0.0634
+All,,,,,Tax,USState,RHODE ISLAND,StateEquipmentSalesTax,0.07
+All,,,,,Tax,USState,SOUTH CAROLINA,StateEquipmentSalesTax,0.0743
+All,,,,,Tax,USState,SOUTH DAHOTA,StateEquipmentSalesTax,0.064
+All,,,,,Tax,USState,TENNESSEE,StateEquipmentSalesTax,0.0947
+All,,,,,Tax,USState,TEXAS,StateEquipmentSalesTax,0.0819
+All,,,,,Tax,USState,UTAH,StateEquipmentSalesTax,0.0694
+All,,,,,Tax,USState,VERMONT,StateEquipmentSalesTax,0.0618
+All,,,,,Tax,USState,VIRGINIA,StateEquipmentSalesTax,0.0565
+All,,,,,Tax,USState,WASHINGTON,StateEquipmentSalesTax,0.0917
+All,,,,,Tax,USState,"WASHINGTON, D.C.",StateEquipmentSalesTax,0.06
+All,,,,,Tax,USState,WEST VIRGINIA,StateEquipmentSalesTax,0.0639
+All,,,,,Tax,USState,WISCONSIN,StateEquipmentSalesTax,0.0544
+All,,,,,Tax,USState,WYOMING,StateEquipmentSalesTax,0.0536
+All,,,,,Tax,USState,Non-U.S. State,StateEquipmentSalesTax,0

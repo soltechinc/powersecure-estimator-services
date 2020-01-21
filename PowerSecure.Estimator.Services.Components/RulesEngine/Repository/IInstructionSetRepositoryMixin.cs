@@ -18,6 +18,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             if (primitives == null) throw new ArgumentNullException("primitives");
 
             var terminals = new HashSet<string>();
+            instructionSetName = instructionSetName.ToLower();
 
             JObject.Parse(instructionDefinition).WalkNodes(
             PreOrder: jToken =>
@@ -67,9 +68,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             var parameters = new List<string>();
             var childInstructionSets = new List<string>();
 
-            foreach (var terminal in terminals)
+            foreach (var terminal in terminals.Select(s => s.ToLower()))
             {
                 if (decimal.TryParse(terminal, out decimal d))
+                {
+                    continue;
+                }
+
+                if(terminal.StartsWith("$"))
                 {
                     continue;
                 }
@@ -84,7 +90,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                 }
             }
 
-            repository.Insert(instructionSetFactory(instructionSetName.ToLower(), instructionDefinition, parameters, childInstructionSets));
+            repository.Insert(instructionSetFactory(instructionSetName, instructionDefinition, parameters, childInstructionSets));
 
             //update existing instruction sets 
             repository.SelectByParameter(instructionSetName)

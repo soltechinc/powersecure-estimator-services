@@ -149,5 +149,15 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 
             Assert.AreEqual(value, "defaultValue", "Default value did not return");
         }
+
+        [TestMethod]
+        public void SwitchPrimitive_invokeUsingStrings()
+        {
+            var primitive = new SwitchPrimitive();
+
+            var value = primitive.Invoke(new object[] { "a", new object[] { new object[] {"a", "stringValue" }, new object[] { 3, "trueValue" } }, "defaultValue" }, null);
+
+            Assert.AreEqual(value, "stringValue", "String value did not return");
+        }
     }
 }

@@ -62,7 +62,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
             }
 
-            if(!neededParameters.All(p => suppliedParameters.Contains(p)))
+            if(!neededParameters.All(p => suppliedParameters.Select(s => s.ToLower()).Contains(p.ToLower())))
             {
                 throw new InvalidOperationException("Missing required parameters");
             }
