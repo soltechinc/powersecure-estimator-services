@@ -9,6 +9,8 @@
     <Compile Remove="Int32Calculation.cs" />
     <Compile Remove="Int64Calculation.cs" />
     <Compile Remove="Number.cs" />
+    <Compile Remove="RulesEngine\Primitives\AccumlatePrimitive.cs" />
+    <Compile Remove="RulesEngine\Primitives\TransformPrimitive.cs" />
     <Compile Remove="StringCalculation.cs" />
   </ItemGroup>
 
