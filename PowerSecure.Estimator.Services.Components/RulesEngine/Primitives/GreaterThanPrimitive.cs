@@ -8,47 +8,48 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class EqualPrimitive : IPrimitive
+    public class GreaterThanPrimitive : IPrimitive
     {
-        public string Name => "=";
+        public string Name => ">";
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            switch (parameters.Length)
+            switch(parameters.Length)
             {
                 case 1:
-                    return CheckEquality(parameters[0].ToObjectArray());
+                    return CheckGreaterThan(parameters[0].ToObjectArray());
                 case 2:
                     {
                         var first = parameters[0].ToComparable();
                         var second = parameters[1].ToResolvedParameter();
 
-                        if (second is object[] objects)
+                        if(second is object[] objects)
                         {
-                            return objects.Select(o => (object)(first.CompareTo(o.ToComparable()) == 0)).ToArray();
+                            return objects.Select(o => (object)(first.CompareTo(o.ToComparable()) > 0)).ToArray();
                         }
 
-                        return first.CompareTo(second.ToComparable()) == 0;
+                        return first.CompareTo(second.ToComparable()) > 0;
                     }
                 default:
-                    return CheckEquality(parameters);
+                    return CheckGreaterThan(parameters);
             }
         }
 
-        private static bool CheckEquality(IEnumerable<object> objects)
+        private static bool CheckGreaterThan(IEnumerable<object> objects)
         {
-            IComparable previous = null;
+            IComparable first = null;
             foreach (var compare in objects.ToComparable())
             {
-                if (previous != null)
+                if(first == null)
                 {
-                    if (compare.CompareTo(previous) != 0)
-                    {
-                        return false;
-                    }
+                    first = compare;
+                    continue;
                 }
 
-                previous = compare;
+                if (first.CompareTo(compare) <= 0)
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -63,7 +64,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                     return (false, "Did not expect any arrays as parameters.");
                 }
 
-                if (jToken.Children().Count() == 1)
+                if(jToken.Children().Count() == 1)
                 {
                     var child = jToken.Children().First();
                     if (child.Children().Count() < 2)

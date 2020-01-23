@@ -70,12 +70,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 
             foreach (var terminal in terminals.Select(s => s.ToLower()))
             {
-                if (decimal.TryParse(terminal, out decimal d))
+                if (terminal.StartsWith("$"))
                 {
                     continue;
                 }
 
-                if(terminal.StartsWith("$"))
+                if (decimal.TryParse(terminal, out decimal d))
                 {
                     continue;
                 }

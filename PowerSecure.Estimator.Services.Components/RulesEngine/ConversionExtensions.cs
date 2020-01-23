@@ -51,6 +51,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     {
                         return d != 0m;
                     }
+                case string s when !s.StartsWith('$'):
+                    {
+                        return bool.Parse(s);
+                    }
                 default:
                     {
                         return Convert.ToBoolean(obj);
@@ -119,10 +123,50 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     {
                         return parameter.Resolve().ToComparable();
                     }
+                case decimal d:
+                    {
+                        return d;
+                    }
+                case string s:
+                    {
+                        if(s.StartsWith('$'))
+                        {
+                            return s;
+                        }
+
+                        if(decimal.TryParse(s, out decimal d))
+                        {
+                            return d;
+                        }
+
+                        if(bool.TryParse(s, out bool b))
+                        {
+                            return b ? 1m : 0m;
+                        }
+
+                        return s;
+                    }
+                case bool b:
+                    {
+                        return b ? 1m : 0m;
+                    }
                 default:
                     {
                         return (IComparable)obj;
                     }
+            }
+        }
+
+        public static object ToResolvedParameter(this object obj)
+        {
+            switch (obj)
+            {
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.Resolve();
+                    }
+                default:
+                    return obj;
             }
         }
     }

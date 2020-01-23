@@ -30,6 +30,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             }
         }
 
+        public static IEnumerable<IComparable> ToComparable(this IEnumerable<object> objects)
+        {
+            foreach (var obj in objects)
+            {
+                yield return obj.ToComparable();
+            }
+        }
+
         public static IEnumerable<string> ToRawString(this IEnumerable<object> objects)
         {
             foreach (var obj in objects)

@@ -6,16 +6,17 @@ using System.Text;
 using System.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
-namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives {
-    public class AndPrimitive : IPrimitive
+namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
+{
+    public class OrPrimitive : IPrimitive
     {
-        public string Name => "and";
+        public string Name => "or";
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters.Length > 1 ?
-                parameters.ToBoolean().All(b => b) :
-                parameters[0].ToObjectArray().ToBoolean().All(b => b);
+                parameters.ToBoolean().Any(b => b) :
+                parameters[0].ToObjectArray().ToBoolean().Any(b => b);
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
