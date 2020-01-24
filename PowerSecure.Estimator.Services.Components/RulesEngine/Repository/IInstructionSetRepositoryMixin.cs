@@ -9,8 +9,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public static class IInstructionSetRepositoryMixin
     {
-        public static void InsertNew(this IInstructionSetRepository repository, string instructionSetName, string instructionDefinition, Func<string,string, IEnumerable<string>, IEnumerable<string>, IInstructionSet> instructionSetFactory, IDictionary<string, IPrimitive> primitives)
+        public static void InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, Func<string,string,string, IEnumerable<string>, IEnumerable<string>, IInstructionSet> instructionSetFactory, IDictionary<string, IPrimitive> primitives)
         {
+            if (instructionSetModule == null) throw new ArgumentNullException("instructionSetModule");
             if (instructionSetName == null) throw new ArgumentNullException("instructionSetName");
             if (instructionDefinition == null) throw new ArgumentNullException("instructionDefinition");
             if (repository == null) throw new ArgumentNullException("repository");
@@ -18,7 +19,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             if (primitives == null) throw new ArgumentNullException("primitives");
 
             var terminals = new HashSet<string>();
-            instructionSetName = instructionSetName.ToLower();
+            instructionSetName = instructionSetName.Trim().ToLower();
+            instructionSetModule = instructionSetModule.Trim().ToLower();
 
             JObject.Parse(instructionDefinition).WalkNodes(
             PreOrder: jToken =>
@@ -36,7 +38,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 
                                 var name = nameList[0];
 
-                                if (!primitives.TryGetValue(name.ToLower(), out IPrimitive primitive))
+                                if (!primitives.TryGetValue(name.Trim().ToLower(), out IPrimitive primitive))
                                 {
                                     throw new InvalidOperationException($"The following token is not a defined primitive: {name}");
                                 }
@@ -60,7 +62,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                 },
             Visit: jToken =>
                 {
-                    terminals.Add(jToken.ToString().ToLower());
+                    terminals.Add(jToken.ToString().Trim().ToLower());
                 }
             );
 
@@ -68,14 +70,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             var parameters = new List<string>();
             var childInstructionSets = new List<string>();
 
-            foreach (var terminal in terminals.Select(s => s.ToLower()))
+            foreach (var terminal in terminals)
             {
-                if (terminal.StartsWith("$"))
-                {
-                    continue;
-                }
-
-                if (decimal.TryParse(terminal, out decimal d))
+                if (string.IsNullOrEmpty(terminal) ||
+                    terminal.StartsWith("$") ||
+                    decimal.TryParse(terminal, out decimal d) ||
+                    bool.TryParse(terminal, out bool b))
                 {
                     continue;
                 }
@@ -90,14 +90,16 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                 }
             }
 
-            repository.Insert(instructionSetFactory(instructionSetName, instructionDefinition, parameters, childInstructionSets));
+            IInstructionSet newInstructionSet = instructionSetFactory(instructionSetModule, instructionSetName, instructionDefinition, parameters, childInstructionSets);
+            repository.Insert(newInstructionSet);
 
             //update existing instruction sets 
-            repository.SelectByParameter(instructionSetName)
-                      .ForEach(instructionSet => repository.Update(instructionSetFactory(instructionSet.Name,
+            repository.SelectByParameter(newInstructionSet.Key)
+                      .ForEach(instructionSet => repository.Update(instructionSetFactory(instructionSet.Module,
+                        instructionSet.Name,
                         instructionSet.Instructions,
-                        instructionSet.Parameters.Where(x => x != instructionSetName),
-                        instructionSet.ChildInstructionSets.Union(new List<string> { instructionSetName }))));
+                        instructionSet.Parameters.Where(x => x != newInstructionSet.Key),
+                        instructionSet.ChildInstructionSets.Union(new List<string> { newInstructionSet.Key }))));
         }
     }
 }

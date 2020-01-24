@@ -54,8 +54,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = new Dictionary<string, object>();
             
             instructionSetRepository.Items.Select(o => o.Value).ForEach(set => {
-                dataSheet.Add(set.Name, null);
-                Trace.WriteLine(set.Name);
+                dataSheet.Add(set.Key, null);
+                Trace.WriteLine(set.Key);
             });
 
             dataSheet["DesiredInstallRate"] = 3.5m;
@@ -79,8 +79,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = new Dictionary<string, object>();
 
             instructionSetRepository.Items.Select(o => o.Value).ForEach(set => {
-                dataSheet.Add(set.Name, null); 
-                Trace.WriteLine(set.Name);
+                dataSheet.Add(set.Key, null); 
+                Trace.WriteLine(set.Key);
             });
 
             dataSheet["DesiredInstallRate"] = 3.5m;

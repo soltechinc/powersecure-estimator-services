@@ -19,7 +19,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 return parameters.ToDecimal().Aggregate((decimal?)null,(acc, current) => acc == null ? current : acc - current);
             }
 
-            switch (parameters[0])
+            switch (parameters[0].ToResolvedParameter())
             {
                 case object[] objs:
                     {

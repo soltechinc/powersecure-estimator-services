@@ -17,7 +17,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new ConcatenatePrimitive();
 
-            Assert.AreEqual("buildstring", primitive.Name, "Concatenate name changed");
+            Assert.AreEqual("str", primitive.Name, "Concatenate name changed");
         }
 
         [TestMethod]

@@ -10,32 +10,32 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     {
         public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
         {
-            var suppliedParameters = new HashSet<string>() { "true", "false" };
+            var suppliedParameters = new HashSet<string>();
             var missingParameters = new HashSet<string>();
 
             foreach(var parameter in dataSheet)
             {
                 if(parameter.Value == null)
                 {
-                    missingParameters.Add(parameter.Key);
+                    missingParameters.Add(parameter.Key.Trim().ToLower());
                 }
                 else
                 {
-                    suppliedParameters.Add(parameter.Key);
+                    suppliedParameters.Add(parameter.Key.Trim().ToLower());
                 }
             }
 
-            var childInstructionSetNames = new HashSet<string>();
+            var childInstructionSetKeys = new HashSet<string>();
             var instructionSets = new Dictionary<string, IInstructionSet>();
             var neededParameters = new HashSet<string>();
             foreach(var instructionSet in instructionSetRepository.SelectByKey(missingParameters))
             {
                 instructionSets.Add(instructionSet.Name, instructionSet);
-                foreach(var childInstructionSetName in instructionSet.ChildInstructionSets)
+                foreach(var childInstructionSetKey in instructionSet.ChildInstructionSets)
                 {
-                    if(!childInstructionSetNames.Contains(childInstructionSetName) && !suppliedParameters.Contains(childInstructionSetName))
+                    if(!childInstructionSetKeys.Contains(childInstructionSetKey) && !suppliedParameters.Contains(childInstructionSetKey))
                     {
-                        childInstructionSetNames.Add(childInstructionSetName);
+                        childInstructionSetKeys.Add(childInstructionSetKey);
                     }
                 }
                 foreach(var parameter in instructionSet.Parameters)
@@ -47,11 +47,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
             }
 
-            foreach(var instructionSet in instructionSetRepository.SelectByKey(childInstructionSetNames))
+            foreach(var instructionSet in instructionSetRepository.SelectByKey(childInstructionSetKeys))
             {
-                if(!instructionSets.ContainsKey(instructionSet.Name))
+                if(!instructionSets.ContainsKey(instructionSet.Key))
                 {
-                    instructionSets.Add(instructionSet.Name, instructionSet);
+                    instructionSets.Add(instructionSet.Key, instructionSet);
                 }
                 foreach (var parameter in instructionSet.Parameters)
                 {
@@ -62,7 +62,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
             }
 
-            if(!neededParameters.All(p => suppliedParameters.Select(s => s.ToLower()).Contains(p.ToLower())))
+            if(!neededParameters.All(p => suppliedParameters.Contains(p)))
             {
                 throw new InvalidOperationException("Missing required parameters");
             }
@@ -70,20 +70,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             var parameters = new Dictionary<string, object>();
             foreach(var pair in dataSheet)
             {
-                parameters.Add(pair.Key?.ToLower(), pair.Value);
+                parameters.Add(pair.Key?.Trim()?.ToLower(), pair.Value);
             }
-            parameters["true"] = "1";
-            parameters["false"] = "0";
             
             foreach (var instructionSet in instructionSets.Values)
             {
-                if(!parameters.ContainsKey(instructionSet.Name))
+                if(!parameters.ContainsKey(instructionSet.Key))
                 {
-                    parameters.Add(instructionSet.Name, instructionSet);
+                    parameters.Add(instructionSet.Key, instructionSet);
                 }
-                else if (parameters[instructionSet.Name] == null)
+                else if (parameters[instructionSet.Key] == null)
                 {
-                    parameters[instructionSet.Name] = instructionSet;
+                    parameters[instructionSet.Key] = instructionSet;
                 }
             }
 

@@ -19,7 +19,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 return parameters.ToBoolean().Select(b => (object)!b).ToArray();
             }
 
-            switch (parameters[0])
+            switch (parameters[0].ToResolvedParameter())
             {
                 case object[] objs:
                     {

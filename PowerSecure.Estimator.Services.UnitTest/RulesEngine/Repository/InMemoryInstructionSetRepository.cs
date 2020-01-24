@@ -18,22 +18,22 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 
         public void Insert(IInstructionSet instructionSet)
         {
-            if (Items.ContainsKey(instructionSet.Name))
+            if (Items.ContainsKey(instructionSet.Key))
             {
                 throw new Exception();
             }
 
-            Items.Add(instructionSet.Name, instructionSet);
+            Items.Add(instructionSet.Key, instructionSet);
         }
     
         public void Update(IInstructionSet instructionSet)
         {
-            if(!Items.ContainsKey(instructionSet.Name))
+            if(!Items.ContainsKey(instructionSet.Key))
             {
                 throw new Exception();
             }
 
-            Items[instructionSet.Name] = instructionSet;
+            Items[instructionSet.Key] = instructionSet;
         }
 
         public bool ContainsKey(string key)
@@ -41,16 +41,16 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             return Items.ContainsKey(key);
         }
 
-        public IEnumerable<IInstructionSet> SelectByKey(params string[] instructionSetNames)
+        public IEnumerable<IInstructionSet> SelectByKey(params string[] instructionSetKeys)
         {
-            return SelectByKey(instructionSetNames.AsEnumerable());
+            return SelectByKey(instructionSetKeys.AsEnumerable());
         }
 
-        public IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetNames)
+        public IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetKeyss)
         {
-            foreach (string instructionSetName in instructionSetNames)
+            foreach (string instructionSetKey in instructionSetKeyss)
             {
-                if (Items.TryGetValue(instructionSetName, out IInstructionSet instructionSet))
+                if (Items.TryGetValue(instructionSetKey, out IInstructionSet instructionSet))
                 {
                     yield return instructionSet;
                 }
@@ -81,7 +81,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 
                 while (csvReader.Read())
                 {
-                    this.InsertNew(csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), InstructionSet.Create, primitives);
+                    this.InsertNew(csvReader.GetField("Module"),csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), InstructionSet.Create, primitives);
                 }
             }
         }

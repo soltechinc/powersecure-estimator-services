@@ -47,13 +47,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 case JTokenType.String:
                     {
                         string value = Token.ToString();
-                        if (value.StartsWith('$')) //these are string literals
+                        if (string.IsNullOrEmpty(value) || value.StartsWith('$')) //these are string literals
                         {
                             return value;
                         }
                         else //these should be resolved against the parameters
                         {
-                            string key = Token.ToString().ToLower();
+                            string key = Token.ToString().Trim().ToLower();
                             if (Parameters[key] is IInstructionSet childInstructionSet)
                             {
                                 Parameters[key] = childInstructionSet.Evaluate(Parameters, Primitives, ReferenceDataRepository);

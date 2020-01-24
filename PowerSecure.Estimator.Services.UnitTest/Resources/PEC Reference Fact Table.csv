@@ -22,6 +22,7 @@ PEC,HVAC,2.5,ton,,Materials,, ,UnitCost,3416
 PEC,HVAC,3,ton,,Materials,, ,UnitCost,3626
 PEC,HVAC,3.5,ton,,Materials,, ,UnitCost,4106
 PEC,HVAC,4,ton,,Materials,, ,UnitCost,4288
+PEC,HVAC,,,Manufacturing,Labor,,,Hours,10
 PEC,ExteriorLights,,,Manufacturing,Labor,,,Hours,1.75
 PEC,InteriorLights,,,Manufacturing,Labor,,,Hours,1.75
 PEC,ExteriorOutlets,,,Manufacturing,Labor,,,Hours,1
@@ -38,6 +39,7 @@ PEC,SmokeDetector,,,Manufacturing,Labor,,,Hours,1
 PEC,PullStation,,,Manufacturing,Labor,,,Hours,1
 PEC,HornStrobe,,,Manufacturing,Labor,,,Hours,1
 PEC,HotDipGalvanization,,,Manufacturing,Labor,,,Hours,64
+PEC,Assembly,,,Installation,Labor,SwitchgearLength,0,Hours,0
 PEC,Assembly,,,Installation,Labor,SwitchgearLength,10,Hours,12
 PEC,Assembly,,,Installation,Labor,SwitchgearLength,20,Hours,24
 PEC,Assembly,,,Installation,Labor,SwitchgearLength,30,Hours,36
@@ -69,7 +71,6 @@ PEC,HVAC,,,,,SwitchgearLength,0,AdditionalHVACUnits,0
 PEC,HVAC,,,,,SwitchgearLength,21,AdditionalHVACUnits,1
 PEC,HVAC,,,,,SwitchgearLength,41,AdditionalHVACUnits,2
 PEC,HVAC,,,,,SwitchgearLength,61,AdditionalHVACUnits,4
-PEC,HVAC,,,,,QuantityOfIdenticalSwitchgears,,AdditionalFACPUnits,1
 PEC,PEC,,,,,,,GroundingMaterialsCost,250
 PEC,PEC,,,Installation,Labor,SwitchgearLength,0,Hours,0
 PEC,PEC,,,Installation,Labor,SwitchgearLength,1,Hours,40
@@ -80,7 +81,6 @@ PEC,ControlHouse,,,,Materials,,,UnitCost,14000
 PEC,ControlHouse,,,Manufacturing,Labor,,,Hours,640
 PEC,ControlHouse,,,Installation,Labor,,,InstallationHours,16
 PEC,ControlHouse,,,Installation,Labor,,,GroundingHours,16
-PEC,ControlHouse,,,,,,,PadsCostTaxablePercentage,0.4
 PEC,ControlHouse,,,Installation,Materials,,,UnitPadsCost,5000
 PEC,ControlHouse,,,Installation,Materials,,,UnitRiggingCost,1500
 PEC,PEC,,,Installation,Materials,,,UnitRiggingCost,1500

@@ -10,7 +10,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class ConcatenatePrimitive : IPrimitive
     {
-        public string Name => "buildstring";
+        public string Name => "str";
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
@@ -19,7 +19,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 return string.Concat(parameters.ToRawString()).ToStringLiteral();
             }
 
-            switch(parameters[0])
+            switch(parameters[0].ToResolvedParameter())
             {
                 case object[] objs:
                     {
