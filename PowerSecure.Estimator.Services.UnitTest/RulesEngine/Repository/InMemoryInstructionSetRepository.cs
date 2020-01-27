@@ -14,26 +14,22 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 {
     public class InMemoryInstructionSetRepository : IInstructionSetRepository
     {
-        public Dictionary<string, IInstructionSet> Items { get; } = new Dictionary<string, IInstructionSet>();
+        public Dictionary<string, SortedSet<IInstructionSet>> Items { get; } = new Dictionary<string, SortedSet<IInstructionSet>>();
 
         public void Insert(IInstructionSet instructionSet)
         {
-            if (Items.ContainsKey(instructionSet.Key))
+            if (!Items.ContainsKey(instructionSet.Key))
             {
-                throw new Exception();
+                Items.Add(instructionSet.Key, new SortedSet<IInstructionSet>(Comparer<IInstructionSet>.Create((first, second) => first.CreationDate.CompareTo(second.CreationDate))));
             }
 
-            Items.Add(instructionSet.Key, instructionSet);
+            Items[instructionSet.Key].Add(instructionSet);
         }
-    
+
         public void Update(IInstructionSet instructionSet)
         {
-            if(!Items.ContainsKey(instructionSet.Key))
-            {
-                throw new Exception();
-            }
-
-            Items[instructionSet.Key] = instructionSet;
+            Items[instructionSet.Key].Remove(instructionSet);
+            Items[instructionSet.Key].Add(instructionSet);
         }
 
         public bool ContainsKey(string key)
@@ -41,18 +37,13 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             return Items.ContainsKey(key);
         }
 
-        public IEnumerable<IInstructionSet> SelectByKey(params string[] instructionSetKeys)
+        public IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetKeys, DateTime effectiveDate)
         {
-            return SelectByKey(instructionSetKeys.AsEnumerable());
-        }
-
-        public IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetKeyss)
-        {
-            foreach (string instructionSetKey in instructionSetKeyss)
+            foreach (string instructionSetKey in instructionSetKeys)
             {
-                if (Items.TryGetValue(instructionSetKey, out IInstructionSet instructionSet))
+                if (Items.TryGetValue(instructionSetKey, out SortedSet<IInstructionSet> instructionSets))
                 {
-                    yield return instructionSet;
+                    yield return instructionSets.Where(x => x.StartDate <= effectiveDate).First();
                 }
                 else
                 {
@@ -63,7 +54,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 
         public IEnumerable<IInstructionSet> SelectByParameter(string parameter)
         {
-            return Items.Select(x => x.Value)
+            return Items.SelectMany(x => x.Value)
                         .Where(x => x.Parameters.Contains(parameter))
                         .ToList(); /* have to project to a new list to allow dictionary modification*/
         }
@@ -81,7 +72,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 
                 while (csvReader.Read())
                 {
-                    this.InsertNew(csvReader.GetField("Module"),csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), InstructionSet.Create, primitives);
+                    this.InsertNew(csvReader.GetField("Module"),csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), DateTime.MinValue, DateTime.MaxValue, InstructionSet.Create, primitives);
                 }
             }
         }

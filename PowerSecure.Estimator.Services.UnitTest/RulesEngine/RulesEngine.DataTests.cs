@@ -53,7 +53,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var dataSheet = new Dictionary<string, object>();
             
-            instructionSetRepository.Items.Select(o => o.Value).ForEach(set => {
+            instructionSetRepository.Items.Select(o => o.Value.First()).ForEach(set => {
                 dataSheet.Add(set.Key, null);
                 Trace.WriteLine(set.Key);
             });
@@ -63,7 +63,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var dataSheet = new Dictionary<string, object>();
 
-            instructionSetRepository.Items.Select(o => o.Value).ForEach(set => {
+            instructionSetRepository.Items.Select(o => o.Value.First()).ForEach(set => {
                 dataSheet.Add(set.Key, null); 
                 Trace.WriteLine(set.Key);
             });
@@ -131,7 +131,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
         }
     }
 }

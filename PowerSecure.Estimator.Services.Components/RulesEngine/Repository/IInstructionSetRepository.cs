@@ -6,9 +6,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public interface IInstructionSetRepository
     {
-        IEnumerable<IInstructionSet> SelectByKey(params string[] instructionSetNames);
-
-        IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetNames);
+        IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetNames, DateTime date);
 
         IEnumerable<IInstructionSet> SelectByParameter(string parameter);
 

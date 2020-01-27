@@ -8,7 +8,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     public class RulesEngine : IRulesEngine
     {
-        public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
+        public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, DateTime effectiveDate, IDictionary<string, IPrimitive> primitives, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
         {
             var suppliedParameters = new HashSet<string>();
             var missingParameters = new HashSet<string>();
@@ -28,7 +28,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             var childInstructionSetKeys = new HashSet<string>();
             var instructionSets = new Dictionary<string, IInstructionSet>();
             var neededParameters = new HashSet<string>();
-            foreach(var instructionSet in instructionSetRepository.SelectByKey(missingParameters))
+            foreach(var instructionSet in instructionSetRepository.SelectByKey(missingParameters, effectiveDate))
             {
                 instructionSets.Add(instructionSet.Name, instructionSet);
                 foreach(var childInstructionSetKey in instructionSet.ChildInstructionSets)
@@ -47,7 +47,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
             }
 
-            foreach(var instructionSet in instructionSetRepository.SelectByKey(childInstructionSetKeys))
+            foreach(var instructionSet in instructionSetRepository.SelectByKey(childInstructionSetKeys, effectiveDate))
             {
                 if(!instructionSets.ContainsKey(instructionSet.Key))
                 {

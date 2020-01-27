@@ -9,7 +9,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public static class IInstructionSetRepositoryMixin
     {
-        public static void InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, Func<string,string,string, IEnumerable<string>, IEnumerable<string>, IInstructionSet> instructionSetFactory, IDictionary<string, IPrimitive> primitives)
+        public static void InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<Guid, string,string,string, IEnumerable<string>, IEnumerable<string>, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IPrimitive> primitives)
         {
             if (instructionSetModule == null) throw new ArgumentNullException("instructionSetModule");
             if (instructionSetName == null) throw new ArgumentNullException("instructionSetName");
@@ -90,16 +90,19 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                 }
             }
 
-            IInstructionSet newInstructionSet = instructionSetFactory(instructionSetModule, instructionSetName, instructionDefinition, parameters, childInstructionSets);
+            IInstructionSet newInstructionSet = instructionSetFactory(Guid.NewGuid(), instructionSetModule, instructionSetName, instructionDefinition, parameters, childInstructionSets, startDate, creationDate);
             repository.Insert(newInstructionSet);
 
             //update existing instruction sets 
             repository.SelectByParameter(newInstructionSet.Key)
-                      .ForEach(instructionSet => repository.Update(instructionSetFactory(instructionSet.Module,
+                      .ForEach(instructionSet => repository.Update(instructionSetFactory(instructionSet.Id,
+                        instructionSet.Module,
                         instructionSet.Name,
                         instructionSet.Instructions,
                         instructionSet.Parameters.Where(x => x != newInstructionSet.Key),
-                        instructionSet.ChildInstructionSets.Union(new List<string> { newInstructionSet.Key }))));
+                        instructionSet.ChildInstructionSets.Union(new List<string> { newInstructionSet.Key }),
+                        instructionSet.StartDate,
+                        instructionSet.CreationDate)));
         }
     }
 }
