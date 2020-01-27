@@ -58,6 +58,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
                 Trace.WriteLine(set.Key);
             });
 
+            dataSheet["EffectiveDate"] = DateTime.Now.ToString();
             dataSheet["DesiredInstallRate"] = 3.5m;
             dataSheet["USState"] = "GEORGIA";
 
@@ -83,6 +84,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
                 Trace.WriteLine(set.Key);
             });
 
+            dataSheet["EffectiveDate"] = DateTime.Now.ToString();
             dataSheet["DesiredInstallRate"] = 3.5m;
             dataSheet["USState"] = "GEORGIA";
             dataSheet["SwitchgearType"] = "MV";

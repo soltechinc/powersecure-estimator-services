@@ -1,4 +1,4 @@
-﻿// 3 parameters. Parameter 1 is the data set name, Parmeter 2 is the criteria array, Parameter 3 is the return field name
+﻿// 4 parameters. Parameter 1 is the data set name, Parmeter 2 is the criteria array, Parameter 3 is the effective date, Parameter 4 is the return field name
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,21 +14,21 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return referenceDataRepository.Lookup(parameters[0].ToRawString(), parameters[1].ToObjectArray().Select(p => p.ToObjectArray()).Select(p => (p[0].ToRawString(), p[1].ToRawString())).ToArray(), parameters[2].ToRawString());
+            return referenceDataRepository.Lookup(parameters[0].ToRawString(), parameters[1].ToObjectArray().Select(p => p.ToObjectArray()).Select(p => (p[0].ToRawString(), p[1].ToRawString())).ToArray(), DateTime.Parse(parameters[2].ToRawString()), parameters[3].ToRawString());
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
         {
             JToken[] children = jToken.Children().ToArray();
 
-            if (children.Count() != 3)
+            if (children.Count() != 4)
             {
-                return (false, $"Expected a parameter array of length 3, got the following: {jToken.Children().Count()}");
+                return (false, $"Expected a parameter array of length 4, got the following: {jToken.Children().Count()}");
             }
 
             if(children[0].Type == JTokenType.Array || children[2].Type == JTokenType.Array)
             {
-                return (false, "Did not expect an array as the first or third parameter.");
+                return (false, "Did not expect an array as the first, third, or fourth parameter.");
             }
 
             if (children[1].Type != JTokenType.Array)

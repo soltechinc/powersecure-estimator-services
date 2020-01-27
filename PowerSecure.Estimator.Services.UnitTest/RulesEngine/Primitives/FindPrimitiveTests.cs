@@ -115,7 +115,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         {
             var primitive = new FindPrimitive();
 
-            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', [ ['3', '4'],['5','6'] ], '2' ]"));
+            (var success, var message) = primitive.Validate(JToken.Parse("[ '2', [ ['3', '4'],['5','6'] ],'2', '2' ]"));
 
             Assert.IsTrue(success, "Find arguments did not validate");
         }

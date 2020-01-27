@@ -13,18 +13,18 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
     {
         public List<Dictionary<string, string>> Items { get; } = new List<Dictionary<string, string>>();
 
-        public object Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, string returnFieldName)
+        public object Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, DateTime effectiveDate, string returnFieldName)
         {
-            var matches = Items.Where(dict => criteria.All(p => dict.ContainsKey(p.SearchParam) && dict[p.SearchParam] == p.Value.ToLower() && dict["ReturnAttribute"] == returnFieldName.ToLower())).ToArray();
-            if(matches.Length == 0)
+            var matches = Items.Where(dict => criteria.All(p => dict.ContainsKey(p.SearchParam.ToLower()) && dict[p.SearchParam.ToLower()] == p.Value.ToLower()) && dict["returnattribute"] == returnFieldName.ToLower()).ToArray();
+
+            if (matches.Length == 0)
             {
                 throw new Exception("not found");
             }
-            if(matches.Length > 1)
-            {
-                throw new Exception("multiple entries found");
-            }
-            return matches[0]["ReturnValue"].ToLower();
+
+            return matches.Where(dict => DateTime.Parse(dict["startdate"]) < effectiveDate)
+                          .OrderBy(dict => DateTime.Parse(dict["creationdate"]))
+                          .First()["returnvalue"].ToLower();
         }
 
         public void Load(string csvFilename)
@@ -48,7 +48,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
                         string value = csvReader.GetField(column);
                         if (string.IsNullOrEmpty(value))
                             continue;
-                        dict.Add(column, value.ToLower());
+                        dict.Add(column.ToLower().Trim(), value.ToLower().Trim());
                     }
                     Items.Add(dict);
                 }
