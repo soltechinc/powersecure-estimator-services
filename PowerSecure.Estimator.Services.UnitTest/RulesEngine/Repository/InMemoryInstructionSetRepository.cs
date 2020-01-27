@@ -43,7 +43,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             {
                 if (Items.TryGetValue(instructionSetKey, out SortedSet<IInstructionSet> instructionSets))
                 {
-                    yield return instructionSets.Where(x => x.StartDate <= effectiveDate).First();
+                    yield return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).First();
                 }
                 else
                 {

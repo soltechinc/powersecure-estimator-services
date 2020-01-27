@@ -23,7 +23,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
             }
 
             return matches.Where(dict => DateTime.Parse(dict["startdate"]) < effectiveDate)
-                          .OrderBy(dict => DateTime.Parse(dict["creationdate"]))
+                          .OrderByDescending(dict => DateTime.Parse(dict["creationdate"]))
                           .First()["returnvalue"].ToLower();
         }
 

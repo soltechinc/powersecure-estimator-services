@@ -59,6 +59,21 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             Assert.AreEqual(4, dataSheet.Count, "Count of items in data sheet is incorrect");
             Assert.AreEqual("12", dataSheet["all.test2"], "Calculation is incorrect");
         }
+        [TestMethod]
+        public void HappyPathTest_datedInstructionSets()
+        {
+            var repository = new InMemoryInstructionSetRepository();
+            var primitives = Primitive.Load();
+            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now.AddDays(-2), InstructionSet.Create, primitives);
+            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 3 ] } ]} ", DateTime.MinValue.AddDays(1), DateTime.Now, InstructionSet.Create, primitives);
+
+            var engine = new Components.RulesEngine.RulesEngine();
+
+            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = "2", ["y"] = "3", ["all.test"] = null }, DateTime.Now, primitives, repository, null);
+
+            Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
+            Assert.AreEqual("15", dataSheet["all.test"], "Calculation is incorrect");
+        }
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
