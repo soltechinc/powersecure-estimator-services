@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.960
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerSecure.Estimator.Services", "PowerSecure.Estimator.Services\PowerSecure.Estimator.Services.csproj", "{99BF542E-40E3-403A-ACC3-2977512C80A2}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerSecure.Estimator.Services.UnitTest", "PowerSecure.Estimator.Services.UnitTest\PowerSecure.Estimator.Services.UnitTest.csproj", "{E1E08962-B4E4-4768-AF6D-2CBEAA913884}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowerSecure.Estimator.Services.Components", "PowerSecure.Estimator.Services.Components\PowerSecure.Estimator.Services.Components.csproj", "{06102972-FA4E-4685-991A-648F5B3B0776}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerSecure.Estimator.Services", "PowerSecure.Estimator.Services\PowerSecure.Estimator.Services.csproj", "{99BF542E-40E3-403A-ACC3-2977512C80A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
