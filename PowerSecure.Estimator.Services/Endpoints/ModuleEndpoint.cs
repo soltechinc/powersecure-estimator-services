@@ -28,8 +28,20 @@ namespace PowerSecure.Estimator.Services.Endpoints
             return (await new ModuleService(new CosmosModuleRepository(dbClient)).List()).ToOkObjectResult();
         }
 
-        [FunctionName("CreateNewModule")]
-        public static async Task<IActionResult> Create(
+        [FunctionName("GetModule")]
+        public static async Task<IActionResult> Get(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modules/{id}")] HttpRequest req,
+            string id,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            log.LogTrace($"Function called - GetModule {id}");
+
+            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id)).ToOkObjectResult();
+        }
+
+        [FunctionName("EditModule")]
+        public static async Task<IActionResult> Upsert(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "modules")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)

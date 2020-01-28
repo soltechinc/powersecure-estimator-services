@@ -10,6 +10,8 @@ namespace PowerSecure.Estimator.Services.Repositories
     {
         Task<object> List();
 
+        Task<object> Get(string id);
+
         Task<object> Upsert(JObject document);
 
         Task<object> Delete(string id);

@@ -72,15 +72,34 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> List()
         {
-            var query = _dbClient.CreateDocumentQuery(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+
+            var documentIds = new List<string>();
+
+            while (query.HasMoreResults)
+            {
+                foreach (Module m in await query.ExecuteNextAsync())
+                {
+                    documentIds.Add(m.ModuleTitle);
+                }
+            }
+
+            return documentIds;
+        }
+
+        public async Task<object> Get(string id)
+        {
+            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
+                .Where(m => m.ModuleTitle == id)
+                .AsDocumentQuery();
 
             var documents = new List<Document>();
 
             while (query.HasMoreResults)
             {
-                foreach(Document document in await query.ExecuteNextAsync())
+                foreach (Module m in await query.ExecuteNextAsync())
                 {
-                    documents.Add(document);
+                    documents.Add(await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: m.Id), new RequestOptions { PartitionKey = new PartitionKey(m.ModuleTitle) }));
                 }
             }
 

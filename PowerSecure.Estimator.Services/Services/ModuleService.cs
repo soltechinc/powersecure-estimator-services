@@ -22,6 +22,11 @@ namespace PowerSecure.Estimator.Services.Services
             return await _moduleRepository.List();
         }
 
+        public async Task<object> Get(string id)
+        {
+            return await _moduleRepository.Get(id);
+        }
+
         public async Task<object> Upsert(JObject document)
         {
             return await _moduleRepository.Upsert(document);
