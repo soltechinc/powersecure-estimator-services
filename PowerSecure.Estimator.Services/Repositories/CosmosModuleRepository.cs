@@ -16,15 +16,19 @@ namespace PowerSecure.Estimator.Services.Repositories
     public class CosmosModuleRepository : IModuleRepository
     {
         private readonly DocumentClient _dbClient;
+        private readonly string _databaseId;
+        private readonly string _collectionId;
 
         public CosmosModuleRepository(DocumentClient dbClient)
         {
             _dbClient = dbClient;
+            _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
+            _collectionId = Environment.GetEnvironmentVariable("modulesCollectionId", EnvironmentVariableTarget.Process);
         }
 
         public async Task<object> Upsert(JObject document)
         {
-            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: "PowerSecure", collectionId: "modules"), new FeedOptions { EnableCrossPartitionQuery = true })
+            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .Where(m => m.ModuleTitle == document["moduleTitle"].ToString())
                 .AsDocumentQuery();
 
@@ -34,13 +38,13 @@ namespace PowerSecure.Estimator.Services.Repositories
                 foreach (Module m in await query.ExecuteNextAsync())
                 {
                     document["id"] = m.Id;
-                    list.Add(await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: "PowerSecure", collectionId: "modules", documentId: m.Id), document));
+                    list.Add(await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: m.Id), document));
                 }
             }
 
             if (list.Count == 0)
             {
-                return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: "PowerSecure", collectionId: "modules"), document);
+                return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
             }
             else
             {
@@ -50,7 +54,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> Delete(string id)
         {
-            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: "PowerSecure", collectionId: "modules"), new FeedOptions { EnableCrossPartitionQuery = true })
+            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .Where(m => m.ModuleTitle == id)
                 .AsDocumentQuery();
 
@@ -59,7 +63,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 foreach (Module m in await query.ExecuteNextAsync())
                 {
-                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: "PowerSecure", collectionId: "modules", documentId: m.Id), new RequestOptions { PartitionKey = new PartitionKey(m.ModuleTitle) }));
+                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: m.Id), new RequestOptions { PartitionKey = new PartitionKey(m.ModuleTitle) }));
                 }
             }
 
@@ -68,7 +72,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> List()
         {
-            var query = _dbClient.CreateDocumentQuery(UriFactory.CreateDocumentCollectionUri(databaseId: "PowerSecure", collectionId: "modules"), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+            var query = _dbClient.CreateDocumentQuery(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
             var documents = new List<Document>();
 
