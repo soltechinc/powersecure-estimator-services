@@ -22,9 +22,9 @@ namespace PowerSecure.Estimator.Services.Services
             return await _moduleRepository.List();
         }
 
-        public async Task<object> Get(string id)
+        public async Task<object> Get(string id, IDictionary<string, string> queryParams)
         {
-            return await _moduleRepository.Get(id);
+            return await _moduleRepository.Get(id, queryParams);
         }
 
         public async Task<object> Upsert(JObject document)
@@ -32,9 +32,9 @@ namespace PowerSecure.Estimator.Services.Services
             return await _moduleRepository.Upsert(document);
         }
         
-        public async Task<object> Delete(string id)
+        public async Task<object> Delete(string id, IDictionary<string, string> queryParams)
         {
-            return await _moduleRepository.Delete(id);
+            return await _moduleRepository.Delete(id, queryParams);
         }
     }
 }

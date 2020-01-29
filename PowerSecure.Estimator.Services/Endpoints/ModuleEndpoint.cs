@@ -35,9 +35,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - GetModule {id}");
+            log.LogTrace($"Function called - GetModule (Id: {id})");
 
-            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id)).ToOkObjectResult();
+            var queryParams = req.GetQueryParameterDictionary();
+
+            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
         }
 
         [FunctionName("EditModule")]
@@ -46,13 +48,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - CreateNewModule");
+            log.LogTrace("Function called - EditModule");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            var response = await new ModuleService(new CosmosModuleRepository(dbClient)).Upsert(JObject.Parse(requestBody));
-
-            return response.ToOkObjectResult();
+            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
         }
 
         [FunctionName("DeleteModule")]
@@ -62,11 +62,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - DeleteModule");
+            log.LogTrace($"Function called - DeleteModule (Id: {id})");
 
-            var response = await new ModuleService(new CosmosModuleRepository(dbClient)).Delete(id);
+            var queryParams = req.GetQueryParameterDictionary();
 
-            return response.ToOkObjectResult();
+            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
         }
     }
 }
