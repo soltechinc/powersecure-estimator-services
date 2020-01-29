@@ -20,8 +20,11 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("module")]
         public string Module { get; set; }
 
-        [JsonProperty("returnAttribute")]
+        [JsonProperty("returnattribute")]
         public string ReturnAttribute { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object> Rest { get; set; }
 
         public override int GetHashCode()
         {

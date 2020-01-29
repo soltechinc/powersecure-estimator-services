@@ -60,21 +60,21 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> List(IDictionary<string,string> queryParams)
         {
-            IQueryable<Document> query = _dbClient.CreateDocumentQuery(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
+            IQueryable<Factor> query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
 
             if(queryParams.ContainsKey("module"))
             {
-                query = query.Where(doc => doc.GetPropertyValue<string>("module") == queryParams["module"]);
+                query = query.Where(f => f.Module == queryParams["module"]);
             }
 
-            var factors = new List<Document>();
+            var factors = new List<Factor>();
 
             var documentQuery = query.AsDocumentQuery();
             while (documentQuery.HasMoreResults)
             {
-                foreach (Document document in await documentQuery.ExecuteNextAsync())
+                foreach (Factor factor in await documentQuery.ExecuteNextAsync())
                 {
-                    factors.Add(document);
+                    factors.Add(factor);
                 }
             }
 

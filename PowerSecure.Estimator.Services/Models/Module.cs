@@ -13,5 +13,8 @@ namespace PowerSecure.Estimator.Services.Models
 
         [JsonProperty("moduleTitle")]
         public string ModuleTitle { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object> Rest { get; set; }
     }
 }

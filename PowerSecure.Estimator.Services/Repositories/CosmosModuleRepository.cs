@@ -48,12 +48,12 @@ namespace PowerSecure.Estimator.Services.Repositories
                 .Where(m => m.ModuleTitle == moduleTitle)
                 .AsDocumentQuery();
 
-            var list = new List<ResourceResponse<Document>>();
+            var list = new List<Document>();
             while (query.HasMoreResults)
             {
-                foreach (Module m in await query.ExecuteNextAsync())
+                foreach (Module module in await query.ExecuteNextAsync())
                 {
-                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: m.Id), new RequestOptions { PartitionKey = new PartitionKey(m.ModuleTitle) }));
+                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: module.Id), new RequestOptions { PartitionKey = new PartitionKey(module.ModuleTitle) }));
                 }
             }
 
@@ -64,17 +64,18 @@ namespace PowerSecure.Estimator.Services.Repositories
         {
             var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
-            var documentIds = new List<Module>();
+            var modules = new List<Module>();
 
             while (query.HasMoreResults)
             {
-                foreach (Module m in await query.ExecuteNextAsync())
+                foreach (Module module in await query.ExecuteNextAsync())
                 {
-                    documentIds.Add(m);
+                    module.Rest = null;
+                    modules.Add(module);
                 }
             }
 
-            return documentIds;
+            return modules;
         }
 
         public async Task<object> Get(string moduleTitle, IDictionary<string, string> queryParams)
@@ -92,9 +93,9 @@ namespace PowerSecure.Estimator.Services.Repositories
 
             while (query.HasMoreResults)
             {
-                foreach (Module m in await query.ExecuteNextAsync())
+                foreach (Module module in await query.ExecuteNextAsync())
                 {
-                    documents.Add(await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: m.Id), new RequestOptions { PartitionKey = new PartitionKey(m.ModuleTitle) }));
+                    documents.Add(await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: module.Id), new RequestOptions { PartitionKey = new PartitionKey(module.ModuleTitle) }));
                 }
             }
 

@@ -74,6 +74,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 foreach (Function function in await documentQuery.ExecuteNextAsync())
                 {
+                    function.Rest = null;
                     functions.Add(function);
                 }
             }
