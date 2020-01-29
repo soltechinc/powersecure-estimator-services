@@ -322,6 +322,177 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Functions",
+			"item": [
+				{
+					"name": "List Functions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Functions From Module",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions?module=PEC",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions"
+							],
+							"query": [
+								{
+									"key": "module",
+									"value": "PEC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Function",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions/1daef620-17e9-44ad-bd1e-9fc8cb55f3e5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions",
+								"1daef620-17e9-44ad-bd1e-9fc8cb55f3e5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Function With Optional Module",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions/1daef620-17e9-44ad-bd1e-9fc8cb55f3e5?module=PEC",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions",
+								"1daef620-17e9-44ad-bd1e-9fc8cb55f3e5"
+							],
+							"query": [
+								{
+									"key": "module",
+									"value": "PEC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert Function",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"module\": \"All\",\n    \"name\" : \"Tax\",\n    \"data\": [\n        4\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/functions/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Function",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions/88febc51-9e81-4e0c-9c89-82c56dfe539c",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions",
+								"88febc51-9e81-4e0c-9c89-82c56dfe539c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Function With Optional Module",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions/78aac8cf-20ba-4c2b-b2a2-8615346a9c74?module=PEC",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions",
+								"78aac8cf-20ba-4c2b-b2a2-8615346a9c74"
+							],
+							"query": [
+								{
+									"key": "module",
+									"value": "PEC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}

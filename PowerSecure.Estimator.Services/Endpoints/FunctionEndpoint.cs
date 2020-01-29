@@ -16,60 +16,60 @@ using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
-    public static class FactorEndpoint
+    public static class FunctionEndpoint
     {
-        [FunctionName("ListFactors")]
+        [FunctionName("ListFunctions")]
         public static async Task<IActionResult> List(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "factors")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "functions")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - ListFactors");
+            log.LogTrace("Function called - ListFunctions");
 
             var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).List(queryParams)).ToOkObjectResult();
         }
 
-        [FunctionName("GetFactor")]
+        [FunctionName("GetFunction")]
         public static async Task<IActionResult> Get(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "factors/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "functions/{id}")] HttpRequest req,
             string id,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - GetFactor (Id: {id})");
+            log.LogTrace($"Function called - GetFunction (Id: {id})");
 
             var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
         }
 
-        [FunctionName("EditFactor")]
+        [FunctionName("EditFunction")]
         public static async Task<IActionResult> Upsert(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "factors")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "functions")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - EditFactor");
+            log.LogTrace("Function called - EditFunction");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
         }
 
-        [FunctionName("DeleteFactor")]
+        [FunctionName("DeleteFunction")]
         public static async Task<IActionResult> Delete(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "factors/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "functions/{id}")] HttpRequest req,
             string id,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - DeleteFactor (Id: {id})");
+            log.LogTrace($"Function called - DeleteFunction (Id: {id})");
 
             var queryParams = req.GetQueryParameterDictionary();
             
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
         }
     }
 }
