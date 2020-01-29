@@ -24,11 +24,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - ListFunctions");
+            try
+            {
+                log.LogTrace("Function called - ListFunctions");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("GetFunction")]
@@ -38,11 +46,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - GetFunction (Id: {id})");
+            try
+            {
+                log.LogTrace($"Function called - GetFunction (Id: {id})");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("EditFunction")]
@@ -51,11 +67,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - EditFunction");
+            try
+            {
+                log.LogTrace("Function called - EditFunction");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             
-            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("DeleteFunction")]
@@ -65,11 +89,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - DeleteFunction (Id: {id})");
+            try
+            {
+                log.LogTrace($"Function called - DeleteFunction (Id: {id})");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
             
-            return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
     }
 }

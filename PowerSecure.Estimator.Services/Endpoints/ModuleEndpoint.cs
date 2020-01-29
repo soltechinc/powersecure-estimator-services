@@ -23,9 +23,17 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - ListModules");
+            try
+            {
+                log.LogTrace("Function called - ListModules");
             
-            return (await new ModuleService(new CosmosModuleRepository(dbClient)).List()).ToOkObjectResult();
+                return (await new ModuleService(new CosmosModuleRepository(dbClient)).List()).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("GetModule")]
@@ -35,11 +43,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - GetModule (Id: {id})");
+            try
+            {
+                log.LogTrace($"Function called - GetModule (Id: {id})");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+                return (await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("EditModule")]
@@ -48,11 +64,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - EditModule");
+            try
+            {
+                log.LogTrace("Function called - EditModule");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+                return (await new ModuleService(new CosmosModuleRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("DeleteModule")]
@@ -62,11 +86,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - DeleteModule (Id: {id})");
+            try
+            { 
+                log.LogTrace($"Function called - DeleteModule (Id: {id})");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new ModuleService(new CosmosModuleRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+                return (await new ModuleService(new CosmosModuleRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
     }
 }

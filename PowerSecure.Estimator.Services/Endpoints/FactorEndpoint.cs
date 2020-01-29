@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
@@ -24,11 +25,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - ListFactors");
+            try
+            {
+                log.LogTrace("Function called - ListFactors");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+                return (await new FactorService(new CosmosFactorRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+            }
+            catch(Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("GetFactor")]
@@ -38,11 +47,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - GetFactor (Id: {id})");
+            try
+            {
+                log.LogTrace($"Function called - GetFactor (Id: {id})");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
 
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+                return (await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("EditFactor")]
@@ -51,11 +68,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace("Function called - EditFactor");
+            try
+            {
+                log.LogTrace("Function called - EditFactor");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+                return (await new FactorService(new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
 
         [FunctionName("DeleteFactor")]
@@ -65,11 +90,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
-            log.LogTrace($"Function called - DeleteFactor (Id: {id})");
+            try
+            {
+                log.LogTrace($"Function called - DeleteFactor (Id: {id})");
 
-            var queryParams = req.GetQueryParameterDictionary();
+                var queryParams = req.GetQueryParameterDictionary();
             
-            return (await new FactorService(new CosmosFactorRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+                return (await new FactorService(new CosmosFactorRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return ex.ToServerErrorObjectResult(ex.Message);
+            }
         }
     }
 }
