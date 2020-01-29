@@ -1,0 +1,316 @@
+{
+	"info": {
+		"_postman_id": "0edf726d-d628-43b8-979d-e23df4a7eba9",
+		"name": "PowerSecure",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Modules",
+			"item": [
+				{
+					"name": "List Modules",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/modules",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"modules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Module",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/modules/a",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"modules",
+								"a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Module With Optional Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/modules/a",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"modules",
+								"a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert Module",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"moduleTitle\": \"title with space\",\n    \"data\": [\n        1\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/modules/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"modules",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Module",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/modules/title%20with%20space",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"modules",
+								"title%20with%20space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Module With Optional Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/modules/title%20with%20space",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"modules",
+								"title%20with%20space"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Factors",
+			"item": [
+				{
+					"name": "List Factors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Factors From Module",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors?module=PEC",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors"
+							],
+							"query": [
+								{
+									"key": "module",
+									"value": "PEC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Factor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors/540b0c67-c22f-4517-8ef6-81af912afdb5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors",
+								"540b0c67-c22f-4517-8ef6-81af912afdb5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Factor With Optional Key",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors/540b0c67-c22f-4517-8ef6-81af912afdb5?key=other-SwitchgearLength",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors",
+								"540b0c67-c22f-4517-8ef6-81af912afdb5"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "other-SwitchgearLength"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert Factor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"module\": \"other\",\n    \"returnAttribute\": \"SwitchgearLength\",\n    \"data\": [\n        4\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/factors/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Factor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors/88febc51-9e81-4e0c-9c89-82c56dfe539c",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors",
+								"88febc51-9e81-4e0c-9c89-82c56dfe539c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Factor With Optional Key",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors/78aac8cf-20ba-4c2b-b2a2-8615346a9c74?key=PEC-SwitchgearLength",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors",
+								"78aac8cf-20ba-4c2b-b2a2-8615346a9c74"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "PEC-SwitchgearLength"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
