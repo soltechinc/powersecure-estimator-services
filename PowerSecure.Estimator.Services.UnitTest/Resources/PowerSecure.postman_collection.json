@@ -179,7 +179,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors?module=PEC",
+							"raw": "{{host}}/api/factors?module=transformer",
 							"host": [
 								"{{host}}"
 							],
@@ -190,7 +190,7 @@
 							"query": [
 								{
 									"key": "module",
-									"value": "PEC"
+									"value": "transformer"
 								}
 							]
 						}
@@ -203,14 +203,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors/540b0c67-c22f-4517-8ef6-81af912afdb5",
+							"raw": "{{host}}/api/factors/7d15c426-e9e9-4cdc-82fb-9f7bb7a38748",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"factors",
-								"540b0c67-c22f-4517-8ef6-81af912afdb5"
+								"7d15c426-e9e9-4cdc-82fb-9f7bb7a38748"
 							]
 						}
 					},
@@ -493,6 +493,25 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Health Check - Properties",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/health/properties",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"health",
+						"properties"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
