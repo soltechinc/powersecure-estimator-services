@@ -17,9 +17,9 @@ namespace PowerSecure.Estimator.Services.Services
             _moduleRepository = moduleRepository;
         }
 
-        public async Task<object> List()
+        public async Task<object> List(IDictionary<string, string> queryParams)
         {
-            return await _moduleRepository.List();
+            return await _moduleRepository.List(queryParams);
         }
 
         public async Task<object> Get(string id, IDictionary<string, string> queryParams)

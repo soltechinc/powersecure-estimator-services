@@ -27,19 +27,43 @@
 					"response": []
 				},
 				{
+					"name": "List Modules with Full Object",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/modules?object=full",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"modules"
+							],
+							"query": [
+								{
+									"key": "object",
+									"value": "full"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Module",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/modules/a",
+							"raw": "{{host}}/api/modules/942ba732-7564-4aca-b69e-a7a14b82ce62",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"modules",
-								"a"
+								"942ba732-7564-4aca-b69e-a7a14b82ce62"
 							]
 						}
 					},
@@ -51,19 +75,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/modules/PowerSecure?id=74e2605f-691c-427d-907c-5b37c95abf21",
+							"raw": "{{host}}/api/modules/PowerBlock?id=942ba732-7564-4aca-b69e-a7a14b82ce62",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"modules",
-								"PowerSecure"
+								"PowerBlock"
 							],
 							"query": [
 								{
 									"key": "id",
-									"value": "74e2605f-691c-427d-907c-5b37c95abf21"
+									"value": "942ba732-7564-4aca-b69e-a7a14b82ce62"
 								}
 							]
 						}
@@ -174,12 +198,36 @@
 					"response": []
 				},
 				{
+					"name": "List Factors With Full Object",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors?object=full",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors"
+							],
+							"query": [
+								{
+									"key": "object",
+									"value": "full"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List Factors From Module",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors?module=transformer",
+							"raw": "{{host}}/api/factors?module=pec",
 							"host": [
 								"{{host}}"
 							],
@@ -190,7 +238,7 @@
 							"query": [
 								{
 									"key": "module",
-									"value": "transformer"
+									"value": "pec"
 								}
 							]
 						}
@@ -203,14 +251,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors/7d15c426-e9e9-4cdc-82fb-9f7bb7a38748",
+							"raw": "{{host}}/api/factors/84edde5a-6696-4837-ab3a-fc38b66e2315",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"factors",
-								"7d15c426-e9e9-4cdc-82fb-9f7bb7a38748"
+								"84edde5a-6696-4837-ab3a-fc38b66e2315"
 							]
 						}
 					},
@@ -255,7 +303,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"module\": \"other\",\n    \"returnAttribute\": \"SwitchgearLength\",\n    \"data\": [\n        4\n    ]\n}",
+							"raw": "{\r\n    \"id\": \"9fb1874b-050f-4306-b6c5-01aa83c8e235\",\r\n    \"module\": \"PEC\",\r\n    \"returnAttribute\": \"SwitchgearLength\",\r\n    \"data\": [\r\n        3\r\n    ],\r\n    \"key\": \"PEC-SwitchgearLength\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -282,14 +330,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors/88febc51-9e81-4e0c-9c89-82c56dfe539c",
+							"raw": "{{host}}/api/factors/540b0c67-c22f-4517-8ef6-81af912afdb5",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"factors",
-								"88febc51-9e81-4e0c-9c89-82c56dfe539c"
+								"540b0c67-c22f-4517-8ef6-81af912afdb5"
 							]
 						}
 					},
@@ -301,19 +349,19 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors/78aac8cf-20ba-4c2b-b2a2-8615346a9c74?key=PEC-SwitchgearLength",
+							"raw": "{{host}}/api/factors/d3bcdc1b-854e-424c-baf5-3c74a58c1d93?key=%2FPEC%2FSwitchgearLength",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"factors",
-								"78aac8cf-20ba-4c2b-b2a2-8615346a9c74"
+								"d3bcdc1b-854e-424c-baf5-3c74a58c1d93"
 							],
 							"query": [
 								{
 									"key": "key",
-									"value": "PEC-SwitchgearLength"
+									"value": "%2FPEC%2FSwitchgearLength"
 								}
 							]
 						}
@@ -339,6 +387,30 @@
 							"path": [
 								"api",
 								"functions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Functions With Full Object",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions?object=full",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions"
+							],
+							"query": [
+								{
+									"key": "object",
+									"value": "full"
+								}
 							]
 						}
 					},

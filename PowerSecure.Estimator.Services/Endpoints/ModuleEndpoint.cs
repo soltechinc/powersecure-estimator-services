@@ -25,9 +25,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace("Function called - ListModules");
-            
-                return (await new ModuleService(new CosmosModuleRepository(dbClient)).List()).ToOkObjectResult();
+                log.LogDebug("Function called - ListModules");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                return (await new ModuleService(new CosmosModuleRepository(dbClient)).List(queryParams)).ToOkObjectResult();
             }
             catch (Exception ex)
             {
@@ -45,7 +47,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace($"Function called - GetModule (Id: {id})");
+                log.LogDebug($"Function called - GetModule (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
@@ -66,7 +68,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace("Function called - EditModule");
+                log.LogDebug("Function called - EditModule");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
@@ -88,7 +90,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             { 
-                log.LogTrace($"Function called - DeleteModule (Id: {id})");
+                log.LogDebug($"Function called - DeleteModule (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
 

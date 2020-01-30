@@ -60,17 +60,25 @@ namespace PowerSecure.Estimator.Services.Repositories
             return list.Count;
         }
 
-        public async Task<object> List()
+        public async Task<object> List(IDictionary<string, string> queryParams)
         {
             var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
             var modules = new List<Module>();
 
+            bool reportFullObject = false;
+            if (queryParams.TryGetValue("object", out string value))
+            {
+                reportFullObject = (value.Trim().ToLower() == "full");
+            }
             while (query.HasMoreResults)
             {
                 foreach (Module module in await query.ExecuteNextAsync())
                 {
-                    module.Rest = null;
+                    if(!reportFullObject)
+                    {
+                         module.Rest = null;
+                    }
                     modules.Add(module);
                 }
             }

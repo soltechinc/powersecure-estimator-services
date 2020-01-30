@@ -27,7 +27,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace("Function called - ListFactors");
+                log.LogDebug("Function called - ListFactors");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
@@ -49,7 +49,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace($"Function called - GetFactor (Id: {id})");
+                log.LogDebug($"Function called - GetFactor (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
@@ -70,7 +70,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace("Function called - EditFactor");
+                log.LogDebug("Function called - EditFactor");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             
@@ -92,7 +92,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace($"Function called - DeleteFactor (Id: {id})");
+                log.LogDebug($"Function called - DeleteFactor (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
             

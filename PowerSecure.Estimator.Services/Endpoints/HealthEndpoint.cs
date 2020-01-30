@@ -21,7 +21,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogTrace("Function called - ListModules");
+                log.LogDebug("Function called - ListModules");
 
                 return (await new HealthService().CheckProperties()).ToOkObjectResult();
             }

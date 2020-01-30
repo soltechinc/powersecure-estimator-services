@@ -8,7 +8,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 {
     public interface IModuleRepository
     {
-        Task<object> List();
+        Task<object> List(IDictionary<string, string> queryParams);
 
         Task<object> Get(string id, IDictionary<string, string> queryParams);
 

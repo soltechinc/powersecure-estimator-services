@@ -70,10 +70,20 @@ namespace PowerSecure.Estimator.Services.Repositories
             var factors = new List<Factor>();
 
             var documentQuery = query.AsDocumentQuery();
+
+            bool reportFullObject = false;
+            if (queryParams.TryGetValue("object", out string value))
+            {
+                reportFullObject = (value.Trim().ToLower() == "full");
+            }
             while (documentQuery.HasMoreResults)
             {
                 foreach (Factor factor in await documentQuery.ExecuteNextAsync())
                 {
+                    if (!reportFullObject)
+                    {
+                        factor.Rest = null;
+                    }
                     factors.Add(factor);
                 }
             }
