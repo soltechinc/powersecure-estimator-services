@@ -16,7 +16,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
     public static class HealthEndpoint
     {
         [FunctionName("CheckProperties")]
-        public static async Task<IActionResult> CheckProperties(
+        public static IActionResult CheckProperties(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "health/properties")] HttpRequest req,
             ILogger log)
         {
@@ -24,7 +24,8 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug("Function called - ListModules");
 
-                return (await new HealthService().CheckProperties()).ToOkObjectResult();
+                (object returnValue, string message) = new HealthService().CheckProperties();
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
