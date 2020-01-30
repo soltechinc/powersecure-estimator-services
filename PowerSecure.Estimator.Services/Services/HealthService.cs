@@ -8,11 +8,11 @@ namespace PowerSecure.Estimator.Services.Services
 {
     public partial class HealthService
     {
-        public async Task<object> CheckProperties()
+        public async Task<(object,string)> CheckProperties()
         {
             var missingProperties = new List<string>(MissingPropertiesIterator());
 
-            return missingProperties;
+            return (missingProperties, $"{missingProperties.Count} properties missing");
         }
     }
 }

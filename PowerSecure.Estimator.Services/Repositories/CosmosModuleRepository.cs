@@ -36,7 +36,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
-        public async Task<object> Delete(string moduleTitle, IDictionary<string, string> queryParams)
+        public async Task<int> Delete(string moduleTitle, IDictionary<string, string> queryParams)
         {
             if (queryParams.ContainsKey("id"))
             {

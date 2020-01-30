@@ -30,12 +30,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).List(queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -52,12 +53,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Get(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -72,13 +74,14 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 log.LogDebug("Function called - EditFunction");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            
-                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -94,13 +97,14 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 log.LogDebug($"Function called - DeleteFunction (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
-            
-                return (await new FunctionService(new CosmosFunctionRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Delete(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
     }

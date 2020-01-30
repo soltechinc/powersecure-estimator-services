@@ -14,6 +14,6 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         Task<object> Upsert(JObject document);
 
-        Task<object> Delete(string id, IDictionary<string, string> queryParams);
+        Task<int> Delete(string id, IDictionary<string, string> queryParams);
     }
 }

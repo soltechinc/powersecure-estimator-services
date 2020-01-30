@@ -28,7 +28,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
     }

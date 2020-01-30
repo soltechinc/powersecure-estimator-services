@@ -18,17 +18,17 @@ namespace PowerSecure.Estimator.Services.Services
             _factorRepository = factorRepository;
         }
 
-        public async Task<object> List(IDictionary<string,string> queryParams)
+        public async Task<(object, string)> List(IDictionary<string,string> queryParams)
         {
-            return await _factorRepository.List(queryParams);
+            return (await _factorRepository.List(queryParams),"OK");
         }
 
-        public async Task<object> Get(string id, IDictionary<string, string> queryParams)
+        public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
         {
-            return await _factorRepository.Get(id, queryParams);
+            return (await _factorRepository.Get(id, queryParams),"OK");
         }
 
-        public async Task<object> Upsert(JObject document)
+        public async Task<(object, string)> Upsert(JObject document)
         {
             document["key"] = string.Join('-', string.Empty, document["module"], document["returnAttribute"]);
             document["hash"] = CreateHash(document.Properties()
@@ -36,12 +36,13 @@ namespace PowerSecure.Estimator.Services.Services
                                 .SelectMany(o => new string[] { o.Name, o.Value.ToString() })
                                 .OrderBy(s => s)
                                 .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
-            return await _factorRepository.Upsert(document);
+            return (await _factorRepository.Upsert(document),"OK");
         }
 
-        public async Task<object> Delete(string id, IDictionary<string, string> queryParams)
+        public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
         {
-            return await _factorRepository.Delete(id, queryParams);
+            int deletedDocumentCount = await _factorRepository.Delete(id, queryParams);
+            return (new object(), $"{deletedDocumentCount} documents deleted");
         }
 
         private static string CreateHash(string valueKey)

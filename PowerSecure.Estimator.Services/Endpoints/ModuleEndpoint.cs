@@ -29,12 +29,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                return (await new ModuleService(new CosmosModuleRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).List(queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -51,12 +52,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                return (await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -72,12 +74,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                return (await new ModuleService(new CosmosModuleRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -94,12 +97,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                return (await new ModuleService(new CosmosModuleRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Delete(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
     }

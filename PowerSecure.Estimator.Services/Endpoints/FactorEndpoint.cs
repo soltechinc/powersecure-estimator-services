@@ -31,12 +31,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                return (await new FactorService(new CosmosFactorRepository(dbClient)).List(queryParams)).ToOkObjectResult();
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).List(queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch(Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -53,12 +54,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                return (await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams)).ToOkObjectResult();
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -73,13 +75,14 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 log.LogDebug("Function called - EditFactor");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            
-                return (await new FactorService(new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody))).ToOkObjectResult();
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
 
@@ -95,13 +98,14 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 log.LogDebug($"Function called - DeleteFactor (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
-            
-                return (await new FactorService(new CosmosFactorRepository(dbClient)).Delete(id, queryParams)).ToOkObjectResult();
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Delete(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
-                return ex.ToServerErrorObjectResult(ex.Message);
+                return new object().ToServerErrorObjectResult();
             }
         }
     }
