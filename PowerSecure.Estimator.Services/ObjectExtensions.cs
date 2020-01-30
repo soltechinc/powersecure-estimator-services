@@ -34,15 +34,7 @@ namespace PowerSecure.Estimator.Services
 
         private static IActionResult ResultFromStatusCode(object obj, string message, HttpStatusCode httpStatusCode)
         {
-            switch(httpStatusCode)
-            {
-                case HttpStatusCode.OK:
-                        return new OkObjectResult(JsonConvert.SerializeObject(new { Items = obj, Message = message, Status = ((int)httpStatusCode) }));
-                case HttpStatusCode.InternalServerError:
-                        return new ObjectResult(JsonConvert.SerializeObject(new { Items = obj, Message = message, Status = ((int)httpStatusCode) })) { StatusCode = (int)httpStatusCode };
-            }
-
-            throw new Exception("unhandled status code");
+            return new ObjectResult(JsonConvert.SerializeObject(new { Items = obj, Message = message, Status = ((int)httpStatusCode) })) { StatusCode = (int)httpStatusCode };
         }
     }
 }

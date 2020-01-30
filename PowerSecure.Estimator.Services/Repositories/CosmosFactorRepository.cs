@@ -97,22 +97,22 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(queryParams["key"]) });
             }
-
-            var documents = new List<Document>();
             
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .Where(f => f.Id == id)
                 .AsDocumentQuery();
 
+            var factors = new List<Factor>();
+
             while (query.HasMoreResults)
             {
                 foreach (Factor factor in await query.ExecuteNextAsync())
                 {
-                    documents.Add(await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: factor.Id), new RequestOptions { PartitionKey = new PartitionKey(factor.Key) }));
+                    factors.Add(factor);
                 }
             }
 
-            return documents;
+            return factors;
         }
     }
 }

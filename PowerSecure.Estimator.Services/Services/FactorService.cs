@@ -42,7 +42,7 @@ namespace PowerSecure.Estimator.Services.Services
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
         {
             int deletedDocumentCount = await _factorRepository.Delete(id, queryParams);
-            return (new object(), $"{deletedDocumentCount} documents deleted");
+            return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
         }
 
         private static string CreateHash(string valueKey)

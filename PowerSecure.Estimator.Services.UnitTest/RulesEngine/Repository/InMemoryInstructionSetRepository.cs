@@ -72,7 +72,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 
                 while (csvReader.Read())
                 {
-                    this.InsertNew(csvReader.GetField("Module"),csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), csvReader.GetField<DateTime>("StartDate"), csvReader.GetField<DateTime>("CreationDate"), InstructionSet.Create, primitives);
+                    this.InsertNew(csvReader.GetField("Module"),csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), csvReader.GetField<DateTime>("StartDate"), csvReader.GetField<DateTime>("CreationDate"), TestInstructionSet.Create, primitives);
                 }
             }
         }

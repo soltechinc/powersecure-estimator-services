@@ -9,7 +9,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public static class IInstructionSetRepositoryMixin
     {
-        public static void InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<Guid, string,string,string, IEnumerable<string>, IEnumerable<string>, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IPrimitive> primitives)
+        public static IInstructionSet InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<string, string,string,string, IEnumerable<string>, IEnumerable<string>, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IPrimitive> primitives)
         {
             if (instructionSetModule == null) throw new ArgumentNullException("instructionSetModule");
             if (instructionSetName == null) throw new ArgumentNullException("instructionSetName");
@@ -90,7 +90,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                 }
             }
 
-            IInstructionSet newInstructionSet = instructionSetFactory(Guid.NewGuid(), instructionSetModule, instructionSetName, instructionDefinition, parameters, childInstructionSets, startDate, creationDate);
+            IInstructionSet newInstructionSet = instructionSetFactory(Guid.NewGuid().ToString(), instructionSetModule, instructionSetName, instructionDefinition, parameters, childInstructionSets, startDate, creationDate);
             repository.Insert(newInstructionSet);
 
             //update existing instruction sets 
@@ -103,6 +103,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                         instructionSet.ChildInstructionSets.Union(new List<string> { newInstructionSet.Key }),
                         instructionSet.StartDate,
                         instructionSet.CreationDate)));
+
+            return newInstructionSet;
         }
     }
 }

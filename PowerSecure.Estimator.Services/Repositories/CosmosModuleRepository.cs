@@ -97,17 +97,17 @@ namespace PowerSecure.Estimator.Services.Repositories
                 .Where(m => m.ModuleTitle == moduleTitle)
                 .AsDocumentQuery();
 
-            var documents = new List<Document>();
+            var modules = new List<Module>();
 
             while (query.HasMoreResults)
             {
                 foreach (Module module in await query.ExecuteNextAsync())
                 {
-                    documents.Add(await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: module.Id), new RequestOptions { PartitionKey = new PartitionKey(module.ModuleTitle) }));
+                    modules.Add(module);
                 }
             }
 
-            return documents;
+            return modules;
         }
     }
 }

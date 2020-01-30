@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
@@ -8,11 +9,11 @@ using System.Linq;
 using System.Text;
 using static PowerSecure.Estimator.Services.Components.RulesEngine.Primitives.Primitive;
 
-namespace PowerSecure.Estimator.Services.Components.RulesEngine
+namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 {
-    public class InstructionSet : IInstructionSet
+    public class TestInstructionSet : IInstructionSet
     {
-        public InstructionSet(Guid id, string module, string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets, DateTime startDate, DateTime creationDate)
+        public TestInstructionSet(string id, string module, string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets, DateTime startDate, DateTime creationDate)
         {
             Id = id;
             Module = module;
@@ -24,7 +25,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             CreationDate = creationDate;
         }
 
-        public Guid Id { get; private set; }
+        public string Id { get; private set; }
 
         public string Module { get; private set; }
 
@@ -42,9 +43,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
         public DateTime CreationDate { get; private set; }
 
-        public static InstructionSet Create(Guid id, string module, string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets, DateTime startDate, DateTime creationDate)
+        public static TestInstructionSet Create(string id, string module, string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets, DateTime startDate, DateTime creationDate)
         {
-            return new InstructionSet(id, module, name, instructions, parameters, childInstructionSets, startDate, creationDate);
+            return new TestInstructionSet(id, module, name, instructions, parameters, childInstructionSets, startDate, creationDate);
         }
     }
 }

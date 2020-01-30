@@ -5,7 +5,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public interface IInstructionSet
     {
-        Guid Id { get; }
+        string Id { get; }
         string Module { get; }
         string Name { get; }
         string Key { get; }

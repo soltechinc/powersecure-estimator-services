@@ -35,7 +35,7 @@ namespace PowerSecure.Estimator.Services.Services
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
         {
             int deletedDocumentCount = await _moduleRepository.Delete(id, queryParams);
-            return (new object(), $"{deletedDocumentCount} documents deleted");
+            return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
         }
     }
 }
