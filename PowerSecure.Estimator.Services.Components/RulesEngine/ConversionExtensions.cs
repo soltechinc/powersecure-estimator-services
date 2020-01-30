@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PowerSecure.Estimator.Services.Components.RulesEngine
+namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
 {
     public static class ConversionExtensions
     {

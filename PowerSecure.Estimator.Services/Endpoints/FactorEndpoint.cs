@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.ActionResults;
 using PowerSecure.Estimator.Services.Repositories;
 using PowerSecure.Estimator.Services.Services;
 using System;

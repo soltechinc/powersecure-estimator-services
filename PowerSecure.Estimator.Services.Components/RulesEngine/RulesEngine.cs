@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     public class RulesEngine : IRulesEngine

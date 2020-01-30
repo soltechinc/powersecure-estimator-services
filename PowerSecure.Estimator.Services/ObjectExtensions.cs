@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace PowerSecure.Estimator.Services
+namespace PowerSecure.Estimator.Services.ActionResults
 {
     public static class ObjectExtensions
     {
