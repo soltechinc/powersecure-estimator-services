@@ -14,45 +14,5 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 action?.Invoke(item);
             }
         }
-
-        public static IEnumerable<decimal> ToDecimal(this IEnumerable<object> objects)
-        {
-            foreach(var obj in objects)
-            {
-                yield return obj.ToDecimal();
-            }
-        }
-
-        public static IEnumerable<bool> ToBoolean(this IEnumerable<object> objects)
-        {
-            foreach(var obj in objects)
-            {
-                yield return obj.ToBoolean();
-            }
-        }
-
-        public static IEnumerable<IComparable> ToComparable(this IEnumerable<object> objects)
-        {
-            foreach (var obj in objects)
-            {
-                yield return obj.ToComparable();
-            }
-        }
-
-        public static IEnumerable<string> ToRawString(this IEnumerable<object> objects)
-        {
-            foreach (var obj in objects)
-            {
-                yield return obj.ToRawString();
-            }
-        }
-
-        public static IEnumerable<string> ToStringLiteral(this IEnumerable<object> objects)
-        {
-            foreach (var obj in objects)
-            {
-                yield return obj.ToStringLiteral();
-            }
-        }
     }
 }

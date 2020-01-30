@@ -23,6 +23,9 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("returnattribute")]
         public string ReturnAttribute { get; set; }
 
+        [JsonProperty("returnvalue")]
+        public string ReturnValue { get; set; }
+
         [JsonExtensionData]
         public Dictionary<string, object> Rest { get; set; }
 

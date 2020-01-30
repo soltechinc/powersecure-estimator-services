@@ -8,10 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using PowerSecure.Estimator.Services.Components.RulesEngine;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
-    public class CosmosFactorRepository : IFactorRepository
+    public class CosmosFactorRepository : IFactorRepository, IReferenceDataRepository
     {
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
@@ -76,6 +78,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 reportFullObject = (value.Trim().ToLower() == "full");
             }
+            /*
             while (documentQuery.HasMoreResults)
             {
                 foreach (Factor factor in await documentQuery.ExecuteNextAsync())
@@ -86,7 +89,16 @@ namespace PowerSecure.Estimator.Services.Repositories
                     }
                     factors.Add(factor);
                 }
-            }
+            }*/
+
+            documentQuery.Iterate().ForEach(factor =>
+            {
+                if (!reportFullObject)
+                {
+                    factor.Rest = null;
+                }
+                factors.Add(factor);
+            });
 
             return factors;
         }
@@ -113,6 +125,21 @@ namespace PowerSecure.Estimator.Services.Repositories
             }
 
             return factors;
+        }
+
+        object IReferenceDataRepository.Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, DateTime effectiveDate, string returnFieldName)
+        {
+            var str = new StringBuilder("select * from " + _collectionId + " f where f.returnattribute = \"" + returnFieldName + "\"");
+            foreach((string searchParam, string value) in criteria)
+            {
+                str.Append(" and f." + searchParam.ToLower().Trim() + " = \"" + value.Trim() + "\"");
+            }
+
+            var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId),
+                            str.ToString()).AsDocumentQuery();
+
+            return null;
+
         }
     }
 }
