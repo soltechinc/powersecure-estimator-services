@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using PowerSecure.Estimator.Services.Components.RulesEngine;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
@@ -78,7 +77,6 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 reportFullObject = (value.Trim().ToLower() == "full");
             }
-            /*
             while (documentQuery.HasMoreResults)
             {
                 foreach (Factor factor in await documentQuery.ExecuteNextAsync())
@@ -89,16 +87,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                     }
                     factors.Add(factor);
                 }
-            }*/
-
-            documentQuery.Iterate().ForEach(factor =>
-            {
-                if (!reportFullObject)
-                {
-                    factor.Rest = null;
-                }
-                factors.Add(factor);
-            });
+            }
 
             return factors;
         }
@@ -138,8 +127,14 @@ namespace PowerSecure.Estimator.Services.Repositories
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId),
                             str.ToString()).AsDocumentQuery();
 
-            return null;
+            Factor result = query.ExecuteNextAsync().Result.FirstOrDefault();
 
+            if(result == null)
+            {
+                return null;
+            }
+
+            return result.ReturnValue;
         }
     }
 }
