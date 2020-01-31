@@ -26,6 +26,12 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("returnvalue")]
         public string ReturnValue { get; set; }
 
+        [JsonProperty("startdate")]
+        public DateTime StartDate { get; set; }
+
+        [JsonProperty("creationdate")]
+        public DateTime CreationDate { get; set; }
+
         [JsonExtensionData]
         public Dictionary<string, object> Rest { get; set; }
 

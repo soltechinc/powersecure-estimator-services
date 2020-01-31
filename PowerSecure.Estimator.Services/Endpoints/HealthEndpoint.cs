@@ -22,7 +22,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogDebug("Function called - ListModules");
+                log.LogDebug("Function called - CheckProperties");
 
                 (object returnValue, string message) = new HealthService().CheckProperties();
                 return returnValue.ToOkObjectResult(message: message);
