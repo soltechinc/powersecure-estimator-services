@@ -15,6 +15,38 @@ namespace PowerSecure.Estimator.Services.UnitTest.Calculator {
             Assert.AreEqual(value, expectedResult);
         }
 
+
+        [TestMethod]
+        public void CheckRoundFunctionNegativeThree() {
+            Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
+            var a = 5.355;
+            var b = -3;
+            var value = cal.RoundUp(a, b);
+            var expectedResult = 5355;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+
+        [TestMethod]
+        public void CheckRoundFunctionTwo() {
+            Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
+            var a = 5.355;
+            var b = 2;
+            var value = cal.RoundUp(a, b);
+            var expectedResult = 5.36;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+        [TestMethod]
+        public void CheckRoundFunctionValueZero() {
+            Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
+            var a = 5.55;
+            var b = 0;
+            var value = cal.RoundUp(a, b);
+            var expectedResult = 6;
+            Assert.AreEqual(value, expectedResult);
+        }
+
         [TestMethod]
         public void CheckDoubleSumProductErrMethod() {
             Calculator<double> cal = new Calculator<double>(new DoubleCalculator());

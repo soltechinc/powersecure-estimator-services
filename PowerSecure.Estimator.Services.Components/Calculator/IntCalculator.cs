@@ -89,5 +89,9 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
         public override int IsZero(int paramA) {
             return (paramA < 0) ? 0 : paramA;
         }
+
+        public override int RoundUp(int value, int numberOfDecimalPlaces) {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -90,5 +90,18 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
         public override double IsZero(double paramA) {
             return (paramA < 0) ? 0 : paramA;
         }
+
+        public override double RoundUp(double value, double numberOfDecimalPlaces) {
+            if(numberOfDecimalPlaces > 0) {
+                value = Math.Round(value, (int)numberOfDecimalPlaces, MidpointRounding.AwayFromZero);
+            } else if(numberOfDecimalPlaces < 0) {
+                var loopValue = Math.Abs(numberOfDecimalPlaces);
+                value = Math.Round(value, (int)loopValue, MidpointRounding.AwayFromZero);
+                for (var i = loopValue; i > 0; i--) { value *= 10; }
+            } else {                
+                value = Math.Floor(value) + 1;
+            }
+            return value;
+        }
     }
 }

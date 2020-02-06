@@ -69,5 +69,9 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
         public T IsZero(T paramA) {
             return _myCalculator.IsZero(paramA);
         }
+
+        public T RoundUp(T value, T numberOfDecimalPlaces) {
+            return _myCalculator.RoundUp(value, numberOfDecimalPlaces);
+        }
     }
 }
