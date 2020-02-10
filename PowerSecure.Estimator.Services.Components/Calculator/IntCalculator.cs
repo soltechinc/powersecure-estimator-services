@@ -93,9 +93,5 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
         public override int RoundUp(int value, int numberOfDecimalPlaces) {
             throw new NotImplementedException();
         }
-
-        public override int RoundDown(int value, int numberOfDecimalPlaces) {
-            throw new NotImplementedException();
-        }
     }
 }
