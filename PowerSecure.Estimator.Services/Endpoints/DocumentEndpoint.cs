@@ -16,9 +16,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
     {
         public static HttpClient httpClient = new HttpClient();
 
-        [FunctionName("DocumentEndpoint")]
+        [FunctionName("PostDocument")]
         public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "documents")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "documents")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
