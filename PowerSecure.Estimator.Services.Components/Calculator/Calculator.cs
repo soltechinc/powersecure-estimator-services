@@ -73,5 +73,9 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
         public T RoundUp(T value, T numberOfDecimalPlaces) {
             return _myCalculator.RoundUp(value, numberOfDecimalPlaces);
         }
+
+        public T RoundDown(T value, T numberOfDecimalPlaces) {
+            return _myCalculator.RoundDown(value, numberOfDecimalPlaces);
+        }
     }
 }

@@ -13,7 +13,8 @@ namespace PowerSecure.Estimator.Services.Components.Calculator {
         public abstract T Ceil(T paramA, T paramB);
         public abstract T SumProduct(T[] values, T[] factors);
         public abstract T IsZero(T paramA);
-
         public abstract T RoundUp(T value, T numberOfDecimalPlaces);
+
+        public abstract T RoundDown(T value, T numberOfDecimalPlaces);
     }
 }

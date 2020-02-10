@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace PowerSecure.Estimator.Services.Components.Calculator
 {
@@ -91,15 +92,42 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
             return (paramA < 0) ? 0 : paramA;
         }
 
+
+        private double ToIncrementNumber(int digitsToChange, bool isGreaterThanZero) {
+            double incrementByValue = 1;
+            for (var i = digitsToChange; i > 0; i--) {
+                incrementByValue = (isGreaterThanZero) ? incrementByValue *= 10 : incrementByValue /= 10;
+            }
+            return incrementByValue;
+        }
+
+        private string ReplaceValueWithZero(string str, int digitsToChange) {
+            char[] charArr = str.ToCharArray();
+            int charArrLength = charArr.Length;
+            for (int i = charArrLength - 1; i >= charArrLength - digitsToChange; i--) {
+                charArr[i] = '0';
+            }            
+            return new string(charArr);
+        }
         public override double RoundUp(double value, double numberOfDecimalPlaces) {
-            if(numberOfDecimalPlaces > 0) {
+            int digitsToChange = (int)Math.Abs(numberOfDecimalPlaces);
+            bool isGreaterThanZero = (numberOfDecimalPlaces < 0) ? true : false;
+            if (numberOfDecimalPlaces < 0) {
+                int lengthOfValue = ((int)Math.Abs(value)).ToString().Length;
+                if (lengthOfValue > digitsToChange) {
+                    double incrementedValue = ToIncrementNumber(digitsToChange, isGreaterThanZero);
+                    value = Math.Floor(value + incrementedValue);
+                    string strVal = ReplaceValueWithZero(value.ToString(), digitsToChange);
+                    value = Convert.ToDouble(strVal);
+                } else {
+                    value = ToIncrementNumber(digitsToChange, isGreaterThanZero);
+                }
+            } else if(numberOfDecimalPlaces > 0) {
+                double incrementedValue = ToIncrementNumber(digitsToChange, isGreaterThanZero);
+                value = value + incrementedValue;
                 value = Math.Round(value, (int)numberOfDecimalPlaces, MidpointRounding.AwayFromZero);
-            } else if(numberOfDecimalPlaces < 0) {
-                var loopValue = Math.Abs(numberOfDecimalPlaces);
-                value = Math.Round(value, (int)loopValue, MidpointRounding.AwayFromZero);
-                for (var i = loopValue; i > 0; i--) { value *= 10; }
-            } else {                
-                value = Math.Floor(value) + 1;
+            } else {
+                value = Math.Ceiling(value);
             }
             return value;
         }
