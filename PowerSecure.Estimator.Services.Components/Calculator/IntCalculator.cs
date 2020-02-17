@@ -30,7 +30,7 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
             return (paramA < paramB) ? paramA : paramB;
         }
 
-        public override int Ceil(int paramA, int paramB) {
+        public override int Ceiling(int paramA, int paramB) {
             int results = 0;
             try {
                 if (paramA > 0 && paramB > 0 && paramA > paramB) {

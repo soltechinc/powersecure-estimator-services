@@ -58,8 +58,8 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
             return mul;
         }
 
-        public T Ceil(T a, T b) {
-            return _myCalculator.Ceil(a, b);
+        public T Ceiling(T a, T b) {
+            return _myCalculator.Ceiling(a, b);
         }
 
         public T SumProduct(T[] values, T[] factors) {

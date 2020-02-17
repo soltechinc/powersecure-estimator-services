@@ -31,7 +31,7 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
             return (paramA < paramB) ? paramA : paramB;
         }
 
-        public override double Ceil(double paramA, double paramB) {
+        public override double Ceiling(double paramA, double paramB) {
             double results = 0;
             try {
                 if (paramA > 0 && paramB > 0 && paramA > paramB) {
