@@ -31,16 +31,15 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
         }
 
         public override int Ceiling(int paramA, int paramB) {
-            int results = 0;
-            try {
-                if (paramA > 0 && paramB > 0 && paramA > paramB) {
-                    int quotient = Quotient(paramA, paramB) + 1;
-                    results = Product(quotient, paramB);
-                }                
-            } catch(Exception ex) {
-                Console.WriteLine(ex.Message);
+            bool overZero = (paramA > 0 && paramB > 0) ? true : false;
+            if (overZero && paramA > paramB) {
+                var quotient = (int)Math.Floor((double)Quotient(paramA, paramB)) + 1;
+                return Product(quotient, paramB);
+            } else if (overZero && paramB > paramA) {
+                return paramB;
+            } else {
+                return 0;
             }
-            return results;
         }
 
         private int AddArrayValues(int[] arr) {

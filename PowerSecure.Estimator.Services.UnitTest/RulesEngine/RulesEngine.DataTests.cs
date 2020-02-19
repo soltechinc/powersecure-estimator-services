@@ -31,6 +31,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             instructionSetRepository.Load(@".\Resources\General Reference Formula Table.csv", primitives);
             referenceDataRepository.Load(@".\Resources\PEC Reference Fact Table.csv");
             instructionSetRepository.Load(@".\Resources\PEC Reference Formula Table.csv", primitives);
+            referenceDataRepository.Load(@".\Resources\Purchased ATS Fact Table.csv");
+            instructionSetRepository.Load(@".\Resources\Purchased ATS Formula Table.csv", primitives);
 
             Assert.AreNotEqual(0, primitives.Count);
             Assert.AreNotEqual(0, referenceDataRepository.Items.Count);
@@ -42,6 +44,32 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             Trace.WriteLine("Instruction Sets");
             instructionSetRepository.Items.Select(o => o.Value).ForEach(set => Trace.WriteLine(JsonConvert.SerializeObject(set, Formatting.Indented)));
         }
+
+
+        [TestMethod]
+        public void RunPurchasedATSInstructionSets() {
+            var referenceDataRepository = new InMemoryReferenceDataRepository();
+            var instructionSetRepository = new InMemoryInstructionSetRepository();
+            referenceDataRepository.Load(@".\Resources\Purchased ATS Fact Table.csv");
+            instructionSetRepository.Load(@".\Resources\Purchased ATS Formula Table.csv", primitives);
+
+            var dataSheet = new Dictionary<string, object>();
+
+            instructionSetRepository.Items.Select(o => o.Value.First()).ForEach(set => {
+                dataSheet.Add(set.Key, null);
+                Trace.WriteLine(set.Key);
+            });
+
+            dataSheet["EffectiveDate"] = DateTime.Now.ToString();
+            dataSheet["DesiredInstallRate"] = 3.5m;
+            dataSheet["USState"] = "GEORGIA";
+
+
+            var rulesEngine = new Components.RulesEngine.RulesEngine();
+
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
+        }
+
 
         [TestMethod]
         public void RunAllGeneralInstructionSets()

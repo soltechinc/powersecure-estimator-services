@@ -150,12 +150,75 @@ namespace PowerSecure.Estimator.Services.UnitTest.Calculator {
         }
 
         [TestMethod]
+        public void CheckDoubleCeilingAEqualsZero() {
+            Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
+            var a = 0;
+            var b = 37;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 0;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+        [TestMethod]
+        public void CheckIntCeilingAEqualsParamB() {
+            Calculator<int> cal = new Calculator<int>(new IntCalculator());
+            var a = 0;
+            var b = 37;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 0;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+
+        [TestMethod]
+        public void CheckDoubleCeilingBEqualsZero() {
+            Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
+            var a = 37;
+            var b = 0;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 0;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+        [TestMethod]
+        public void CheckIntCeilingBEqualsParamB() {
+            Calculator<int> cal = new Calculator<int>(new IntCalculator());
+            var a = 37;
+            var b = 0;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 0;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+
+        [TestMethod]
+        public void CheckDoubleCeilingEqualsParamB() {
+            Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
+            var a = 37;
+            var b = 45;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 45;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+        [TestMethod]
+        public void CheckIntCeilingEqualsParamB() {
+            Calculator<int> cal = new Calculator<int>(new IntCalculator());
+            var a = 37;
+            var b = 45;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 45;
+            Assert.AreEqual(value, expectedResult);
+        }
+
+
+        [TestMethod]
         public void CheckDoubleCeilMethod() {
             Calculator<double> cal = new Calculator<double>(new DoubleCalculator());
             var a = 37;
             var b = 5;
-            var value = cal.Ceil(a, b);
-            var expectedResult = 42;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 40;
             Assert.AreEqual(value, expectedResult);
         }
 
@@ -165,11 +228,21 @@ namespace PowerSecure.Estimator.Services.UnitTest.Calculator {
             Calculator<int> cal = new Calculator<int>(new IntCalculator());
             var a = 37;
             var b = 5;
-            var value = cal.Ceil(a, b);
+            var value = cal.Ceiling(a, b);
             var expectedResult = 40;
             Assert.AreEqual(value, expectedResult);
         }
 
+
+        [TestMethod]
+        public void CheckIntCeilMethod2() {
+            Calculator<int> cal = new Calculator<int>(new IntCalculator());
+            var a = 42;
+            var b = 5;
+            var value = cal.Ceiling(a, b);
+            var expectedResult = 45;
+            Assert.AreEqual(value, expectedResult);
+        }
 
         [TestMethod]
         public void CheckArrayIntProductMethod() {

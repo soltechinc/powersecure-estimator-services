@@ -12,6 +12,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(primitive.Name.ToLower(), primitive);
 			primitive = new AndPrimitive();
 			dict.Add(primitive.Name.ToLower(), primitive);
+			primitive = new CeilingPrimitive();
+			dict.Add(primitive.Name.ToLower(), primitive);
 			primitive = new CheckPrimitive();
 			dict.Add(primitive.Name.ToLower(), primitive);
 			primitive = new ConcatenatePrimitive();

@@ -32,16 +32,14 @@ namespace PowerSecure.Estimator.Services.Components.Calculator
         }
 
         public override double Ceiling(double paramA, double paramB) {
-            double results = 0;
-            try {
-                if (paramA > 0 && paramB > 0 && paramA > paramB) {
-                    double quotient = Quotient(paramA, paramB) + 1;
-                    results = Product(quotient, paramB);
-                }
-                return results;
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-                return results;
+            bool overZero = (paramA > 0 && paramB > 0) ? true : false;
+            if (overZero && paramA > paramB) {
+                var quotient = (int)Math.Floor((double)Quotient(paramA, paramB)) + 1;
+                return Product(quotient, paramB);
+            } else if(overZero && paramB > paramA) {
+                return paramB;
+            } else {
+                return 0;
             }
         }
 
