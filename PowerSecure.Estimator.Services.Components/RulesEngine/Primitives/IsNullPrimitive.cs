@@ -8,7 +8,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class IsNullPrimitive : IPrimitive
+    public class IsNullPrimitive : IFunction
     {
         public string Name => "isnull";
         

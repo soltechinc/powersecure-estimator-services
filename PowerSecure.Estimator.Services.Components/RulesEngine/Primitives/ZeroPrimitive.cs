@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class ZeroPrimitive : IPrimitive
+    public class ZeroPrimitive : IFunction
     {
         public string Name => "zero";
         

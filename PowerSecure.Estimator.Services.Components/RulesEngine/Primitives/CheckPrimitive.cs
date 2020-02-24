@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class CheckPrimitive : IPrimitive
+    public class CheckPrimitive : IFunction
     {
         public string Name => "if";
         

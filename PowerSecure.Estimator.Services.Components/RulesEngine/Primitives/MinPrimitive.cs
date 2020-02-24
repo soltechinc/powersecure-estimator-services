@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class MinPrimitive : IPrimitive
+    public class MinPrimitive : IFunction
     {
         public string Name => "min";
         

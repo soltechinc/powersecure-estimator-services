@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class MarginPrimitive : IPrimitive
+    public class MarginPrimitive : IFunction
     {
         public string Name => "margin";
         

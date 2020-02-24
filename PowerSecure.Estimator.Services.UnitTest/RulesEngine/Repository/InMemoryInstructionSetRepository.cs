@@ -59,7 +59,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
                         .ToList(); /* have to project to a new list to allow dictionary modification*/
         }
         
-        public void Load(string csvFilename, IDictionary<string, IPrimitive> primitives)
+        public void Load(string csvFilename, IDictionary<string, IFunction> primitives)
         {
             //get csv data
             using (var stream = new FileStream(csvFilename, FileMode.Open))

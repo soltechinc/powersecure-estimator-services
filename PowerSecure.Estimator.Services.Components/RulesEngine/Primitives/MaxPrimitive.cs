@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class MaxPrimitive : IPrimitive
+    public class MaxPrimitive : IFunction
     {
         public string Name => "max";
         

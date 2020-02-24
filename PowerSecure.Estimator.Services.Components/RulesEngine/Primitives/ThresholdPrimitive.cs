@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class ThresholdPrimitive : IPrimitive
+    public class ThresholdPrimitive : IFunction
     {
         public string Name => "threshold";
         

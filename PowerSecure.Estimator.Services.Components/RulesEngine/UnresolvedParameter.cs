@@ -14,14 +14,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
         public JToken Token { get; set; }
         public IDictionary<string, object> Parameters { get; set; }
-        public IDictionary<string, IPrimitive> Primitives { get; set; }
+        public IDictionary<string, IFunction> Functions { get; set; }
         public IReferenceDataRepository ReferenceDataRepository { get; set; }
 
         private UnresolvedParameter(JToken jToken, UnresolvedParameter parentParameter)
         {
             Token = jToken;
             Parameters = parentParameter.Parameters;
-            Primitives = parentParameter.Primitives;
+            Functions = parentParameter.Functions;
             ReferenceDataRepository = parentParameter.ReferenceDataRepository;
         }
 
@@ -33,7 +33,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 case JTokenType.Object:
                     { //this is a primitive
                         var jProp = Token.Children<JProperty>().First();
-                        return Primitives[jProp.Name].Invoke(jProp.Value.Children().Select(jToken => new UnresolvedParameter(jToken, this)).ToArray(), ReferenceDataRepository);
+                        return Functions[jProp.Name].Invoke(jProp.Value.Children().Select(jToken => new UnresolvedParameter(jToken, this)).ToArray(), ReferenceDataRepository);
                     }
                 case JTokenType.Array when Token.Parent.Type == JTokenType.Array:
                     {
@@ -56,7 +56,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                             string key = Token.ToString().Trim().ToLower();
                             if (Parameters[key] is IInstructionSet childInstructionSet)
                             {
-                                Parameters[key] = childInstructionSet.Evaluate(Parameters, Primitives, ReferenceDataRepository);
+                                Parameters[key] = childInstructionSet.Evaluate(Parameters, Functions, ReferenceDataRepository);
                             }
                             return Parameters[key];
                         }

@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class SubtractionPrimitive : IPrimitive
+    public class SubtractionPrimitive : IFunction
     {
         public string Name => "-";
         

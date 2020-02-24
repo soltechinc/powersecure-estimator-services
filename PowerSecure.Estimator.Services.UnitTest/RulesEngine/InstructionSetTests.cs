@@ -163,7 +163,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_single()
         {
             var repository = new InMemoryInstructionSetRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
+            var primitives = new Dictionary<string, IFunction>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
             repository.InsertNew("All", "test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , 3 ] }] ] }", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
@@ -178,7 +178,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void AllowArrayParameters_lotsOfNesting()
         {
             var repository = new InMemoryInstructionSetRepository();
-            var primitives = new Dictionary<string, IPrimitive>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
+            var primitives = new Dictionary<string, IFunction>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
             repository.InsertNew("All", "test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , ['q', [['b'],2] ]] }] ] }", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
@@ -245,6 +245,21 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
             var value = instructionSet.Evaluate(dataTable, primitives, null);
+        }
+
+        //[TestMethod]
+        public void HappyPathTest_functionInstructionSet()
+        {
+            var repository = new InMemoryInstructionSetRepository();
+            var primitives = Primitive.Load();
+            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+
+            Assert.AreEqual(1, repository.Items.Count);
+
+            var instructionSet = repository.Items.Values.First().First();
+
+            Assert.AreEqual(2, instructionSet.Parameters.Count, "Parameter count does not match");
+            Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
     }
 }

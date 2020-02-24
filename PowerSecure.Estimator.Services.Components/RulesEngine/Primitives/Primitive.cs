@@ -9,19 +9,19 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public static partial class Primitive
     {
-        public static IDictionary<string, IPrimitive> Load(Assembly assembly)
+        public static IDictionary<string, IFunction> Load(Assembly assembly)
         {
-            var primitives = new Dictionary<string, IPrimitive>();
+            var functions = new Dictionary<string, IFunction>();
 
             assembly.GetTypes()
-                .Where(p => typeof(IPrimitive).IsAssignableFrom(p) && p.IsClass)
+                .Where(p => typeof(IFunction).IsAssignableFrom(p) && p.IsClass)
                 .ForEach(type =>
                 {
-                    var primitive = (IPrimitive)Activator.CreateInstance(type);
-                    primitives.Add(primitive.Name.ToLower(), primitive);
+                    var primitive = (IFunction)Activator.CreateInstance(type);
+                    functions.Add(primitive.Name.ToLower(), primitive);
                 });
 
-            return primitives.ToReadonlyDictionary();
+            return functions;
         }
     }
 }

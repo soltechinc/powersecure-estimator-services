@@ -8,12 +8,12 @@ using static PowerSecure.Estimator.Services.Components.RulesEngine.Primitives.Pr
 
 namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 {
-    public class TestPrimitive : IPrimitive
+    public class TestPrimitive : IFunction
     {
         public delegate (bool Success, string Message) ValidationFunc(JToken jToken);
 
-        private Func<object[], IReferenceDataRepository, decimal> _invokeFunc;
-        private ValidationFunc _validateFunc;
+        private readonly Func<object[], IReferenceDataRepository, decimal> _invokeFunc;
+        private readonly ValidationFunc _validateFunc;
 
         public TestPrimitive(string name, Func<object[], IReferenceDataRepository, decimal> invokeFunc, ValidationFunc validateFunc)
         {

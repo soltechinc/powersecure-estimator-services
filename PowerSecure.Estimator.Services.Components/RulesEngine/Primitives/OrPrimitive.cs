@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class OrPrimitive : IPrimitive
+    public class OrPrimitive : IFunction
     {
         public string Name => "or";
 

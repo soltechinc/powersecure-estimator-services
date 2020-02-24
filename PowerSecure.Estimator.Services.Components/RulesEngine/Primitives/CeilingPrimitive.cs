@@ -8,7 +8,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives {
-    public class CeilingPrimitive : IPrimitive {
+    public class CeilingPrimitive : IFunction {
         public string Name => "ceiling";
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository) {

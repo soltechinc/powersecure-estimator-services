@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class FindPrimitive : IPrimitive
+    public class FindPrimitive : IFunction
     {
         public string Name => "find";
         

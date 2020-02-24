@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public interface IPrimitive
+    public interface IFunction
     {
         string Name { get; }
         

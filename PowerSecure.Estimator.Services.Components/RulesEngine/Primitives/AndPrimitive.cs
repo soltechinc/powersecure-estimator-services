@@ -8,7 +8,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives {
-    public class AndPrimitive : IPrimitive
+    public class AndPrimitive : IFunction
     {
         public string Name => "and";
 

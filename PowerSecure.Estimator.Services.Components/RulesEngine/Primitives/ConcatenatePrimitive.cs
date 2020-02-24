@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class ConcatenatePrimitive : IPrimitive
+    public class ConcatenatePrimitive : IFunction
     {
         public string Name => "str";
 

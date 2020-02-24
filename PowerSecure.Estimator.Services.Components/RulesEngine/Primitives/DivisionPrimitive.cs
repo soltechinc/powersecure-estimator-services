@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class DivisionPrimitive : IPrimitive
+    public class DivisionPrimitive : IFunction
     {
         public string Name => "/";
         

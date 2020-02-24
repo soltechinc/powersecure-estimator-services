@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class SumProductPrimitive : IPrimitive
+    public class SumProductPrimitive : IFunction
     {
         public string Name => "sumproduct";
         

@@ -9,7 +9,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class SwitchPrimitive : IPrimitive
+    public class SwitchPrimitive : IFunction
     {
         public string Name => "switch";
 

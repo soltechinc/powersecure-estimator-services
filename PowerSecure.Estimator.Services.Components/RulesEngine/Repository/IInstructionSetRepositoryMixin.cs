@@ -9,14 +9,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public static class IInstructionSetRepositoryMixin
     {
-        public static IInstructionSet InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<string, string,string,string, IEnumerable<string>, IEnumerable<string>, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IPrimitive> primitives)
+        public static IInstructionSet InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<string, string,string,string, IEnumerable<string>, IEnumerable<string>, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IFunction> functions)
         {
             if (instructionSetModule == null) throw new ArgumentNullException("instructionSetModule");
             if (instructionSetName == null) throw new ArgumentNullException("instructionSetName");
             if (instructionDefinition == null) throw new ArgumentNullException("instructionDefinition");
             if (repository == null) throw new ArgumentNullException("repository");
             if (instructionSetFactory == null) throw new ArgumentNullException("instructionSetFactory");
-            if (primitives == null) throw new ArgumentNullException("primitives");
+            if (functions == null) throw new ArgumentNullException("functions");
 
             var terminals = new HashSet<string>();
             instructionSetName = instructionSetName.Trim().ToLower();
@@ -38,11 +38,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 
                                 var name = nameList[0];
 
-                                if (!primitives.TryGetValue(name.Trim().ToLower(), out IPrimitive primitive))
-                                {
-                                    throw new InvalidOperationException($"The following token is not a defined primitive: {name}");
-                                }
-
                                 var value = jObject.GetValue(name);
 
                                 if (value.Type != JTokenType.Array)
@@ -50,7 +45,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                                     throw new InvalidOperationException($"Expected a parameter array, got the following: {value.ToString()}");
                                 }
 
-                                (bool isValid, string message) = primitive.Validate(value);
+                                if (!functions.TryGetValue(name.Trim().ToLower(), out IFunction function))
+                                {
+                                    break; //if we don't know the name of the primitive, maybe it'll be loaded later. In any case, we cannot validate it
+                                }
+
+                                (bool isValid, string message) = function.Validate(value);
 
                                 if (!isValid)
                                 {

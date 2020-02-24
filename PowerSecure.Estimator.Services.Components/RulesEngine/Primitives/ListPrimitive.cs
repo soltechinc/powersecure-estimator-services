@@ -8,7 +8,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class ListPrimitive : IPrimitive
+    public class ListPrimitive : IFunction
     {
         public string Name => "list";
 

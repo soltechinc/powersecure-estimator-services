@@ -19,7 +19,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
         private readonly string _collectionId;
-        private readonly IDictionary<string, IPrimitive> _primitives = Primitive.Load();
+        private readonly IDictionary<string, IFunction> _functions = Primitive.Load();
 
         public CosmosFunctionRepository(DocumentClient dbClient)
         {
@@ -38,7 +38,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                 instructionSet.StartDate,
                 DateTime.Now,
                 InstructionSet.Create,
-                _primitives);
+                _functions);
 
             if(document.ContainsKey("id"))
             {

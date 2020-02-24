@@ -21,12 +21,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
 	public static partial class Primitive
 	{
-		public static IDictionary<string, IPrimitive> Load() 
+		public static IDictionary<string, IFunction> Load() 
 		{
-			IPrimitive primitive;
-			var dict = new Dictionary<string, IPrimitive>();
+			IFunction function;
+			var dict = new Dictionary<string, IFunction>();
 <# ListFiles(projectItems); #>
-			return dict.ToReadonlyDictionary();
+			return dict;
 		}
 	}
 }
@@ -45,8 +45,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
 		foreach(string fileName in fileNames)
 		{
-			WriteLine(string.Format("\t\t\tprimitive = new {0}();", fileName));
-			WriteLine("\t\t\tdict.Add(primitive.Name.ToLower(), primitive);");
+			WriteLine(string.Format("\t\t\tfunction = new {0}();", fileName));
+			WriteLine("\t\t\tdict.Add(function.Name.ToLower(), function);");
 		}
 	}
 
