@@ -8,6 +8,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public interface IRulesEngine
     {
-        IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository dataSheetRepository);
+        IDictionary<string, object> EvaluateDataSheet(string dataSheet, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository dataSheetRepository);
     }
 }

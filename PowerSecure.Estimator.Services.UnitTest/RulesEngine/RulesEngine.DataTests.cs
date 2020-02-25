@@ -67,7 +67,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(JsonConvert.SerializeObject(dataSheet), DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
         }
 
 
@@ -92,7 +92,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(JsonConvert.SerializeObject(dataSheet), DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
         }
 
         [TestMethod]
@@ -161,7 +161,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(JsonConvert.SerializeObject(dataSheet), DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
         }
     }
 }
