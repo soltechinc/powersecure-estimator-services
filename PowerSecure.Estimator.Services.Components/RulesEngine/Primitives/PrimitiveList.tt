@@ -30,7 +30,7 @@
 				continue;
 			}
 			filename = filename.Substring(root.Length+1).Replace(".cs",string.Empty);
-			if(filename == "Primitive" || filename == "IPrimitive" || !filename.EndsWith("Primitive"))
+			if(filename == "Primitive" || filename == "IPrimitive" || filename == "UserDefinedPrimitive" || !filename.EndsWith("Primitive"))
 			{
 				continue;
 			}
