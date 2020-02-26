@@ -16,10 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PowerSecure.Estimator.Services.Components\PowerSecure.Estimator.Services.Components.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\" />
+    <ProjectReference Include="..\PowerSecure.Estimator.Services\PowerSecure.Estimator.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +24,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\General Reference Formula Table.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\module_evaluate_sample_json1.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\PEC Reference Fact Table.csv">
