@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.UnitTest.Services
 {
@@ -19,7 +20,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.Services
 
             JObject inputFromUi = JObject.Parse(File.ReadAllText(@".\Resources\module_evaluate_sample_json1.json"));
 
-            estimateService.Evaluate(inputFromUi);
+            var retValue = Task.Run(async () => await estimateService.Evaluate(inputFromUi)).GetAwaiter().GetResult();
         }
     }
 }

@@ -22,7 +22,8 @@ namespace PowerSecure.Estimator.Services.Services
         {
             var dataSheet = new Dictionary<string, object>();
             string moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
-            //TODO - Translate into data sheet
+
+            //Translate into data sheet
             uiInputs.WalkNodes(PreOrder: jToken =>
                 {
                     switch(jToken)
@@ -34,10 +35,10 @@ namespace PowerSecure.Estimator.Services.Services
                                     break;
                                 }
 
-                                bool isInput = jObject.Properties().Where(prop => prop.Name == "input").First().Value.ToObject<bool>();
-                                string name = jObject.Properties().Where(prop => prop.Name == "variableName").First().Value.ToObject<string>().ToLower().Trim();
+                                bool isInput = jObject["input"].ToObject<bool>();
+                                string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 object inputValue;
-                                JToken inputValueFromJson = jObject.Properties().Where(prop => prop.Name == "inputValue").First().Value;
+                                JToken inputValueFromJson = jObject["inputValue"];
                                 switch(inputValueFromJson.Type)
                                 {
                                     case JTokenType.Integer:
@@ -68,8 +69,39 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 });
 
-            //TODO - Add functionality
-            return (null, "");
+            //TODO - Add evaluate functionality
+            foreach(var key in dataSheet.Keys.ToList())
+            {
+                dataSheet[key] = 1;
+            }
+
+            //Convert back
+            uiInputs.WalkNodes(PreOrder: jToken =>
+            {
+                switch (jToken)
+                {
+                    case JObject jObject:
+                        {
+                            if (!jObject.Properties().Any(prop => prop.Name == "input"))
+                            {
+                                break;
+                            }
+
+                            bool isInput = jObject["input"].ToObject<bool>();
+                            string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
+
+                            if(!isInput && dataSheet.TryGetValue($"{moduleName}.{name}", out object value))
+                            {
+                                jObject["inputValue"] = JToken.FromObject(value);
+                                break;
+                            }
+
+                            break;
+                        }
+                }
+            });
+
+            return (uiInputs, "");
         }
     }
 }
