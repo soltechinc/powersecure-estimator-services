@@ -39,7 +39,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			.Select(f => f.Replace("\\", "/"))
 			.Where(f => projectItems.Any(p => p.Equals(f, StringComparison.OrdinalIgnoreCase)))
 			.Select(f => f.Substring(root.Length+1).Replace(".cs",string.Empty))
-			.Where(f => f != "Primitive" && f != "IPrimitive" && f != "UserDefinedPrimitive" && f.EndsWith("Primitive"))
+			.Where(f => f != "Primitive" && f != "IPrimitive" && f.EndsWith("Primitive"))
 			.OrderBy(f => f)
 			.ToList();
 

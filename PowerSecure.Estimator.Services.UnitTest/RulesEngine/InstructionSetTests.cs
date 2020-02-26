@@ -247,39 +247,19 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var value = instructionSet.Evaluate(dataTable, primitives, null);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void HappyPathTest_functionInstructionSet()
         {
             var repository = new InMemoryInstructionSetRepository();
-            var functions = Primitive.Load();
-            int functionCount = functions.Count;
-
-            repository.InsertNew("All", "test", " { '*': [ '@1-y', { '+': [ '@2-x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, functions);
-            repository.InsertNew("All", "test2", " { 'test': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, functions);
+            var primitives = Primitive.Load();
+            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
 
             Assert.AreEqual(1, repository.Items.Count);
-            Assert.AreEqual(functionCount + 1, functions.Count);
 
-            var instructionSet = repository.Items["all.test2"].First();
+            var instructionSet = repository.Items.Values.First().First();
 
             Assert.AreEqual(2, instructionSet.Parameters.Count, "Parameter count does not match");
             Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
-        }
-
-        //[TestMethod]
-        public void Evaluate_withFunctionInstructionSet()
-        {
-            var repository = new InMemoryInstructionSetRepository();
-            var functions = Primitive.Load();
-            var dataTable = new Dictionary<string, object> { ["a"] = "2", ["y"] = 3 };
-
-            repository.InsertNew("All", "test", " { '*': [ '@1-y', { '+': [ '@2-x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, functions);
-
-            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test2", "{ 'all.test': [ 'a', 3 ]}", new string[] { "a" }, new string[] { }, DateTime.MinValue, DateTime.Now);
-
-            var value = (decimal)instructionSet.Evaluate(dataTable, functions, null);
-
-            Assert.AreEqual(6, value, "Calculation failed");
         }
     }
 }

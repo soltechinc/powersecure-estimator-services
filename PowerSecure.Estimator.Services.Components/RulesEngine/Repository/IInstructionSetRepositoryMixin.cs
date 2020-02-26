@@ -69,7 +69,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             //divide terminals into classes
             var parameters = new List<string>();
             var childInstructionSets = new List<string>();
-            bool hasPositionalParameters = false;
 
             foreach (var terminal in terminals)
             {
@@ -81,11 +80,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                     continue;
                 }
 
-                if(terminal.StartsWith("@"))
-                {
-                    hasPositionalParameters = true;
-                }
-
                 if (repository.ContainsKey(terminal))
                 {
                     childInstructionSets.Add(terminal);
@@ -94,12 +88,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                 {
                     parameters.Add(terminal);
                 }
-            }
-
-            if(hasPositionalParameters)
-            {
-                functions.Add($"{instructionSetModule}.{instructionSetName}", null);
-                return null;
             }
 
             IInstructionSet newInstructionSet = instructionSetFactory(Guid.NewGuid().ToString(), instructionSetModule, instructionSetName, instructionDefinition, parameters, childInstructionSets, startDate, creationDate);
