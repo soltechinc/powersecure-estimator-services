@@ -17,70 +17,43 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
 
             var stack = new Stack<Dictionary<string, object>>();
             stack.Push(new Dictionary<string, object>());
-            List<JToken> order = new List<JToken>();
             JObject.Parse(dataSheet).WalkNodes(
                 PreOrder: jToken =>
                 {
                     switch (jToken)
                     {
-                        case JArray jArray:
-                            {
-                                var parameters = stack.Peek();
-                                var arrayParameters = new Dictionary<string, object>();
-                                parameters.Add(jArray.Path, arrayParameters);
-                                stack.Push(arrayParameters);
-                                break;
-                            }
                         case JObject jObject:
                             {
                                 var parameters = stack.Peek();
-                                var objParameters = new Dictionary<string, object>();
-                                parameters.Add(jObject.Path, objParameters);
-                                stack.Push(objParameters);
+                                jObject.Properties()
+                                    .Where(p => p.Value.Type != JTokenType.Object && p.Value.Type != JTokenType.Array)
+                                    .Aggregate(parameters, (acc, prop) =>
+                                     {
+                                         switch (prop.Value.Type)
+                                         {
+                                             case JTokenType.Boolean:
+                                                 acc.Add(prop.Path, prop.Value.ToObject<bool>());
+                                                 break;
+                                             case JTokenType.Integer:
+                                                 acc.Add(prop.Path, Convert.ToDecimal(prop.Value.ToObject<int>()));
+                                                 break;
+                                             case JTokenType.Float:
+                                                 acc.Add(prop.Path, Convert.ToDecimal(prop.Value.ToObject<float>()));
+                                                 break;
+                                             case JTokenType.Null:
+                                                 acc.Add(prop.Path, null);
+                                                 break;
+                                             default:
+                                                 acc.Add(prop.Path, prop.Value.ToString());
+                                                 break;
+                                         }
+                                         return acc;
+                                     });
                                 break;
                             }
-                    }
-                },
-                Visit: jToken =>
-                {
-                    var parameters = stack.Peek();
-
-                    string path = CleanPath(jToken.Path);
-
-                    switch (jToken.Type)
-                    {
-                        case JTokenType.Boolean:
-                            parameters.Add(path, jToken.ToObject<bool>());
-                            break;
-                        case JTokenType.Integer:
-                            parameters.Add(path, Convert.ToDecimal(jToken.ToObject<int>()));
-                            break;
-                        case JTokenType.Float:
-                            parameters.Add(path, Convert.ToDecimal(jToken.ToObject<float>()));
-                            break;
-                        case JTokenType.Null:
-                            parameters.Add(path, null);
-                            break;
-                        default:
-                            parameters.Add(path, jToken.ToString());
-                            break;
-                    }
-                },
-                PostOrder: jToken =>
-                {
-                    switch (jToken)
-                    {
                         case JArray jArray:
                             {
-                                stack.Pop();
-                                break;
-                            }
-                        case JObject jObject:
-                            {
-                                if(stack.Count > 1)
-                                {
-                                    stack.Pop();
-                                }
+                                
                                 break;
                             }
                     }
@@ -166,11 +139,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             }
 
             return null;
-        }
-
-        private static string CleanPath(string path)
-        {
-            return path.Replace("['", "").Replace("']", "");
         }
     }
 }
