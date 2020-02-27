@@ -8,8 +8,8 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives {
-    public class CeilingPrimitive : IFunction {
-        public string Name => "ceiling";
+    public class FloorPrimitive : IFunction {
+        public string Name => "floor";
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository) {
             var value = parameters[0].ToDecimal();
@@ -19,7 +19,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives {
                 return 0;
             }
             
-            return (int)Math.Ceiling(value / multiple) * multiple;
+            return (int)Math.Floor(value / multiple) * multiple;
         }
 
         public (bool Success, string Message) Validate(JToken jToken) {
