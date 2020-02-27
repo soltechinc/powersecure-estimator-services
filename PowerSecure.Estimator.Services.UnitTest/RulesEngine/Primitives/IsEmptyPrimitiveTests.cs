@@ -9,21 +9,21 @@ using System.Text;
 namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
 {
     [TestClass]
-    public class IsNullPrimitiveTests
+    public class IsEmptyPrimitiveTests
     {
 
         [TestMethod]
         public void IsNullPrimitive_name()
         {
-            var primitive = new IsNullPrimitive();
+            var primitive = new IsEmptyPrimitive();
 
-            Assert.AreEqual("isnull", primitive.Name, "IsNull name changed");
+            Assert.AreEqual("isempty", primitive.Name, "IsNull name changed");
         }
 
         [TestMethod]
         public void IsNullPrimitive_invokeValue()
         {
-            var primitive = new IsNullPrimitive();
+            var primitive = new IsEmptyPrimitive();
 
             var value = (bool)primitive.Invoke(new object[] { "-3" }, null);
 
@@ -33,7 +33,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         [TestMethod]
         public void IsNullPrimitive_invokeIsNull()
         {
-            var primitive = new IsNullPrimitive();
+            var primitive = new IsEmptyPrimitive();
 
             var value = (bool)primitive.Invoke(new object[] { null }, null);
 
@@ -43,7 +43,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         [TestMethod]
         public void IsNullPrimitive_validateTooFewArguments()
         {
-            var primitive = new IsNullPrimitive();
+            var primitive = new IsEmptyPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[  ]"));
 
@@ -53,7 +53,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         [TestMethod]
         public void IsNullPrimitive_validateTooManyArguments()
         {
-            var primitive = new IsNullPrimitive();
+            var primitive = new IsEmptyPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[ '2', '2' ]"));
 
@@ -63,7 +63,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         [TestMethod]
         public void IsNullPrimitive_validateArrayArguments()
         {
-            var primitive = new IsNullPrimitive();
+            var primitive = new IsEmptyPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[ [] ]"));
 
@@ -73,7 +73,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Primitives
         [TestMethod]
         public void IsNullPrimitive_validate()
         {
-            var primitive = new IsNullPrimitive();
+            var primitive = new IsEmptyPrimitive();
 
             (var success, var message) = primitive.Validate(JToken.Parse("[ '3' ]"));
 

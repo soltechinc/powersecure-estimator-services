@@ -4,17 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
-    public class IsNullPrimitive : IFunction
+    public class IsEmptyPrimitive : IFunction
     {
-        public string Name => "isnull";
+        public string Name => "isempty";
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return parameters[0] == null;
+            return (parameters[0] == null || string.IsNullOrEmpty(parameters[0].ToRawString()));
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

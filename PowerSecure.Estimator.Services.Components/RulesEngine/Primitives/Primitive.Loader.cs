@@ -30,7 +30,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new GreaterThanPrimitive();
 			dict.Add(function.Name.ToLower(), function);
-			function = new IsNullPrimitive();
+			function = new IsEmptyPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new LessThanOrEqualPrimitive();
 			dict.Add(function.Name.ToLower(), function);
