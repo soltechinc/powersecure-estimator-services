@@ -8,18 +8,14 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives {
-    public class CeilingPrimitive : IFunction {
-        public string Name => "ceiling";
+    public class PowerPrimitive : IFunction {
+        public string Name => "^";
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository) {
             var value = parameters[0].ToDecimal();
-            var multiple = parameters[1].ToDecimal();
-            if(multiple == 0)
-            {
-                return 0;
-            }
+            var exponent = parameters[1].ToDecimal();
             
-            return (int)Math.Ceiling(value / multiple) * multiple;
+            return Convert.ToDecimal(Math.Pow((double)value, (double)exponent));
         }
 
         public (bool Success, string Message) Validate(JToken jToken) {

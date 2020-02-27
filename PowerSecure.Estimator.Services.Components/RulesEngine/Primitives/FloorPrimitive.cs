@@ -1,4 +1,4 @@
-﻿// 2 parameters A and B has to be greater than 0 and A has to be greater than B. Quotient equals Divide A to B then add 1. The final results is the value of Quotient multiplied by B
+﻿// 2 parameters.
 using System;
 using System.Collections.Generic;
 using System.Text;
