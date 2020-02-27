@@ -63,11 +63,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
             }
 
-            if(!neededParameters.All(p => suppliedParameters.Contains(p)))
-            {
-                throw new InvalidOperationException("Missing required parameters");
-            }
-
             var parameters = new Dictionary<string, object>();
             foreach(var pair in dataSheet)
             {

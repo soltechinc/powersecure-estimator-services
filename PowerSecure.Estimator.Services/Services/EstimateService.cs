@@ -36,7 +36,9 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         case JObject jObject:
                             {
-                                if(!jObject.Properties().Any(prop => prop.Name == "calculated"))
+                                if(!(jObject.Properties().Any(prop => prop.Name == "calculated") &&
+                                    jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                    jObject.Properties().Any(prop => prop.Name == "inputValue")))
                                 {
                                     break;
                                 }
@@ -90,17 +92,39 @@ namespace PowerSecure.Estimator.Services.Services
                 {
                     case JObject jObject:
                         {
-                            if (!jObject.Properties().Any(prop => prop.Name == "input"))
+                            if (!(jObject.Properties().Any(prop => prop.Name == "calculated") &&
+                                jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                jObject.Properties().Any(prop => prop.Name == "inputValue")))
                             {
                                 break;
                             }
 
-                            bool isInput = jObject["input"].ToObject<bool>();
+                            bool isCalculated = jObject["calculated"].ToObject<bool>();
                             string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
 
-                            if(!isInput && dataSheet.TryGetValue($"{moduleName}.{name}", out object value))
+                            if(isCalculated && dataSheet.TryGetValue($"{moduleName}.{name}", out object value) && value != null)
                             {
-                                jObject["inputValue"] = JToken.FromObject(value);
+                                if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "select")
+                                {
+                                    var options = new List<Dictionary<string, string>>();
+                                    foreach(var returnedOption in (object[])value)
+                                    {
+                                        foreach(var optionPart in (object[])returnedOption)
+                                        {
+                                            var option = new Dictionary<string, string>();
+                                            var optionsParts = (object[])optionPart;
+                                            option.Add("text", optionsParts[0].ToString());
+                                            option.Add("value", optionsParts[1].ToString());
+                                            options.Add(option);
+                                        }
+                                    }
+
+                                    jObject["options"] = JToken.FromObject(options);
+                                }
+                                else
+                                {
+                                    jObject["inputValue"] = JToken.FromObject(value);
+                                }
                                 break;
                             }
 

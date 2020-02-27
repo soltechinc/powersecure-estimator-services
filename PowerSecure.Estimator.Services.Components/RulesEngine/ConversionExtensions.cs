@@ -8,13 +8,17 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
 {
     public static class ConversionExtensions
     {
-        public static decimal ToDecimal(this object obj)
+        public static decimal? ToDecimal(this object obj)
         {
             switch (obj)
             {
+                case null:
+                    {
+                        return null;
+                    }
                 case UnresolvedParameter parameter:
                     {
-                        return parameter.Resolve().ToDecimal();
+                        return parameter.Resolve()?.ToDecimal();
                     }
                 case decimal d:
                     {
@@ -35,13 +39,17 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
             }
         }
 
-        public static bool ToBoolean(this object obj)
+        public static bool? ToBoolean(this object obj)
         {
             switch (obj)
             {
+                case null:
+                    {
+                        return null;
+                    }
                 case UnresolvedParameter parameter:
                     {
-                        return parameter.Resolve().ToBoolean();
+                        return parameter.Resolve()?.ToBoolean();
                     }
                 case bool b:
                     {
@@ -66,9 +74,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
         {
             switch (obj)
             {
+                case null:
+                    {
+                        return null;
+                    }
                 case UnresolvedParameter parameter:
                     {
-                        return parameter.Resolve().ToRawString();
+                        return parameter.Resolve()?.ToRawString();
                     }
                 case string s when s.StartsWith('$'):
                     {
@@ -85,9 +97,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
         {
             switch (obj)
             {
+                case null:
+                    {
+                        return null;
+                    }
                 case UnresolvedParameter parameter:
                     {
-                        return parameter.Resolve().ToStringLiteral();
+                        return parameter.Resolve()?.ToStringLiteral();
                     }
                 case string s when s.StartsWith('$'):
                     {
@@ -104,9 +120,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
         {
             switch (obj)
             {
+                case null:
+                    {
+                        return null;
+                    }
                 case UnresolvedParameter parameter:
                     {
-                        return parameter.Resolve().ToObjectArray();
+                        return parameter.Resolve()?.ToObjectArray();
                     }
                 default:
                     {
@@ -119,9 +139,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
         {
             switch (obj)
             {
+                case null:
+                    {
+                        return null;
+                    }
                 case UnresolvedParameter parameter:
                     {
-                        return parameter.Resolve().ToComparable();
+                        return parameter.Resolve()?.ToComparable();
                     }
                 case decimal d:
                     {
@@ -161,6 +185,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
         {
             switch (obj)
             {
+                case null:
+                    {
+                        return null;
+                    }
                 case UnresolvedParameter parameter:
                     {
                         return parameter.Resolve();
@@ -170,7 +198,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
             }
         }
 
-        public static IEnumerable<decimal> ToDecimal(this IEnumerable<object> objects)
+        public static IEnumerable<decimal?> ToDecimal(this IEnumerable<object> objects)
         {
             foreach (var obj in objects)
             {
@@ -178,7 +206,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
             }
         }
 
-        public static IEnumerable<bool> ToBoolean(this IEnumerable<object> objects)
+        public static IEnumerable<bool?> ToBoolean(this IEnumerable<object> objects)
         {
             foreach (var obj in objects)
             {

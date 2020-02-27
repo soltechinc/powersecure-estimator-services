@@ -16,8 +16,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters.Length > 1 ?
-                parameters.ToBoolean().Any(b => b) :
-                parameters[0].ToObjectArray().ToBoolean().Any(b => b);
+                parameters.ToBoolean().Any(b => b ?? true) :
+                parameters[0].ToObjectArray().ToBoolean().Any(b => b ?? true);
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

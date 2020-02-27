@@ -237,7 +237,6 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         }
 
         [TestMethod]
-        [ExpectedException(typeof(KeyNotFoundException))]
         public void Evaluate_withMissingParameter()
         {
             var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a" }, new string[] { }, DateTime.MinValue, DateTime.Now);
@@ -245,6 +244,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
             var value = instructionSet.Evaluate(dataTable, primitives, null);
+            Assert.IsNull(value, "Instruction set evaluated to a non-null value with a missing parameter.");
         }
 
         //[TestMethod]

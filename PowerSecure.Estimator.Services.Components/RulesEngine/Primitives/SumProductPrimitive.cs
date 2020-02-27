@@ -22,7 +22,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             for (int i = 0; i < values.Length; ++i)
             {
-                value += values[i] * factors[i];
+                value += (values[i] ?? 0) * (factors[i] ?? 0);
             }
 
             return value;

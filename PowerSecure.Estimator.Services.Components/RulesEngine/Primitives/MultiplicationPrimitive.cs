@@ -16,8 +16,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters.Length > 1 ?
-                parameters.ToDecimal().Aggregate(1m, (value, current) => value * current) :
-                parameters[0].ToObjectArray().ToDecimal().Aggregate(1m, (value, current) => value * current);
+                parameters.ToDecimal().Aggregate(1m, (value, current) => value * (current ?? 0)) :
+                parameters[0].ToObjectArray().ToDecimal().Aggregate(1m, (value, current) => value * (current ?? 0));
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

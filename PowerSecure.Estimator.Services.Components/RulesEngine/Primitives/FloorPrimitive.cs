@@ -14,12 +14,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives {
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository) {
             var value = parameters[0].ToDecimal();
             var multiple = parameters[1].ToDecimal();
-            if(multiple == 0)
+
+            if (!value.HasValue || !multiple.HasValue)
+            {
+                return null;
+            }
+
+            if (multiple == 0)
             {
                 return 0;
             }
             
-            return (int)Math.Floor(value / multiple) * multiple;
+            return (int)Math.Floor(value.Value / multiple.Value) * multiple;
         }
 
         public (bool Success, string Message) Validate(JToken jToken) {
