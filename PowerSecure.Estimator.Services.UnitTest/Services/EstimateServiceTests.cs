@@ -13,10 +13,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.Services
     [TestClass]
     public class EstimateServiceTests
     {
-        [TestMethod]
         public void HappyPathTest_evaluate()
         {
-            var estimateService = new EstimateService(null);
+            var estimateService = new EstimateService(null,null);
 
             JObject inputFromUi = JObject.Parse(File.ReadAllText(@".\Resources\module_evaluate_sample_json1.json"));
 

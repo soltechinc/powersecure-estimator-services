@@ -33,7 +33,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 log.LogInformation($"Request Body: {requestBody}");
 
-                (object returnValue, string message) = await new EstimateService(new CosmosFunctionRepository(dbClient)).Evaluate(JObject.Parse(requestBody));
+                (object returnValue, string message) = await new EstimateService(new CosmosFunctionRepository(dbClient), new CosmosFactorRepository(dbClient)).Evaluate(JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
