@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.Services
     public class EstimateServiceTests
     {
         [TestMethod]
-        public void HappyPathTest_singleInstruction()
+        public void HappyPathTest_evaluate()
         {
             var estimateService = new EstimateService(null);
 

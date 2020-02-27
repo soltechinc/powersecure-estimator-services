@@ -6,16 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 
 namespace PowerSecure.Estimator.Services.Services
 {
     public class EstimateService
     {
-        private readonly IFunctionRepository _functionRepository;
+        private readonly IInstructionSetRepository _instructionSetRepository;
+        private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IDictionary<string, IFunction> _functions;
 
-        public EstimateService(IFunctionRepository functionRepository)
+        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
         {
-            _functionRepository = functionRepository;
+            _instructionSetRepository = instructionSetRepository;
+            _referenceDataRepository = referenceDataRepository;
+            _functions = Primitive.Load();
         }
 
         public async Task<(object, string)> Evaluate(JObject uiInputs)
@@ -30,12 +36,12 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         case JObject jObject:
                             {
-                                if(!jObject.Properties().Any(prop => prop.Name == "input"))
+                                if(!jObject.Properties().Any(prop => prop.Name == "calculated"))
                                 {
                                     break;
                                 }
 
-                                bool isInput = jObject["input"].ToObject<bool>();
+                                bool isCalculated = jObject["calculated"].ToObject<bool>();
                                 string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 object inputValue;
                                 JToken inputValueFromJson = jObject["inputValue"];
@@ -63,13 +69,15 @@ namespace PowerSecure.Estimator.Services.Services
                                         }
                                 }
 
-                                dataSheet.Add($"{moduleName}.{name}", isInput ? inputValue : null);
+                                dataSheet.Add($"{moduleName}.{name}", isCalculated ? inputValue : null);
                                 break;
                             }
                     }
                 });
 
             //TODO - Add evaluate functionality
+            var rulesEngine = new RulesEngine();
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository);
             foreach(var key in dataSheet.Keys.ToList())
             {
                 dataSheet[key] = 1;
