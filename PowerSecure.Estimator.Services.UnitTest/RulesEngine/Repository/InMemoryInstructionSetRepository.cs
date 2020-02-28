@@ -14,49 +14,30 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 {
     public class InMemoryInstructionSetRepository : IInstructionSetRepository
     {
-        public Dictionary<string, SortedSet<IInstructionSet>> Items { get; } = new Dictionary<string, SortedSet<IInstructionSet>>();
+        public Dictionary<string, List<IInstructionSet>> Items { get; } = new Dictionary<string, List<IInstructionSet>>();
 
         public void Insert(IInstructionSet instructionSet)
         {
             if (!Items.ContainsKey(instructionSet.Key))
             {
-                Items.Add(instructionSet.Key, new SortedSet<IInstructionSet>(Comparer<IInstructionSet>.Create((first, second) => first.CreationDate.CompareTo(second.CreationDate))));
+                Items.Add(instructionSet.Key, new List<IInstructionSet>());
             }
-
             Items[instructionSet.Key].Add(instructionSet);
         }
 
-        public void Update(IInstructionSet instructionSet)
-        {
-            Items[instructionSet.Key].Remove(instructionSet);
-            Items[instructionSet.Key].Add(instructionSet);
+        public IInstructionSet Get(string module, string name, DateTime effectiveDate)
+        {            
+            return Get($"{module}.{name}",effectiveDate);
         }
 
-        public bool ContainsKey(string key)
+        public IInstructionSet Get(string key, DateTime effectiveDate)
         {
-            return Items.ContainsKey(key);
-        }
-
-        public IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetKeys, DateTime effectiveDate)
-        {
-            foreach (string instructionSetKey in instructionSetKeys)
+            if (Items.TryGetValue(key.ToLower(), out List<IInstructionSet> instructionSets))
             {
-                if (Items.TryGetValue(instructionSetKey, out SortedSet<IInstructionSet> instructionSets))
-                {
-                    yield return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).First();
-                }
-                else
-                {
-                    //handle error condition
-                }
+                return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).First();
             }
-        }
 
-        public IEnumerable<IInstructionSet> SelectByParameter(string parameter)
-        {
-            return Items.SelectMany(x => x.Value)
-                        .Where(x => x.Parameters.Contains(parameter))
-                        .ToList(); /* have to project to a new list to allow dictionary modification*/
+            return null;
         }
         
         public void Load(string csvFilename, IDictionary<string, IFunction> primitives)
@@ -69,10 +50,14 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
                 csvReader.Read();
                 csvReader.ReadHeader();
                 string[] headerRow = csvReader.Context.HeaderRecord;
-
                 while (csvReader.Read())
                 {
-                    this.InsertNew(csvReader.GetField("Module"),csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), csvReader.GetField<DateTime>("StartDate"), csvReader.GetField<DateTime>("CreationDate"), TestInstructionSet.Create, primitives);
+                    string key = string.Format("{0}.{1}", csvReader.GetField("Module"), csvReader.GetField("Name")).ToLower();
+                    if(!Items.ContainsKey(key))
+                    {
+                        Items.Add(key, new List<IInstructionSet>());
+                    }
+                    Items[key].Add(this.ValidateInstructionSet(csvReader.GetField("Module"),csvReader.GetField("Name"), csvReader.GetField("InstructionSet"), csvReader.GetField<DateTime>("StartDate"), csvReader.GetField<DateTime>("CreationDate"), TestInstructionSet.Create, primitives));
                 }
             }
         }

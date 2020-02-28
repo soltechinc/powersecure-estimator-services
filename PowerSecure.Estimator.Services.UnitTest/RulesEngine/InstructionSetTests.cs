@@ -19,14 +19,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All","test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All","test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
     
             Assert.AreEqual(1, repository.Items.Count);
-
-            var instructionSet = repository.Items.Values.First().First();
-            
-            Assert.AreEqual(2, instructionSet.Parameters.Count, "Parameter count does not match");
-            Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
 
         [TestMethod]
@@ -34,15 +29,10 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test2", "{ '*': [ 3, 'all.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ '*': [ 3, 'all.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
             
             Assert.AreEqual(2, repository.Items.Count);
-
-            var instructionSet = repository.Items["all.test2"].First();
-
-            Assert.AreEqual(0, instructionSet.Parameters.Count, "Parameter count does not match");
-            Assert.AreEqual(1, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
 
         [TestMethod]
@@ -50,15 +40,10 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test2", "{ '*': [ 3, 'all.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ '*': [ 3, 'all.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
             
             Assert.AreEqual(2, repository.Items.Count);
-
-            var instructionSet = repository.Items["all.test2"].First();
-
-            Assert.AreEqual(0, instructionSet.Parameters.Count, "Parameter count does not match");
-            Assert.AreEqual(1, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
 
         [TestMethod]
@@ -67,7 +52,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ], '*':[ 3 , 4] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ], '*':[ 3 , 4] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -76,7 +61,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': 3} ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': 3} ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -85,7 +70,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { 'This is not a primitive': 3} ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { 'This is not a primitive': 3} ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -94,7 +79,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew(null, "test", "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet(null, "test", "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -103,7 +88,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", null, "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", null, "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -112,7 +97,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", null, DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", null, DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -121,7 +106,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var primitives = Primitive.Load();
             var repository = new InMemoryInstructionSetRepository();
-            repository.InsertNew("All", "test", "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]}", DateTime.MinValue, DateTime.Now, null, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]}", DateTime.MinValue, DateTime.Now, null, primitives));
         }
 
         [TestMethod]
@@ -129,7 +114,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         public void ErrorTest_nullPrimitives()
         {
             var repository = new InMemoryInstructionSetRepository();
-            repository.InsertNew("All", "test", "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, null);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", "{ '*': [ 'y', { '+': [ 'x', 2 ] } ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, null));
         }
 
         [TestMethod]
@@ -138,7 +123,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", "This is not json", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", "This is not json", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -147,7 +132,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", "{ '*': [ 'y', { } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", "{ '*': [ 'y', { } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -156,7 +141,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", "{ '+': [ 'y', { '*': [ 'x' ] } ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", "{ '+': [ 'y', { '*': [ 'x' ] } ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
         }
 
         [TestMethod]
@@ -164,14 +149,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = new Dictionary<string, IFunction>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
-            repository.InsertNew("All", "test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , 3 ] }] ] }", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , 3 ] }] ] }", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             Assert.AreEqual(1, repository.Items.Count);
-
-            var instructionSet = repository.Items.Values.First().First();
-
-            Assert.AreEqual(3, instructionSet.Parameters.Count, "Parameter count does not match");
-            Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
 
         [TestMethod]
@@ -179,23 +159,18 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = new Dictionary<string, IFunction>() { ["find"] = new TestPrimitive("find", null, p => (true, string.Empty)), ["*"] = new TestPrimitive("*", null, p => (true, string.Empty)) };
-            repository.InsertNew("All", "test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , ['q', [['b'],2] ]] }] ] }", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", "{ 'find' : [ 'z', [ 1, 'x', { '*' : [ 'y' , ['q', [['b'],2] ]] }] ] }", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             Assert.AreEqual(1, repository.Items.Count);
-
-            var instructionSet = repository.Items.Values.First().First();
-
-            Assert.AreEqual(5, instructionSet.Parameters.Count, "Parameter count does not match");
-            Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
 
         [TestMethod]
         public void Evaluate_simple()
         {
-            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 2, 3 ]}", new string[] { }, new string[] { }, DateTime.MinValue, DateTime.Now);
+            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 2, 3 ]}", DateTime.MinValue, DateTime.Now);
             var primitives = Primitive.Load();
 
-            var value = (decimal)instructionSet.Evaluate(null, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(null, primitives, null, null, DateTime.Now);
 
             Assert.AreEqual(6, value, "Calculation failed");
         }
@@ -203,11 +178,11 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void Evaluate_withParameter()
         {
-            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', 3 ]}", new string[] { "a" }, new string[] { }, DateTime.MinValue, DateTime.Now);
+            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', 3 ]}", DateTime.MinValue, DateTime.Now);
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
-            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now);
 
             Assert.AreEqual(6, value, "Calculation failed");
         }
@@ -215,11 +190,11 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void Evaluate_withNestedPrimitive()
         {
-            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', { '+' : [ 'a', 3] } ]}", new string[] { "a" }, new string[] { }, DateTime.MinValue, DateTime.Now);
+            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', { '+' : [ 'a', 3] } ]}", DateTime.MinValue, DateTime.Now);
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
-            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now);
 
             Assert.AreEqual(10, value, "Calculation failed");
         }
@@ -227,11 +202,11 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void Evaluate_withNestedPrimitiveAndMultipleParameters()
         {
-            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a", "b" }, new string[] { }, DateTime.MinValue, DateTime.Now);
+            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", DateTime.MinValue, DateTime.Now);
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2", ["b"] = "6" };
 
-            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now);
 
             Assert.AreEqual(18, value, "Calculation failed");
         }
@@ -239,11 +214,11 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         [TestMethod]
         public void Evaluate_withMissingParameter()
         {
-            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", new string[] { "a" }, new string[] { }, DateTime.MinValue, DateTime.Now);
+            var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 'a', { '+' : [ 'b', 3] } ]}", DateTime.MinValue, DateTime.Now);
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
-            var value = instructionSet.Evaluate(dataTable, primitives, null);
+            var value = instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now);
             Assert.IsNull(value, "Instruction set evaluated to a non-null value with a missing parameter.");
         }
 
@@ -252,14 +227,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             Assert.AreEqual(1, repository.Items.Count);
-
-            var instructionSet = repository.Items.Values.First().First();
-
-            Assert.AreEqual(2, instructionSet.Parameters.Count, "Parameter count does not match");
-            Assert.AreEqual(0, instructionSet.ChildInstructionSets.Count, "Child instruction set count does not match");
         }
     }
 }

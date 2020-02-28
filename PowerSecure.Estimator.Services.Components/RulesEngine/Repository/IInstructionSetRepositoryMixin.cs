@@ -9,7 +9,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public static class IInstructionSetRepositoryMixin
     {
-        public static IInstructionSet InsertNew(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<string, string,string,string, IEnumerable<string>, IEnumerable<string>, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IFunction> functions)
+        public static IInstructionSet ValidateInstructionSet(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<string, string,string,string, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IFunction> functions)
         {
             if (instructionSetModule == null) throw new ArgumentNullException("instructionSetModule");
             if (instructionSetName == null) throw new ArgumentNullException("instructionSetName");
@@ -17,8 +17,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             if (repository == null) throw new ArgumentNullException("repository");
             if (instructionSetFactory == null) throw new ArgumentNullException("instructionSetFactory");
             if (functions == null) throw new ArgumentNullException("functions");
-
-            var terminals = new HashSet<string>();
+            
             instructionSetName = instructionSetName.Trim().ToLower();
             instructionSetModule = instructionSetModule.Trim().ToLower();
 
@@ -59,52 +58,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
                                 break;
                             }
                     }
-                },
-            Visit: jToken =>
-                {
-                    terminals.Add(jToken.ToString().Trim().ToLower());
                 }
             );
 
-            //divide terminals into classes
-            var parameters = new List<string>();
-            var childInstructionSets = new List<string>();
-
-            foreach (var terminal in terminals)
-            {
-                if (string.IsNullOrEmpty(terminal) ||
-                    terminal.StartsWith("$") ||
-                    decimal.TryParse(terminal, out decimal d) ||
-                    bool.TryParse(terminal, out bool b))
-                {
-                    continue;
-                }
-
-                if (repository.ContainsKey(terminal))
-                {
-                    childInstructionSets.Add(terminal);
-                }
-                else
-                {
-                    parameters.Add(terminal);
-                }
-            }
-
-            IInstructionSet newInstructionSet = instructionSetFactory(Guid.NewGuid().ToString(), instructionSetModule, instructionSetName, instructionDefinition, parameters, childInstructionSets, startDate, creationDate);
-            repository.Insert(newInstructionSet);
-
-            //update existing instruction sets 
-            repository.SelectByParameter(newInstructionSet.Key)
-                      .ForEach(instructionSet => repository.Update(instructionSetFactory(instructionSet.Id,
-                        instructionSet.Module,
-                        instructionSet.Name,
-                        instructionSet.Instructions,
-                        instructionSet.Parameters.Where(x => x != newInstructionSet.Key),
-                        instructionSet.ChildInstructionSets.Union(new List<string> { newInstructionSet.Key }),
-                        instructionSet.StartDate,
-                        instructionSet.CreationDate)));
-
-            return newInstructionSet;
+            return instructionSetFactory(Guid.NewGuid().ToString(), instructionSetModule, instructionSetName, instructionDefinition, startDate, creationDate);
         }
     }
 }

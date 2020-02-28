@@ -13,8 +13,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
         {
             var suppliedParameters = new HashSet<string>();
             var missingParameters = new HashSet<string>();
-
-            foreach(var parameter in dataSheet)
+            var parameters = new Dictionary<string, object>();
+            
+            foreach (var parameter in dataSheet)
             {
                 if(parameter.Value == null)
                 {
@@ -23,71 +24,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 else
                 {
                     suppliedParameters.Add(parameter.Key.Trim().ToLower());
+                    parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
                 }
-            }
-
-            var childInstructionSetKeys = new HashSet<string>();
-            var instructionSets = new Dictionary<string, IInstructionSet>();
-            var neededParameters = new HashSet<string>();
-            foreach(var instructionSet in instructionSetRepository.SelectByKey(missingParameters, effectiveDate))
-            {
-                instructionSets.Add(instructionSet.Name, instructionSet);
-                foreach(var childInstructionSetKey in instructionSet.ChildInstructionSets)
-                {
-                    if(!childInstructionSetKeys.Contains(childInstructionSetKey) && !suppliedParameters.Contains(childInstructionSetKey))
-                    {
-                        childInstructionSetKeys.Add(childInstructionSetKey);
-                    }
-                }
-                foreach(var parameter in instructionSet.Parameters)
-                {
-                    if(!neededParameters.Contains(parameter))
-                    {
-                        neededParameters.Add(parameter);
-                    }
-                }
-            }
-
-            foreach(var instructionSet in instructionSetRepository.SelectByKey(childInstructionSetKeys, effectiveDate))
-            {
-                if(!instructionSets.ContainsKey(instructionSet.Key))
-                {
-                    instructionSets.Add(instructionSet.Key, instructionSet);
-                }
-                foreach (var parameter in instructionSet.Parameters)
-                {
-                    if (!neededParameters.Contains(parameter))
-                    {
-                        neededParameters.Add(parameter);
-                    }
-                }
-            }
-
-            var parameters = new Dictionary<string, object>();
-            foreach(var pair in dataSheet)
-            {
-                parameters.Add(pair.Key?.Trim()?.ToLower(), pair.Value);
             }
             
-            foreach (var instructionSet in instructionSets.Values)
+            foreach(var key in missingParameters)
             {
-                if(!parameters.ContainsKey(instructionSet.Key))
+                if(!parameters.ContainsKey(key))
                 {
-                    parameters.Add(instructionSet.Key, instructionSet);
+                    parameters.Add(key, instructionSetRepository.Get(key, effectiveDate)?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate));
                 }
-                else if (parameters[instructionSet.Key] == null)
-                {
-                    parameters[instructionSet.Key] = instructionSet;
-                }
-            }
 
-            foreach (var key in missingParameters)
-            {
-                if (parameters[key] is IInstructionSet instructionSet)
-                {
-                    parameters[key] = instructionSet.Evaluate(parameters, functions, referenceDataRepository);
-                }
-                dataSheet[key] = parameters[key].ToRawString();
+                dataSheet[key] = parameters[key]?.ToRawString();
             }
 
             return dataSheet;

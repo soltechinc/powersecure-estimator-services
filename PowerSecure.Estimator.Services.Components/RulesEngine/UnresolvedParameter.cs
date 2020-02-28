@@ -16,6 +16,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public IDictionary<string, object> Parameters { get; set; }
         public IDictionary<string, IFunction> Functions { get; set; }
         public IReferenceDataRepository ReferenceDataRepository { get; set; }
+        public IInstructionSetRepository InstructionSetRepository { get; set; }
+        public DateTime EffectiveDate { get; set; }
         public bool IsNullValue { get; private set; } = false;
 
         private UnresolvedParameter(JToken jToken, UnresolvedParameter parentParameter)
@@ -24,6 +26,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             Parameters = parentParameter.Parameters;
             Functions = parentParameter.Functions;
             ReferenceDataRepository = parentParameter.ReferenceDataRepository;
+            InstructionSetRepository = parentParameter.InstructionSetRepository;
+            EffectiveDate = parentParameter.EffectiveDate;
         }
 
         public object Resolve()
@@ -47,7 +51,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 {
                                     retValue = Functions[jProp.Name].Invoke(unresolvedParameters, ReferenceDataRepository);
                                 }
-                                catch (Exception ignored) { }
+                                catch (Exception ignored) { return null; }
                                 return unresolvedParameters.Any(p => p.IsNullValue) ? null : retValue;
                             }
                         case JTokenType.Array when Token.Parent.Type == JTokenType.Array:
@@ -71,11 +75,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     string key = str.Trim().ToLower();
                                     if (!Parameters.ContainsKey(key))
                                     {
-                                        return null;
+                                        var instructionSet = InstructionSetRepository.Get(key, EffectiveDate);
+
+                                        if(instructionSet == null)
+                                        {
+                                            return null;
+                                        }
+
+                                        Parameters.Add(key, instructionSet);
                                     }
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
                                     {
-                                        Parameters[key] = childInstructionSet.Evaluate(Parameters, Functions, ReferenceDataRepository);
+                                        Parameters[key] = childInstructionSet.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate);
                                     }
 
                                     return Parameters[key];

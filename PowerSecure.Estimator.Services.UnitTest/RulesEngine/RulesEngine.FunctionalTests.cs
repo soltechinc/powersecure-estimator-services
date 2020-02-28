@@ -17,7 +17,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
             
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -32,8 +32,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test2", "{ '*': [ 3, 'All.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ '*': [ 3, 'All.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -48,9 +48,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test2", "{ 'if': [ true, 'All.test', 'All.test3' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test3", "{ '*': [ 'z', 'z' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ 'if': [ true, 'All.test', 'All.test3' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test3", "{ '*': [ 'z', 'z' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -65,9 +65,9 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test2", "{ 'if': [ true, 'All.test', 'All.test3' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test3", "{ '*': [ 'z', 'z' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ 'if': [ true, 'All.test', 'All.test3' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test3", "{ '*': [ 'z', 'z' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -82,8 +82,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now.AddDays(-2), TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 3 ] } ]} ", DateTime.MinValue.AddDays(1), DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now.AddDays(-2), TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 3 ] } ]} ", DateTime.MinValue.AddDays(1), DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -94,21 +94,20 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         }
 
         [TestMethod]
-        [ExpectedException(typeof(FormatException))]
         public void ErrorTest_parameterTypingError()
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test2", "{ 'if': [ true, 'All.test', 'All.test3' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test3", "{ '*': [ 'z', 'z' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ 'if': [ true, 'All.test', 'All.test3' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test3", "{ '*': [ 'z', 'z' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = 2, ["y"] = "3", ["z"] = "nan", ["all.test3"] = null }, DateTime.Now, primitives, repository, null);
 
             Assert.AreEqual(4, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("12", dataSheet["all.test2"], "Calculation is incorrect");
+            Assert.IsNull(dataSheet["all.test3"], "Calculation is incorrect");
         }
 
         [TestMethod]
@@ -116,8 +115,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test2", "{ '*': [ 3, 'All.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ '*': [ 3, 'All.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -131,8 +130,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
-            repository.InsertNew("All", "test2", "{ '*': [ 3, 'All.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+            repository.Insert(repository.ValidateInstructionSet("All", "test2", "{ '*': [ 3, 'All.test' ]}", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 
@@ -147,7 +146,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
         {
             var repository = new InMemoryInstructionSetRepository();
             var primitives = Primitive.Load();
-            repository.InsertNew("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives);
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { '*': [ 'y', { '+': [ 'x', 2 ] } ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
 
             var engine = new Components.RulesEngine.RulesEngine();
 

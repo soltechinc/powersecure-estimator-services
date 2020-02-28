@@ -10,8 +10,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         string Name { get; }
         string Key { get; }
         string Instructions { get; }
-        ReadOnlyCollection<string> Parameters { get; }
-        ReadOnlyCollection<string> ChildInstructionSets { get; }
         DateTime StartDate { get; }
         DateTime CreationDate { get; }
     }

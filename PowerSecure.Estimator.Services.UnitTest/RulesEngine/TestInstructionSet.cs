@@ -13,14 +13,12 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 {
     public class TestInstructionSet : IInstructionSet
     {
-        public TestInstructionSet(string id, string module, string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets, DateTime startDate, DateTime creationDate)
+        public TestInstructionSet(string id, string module, string name, string instructions, DateTime startDate, DateTime creationDate)
         {
             Id = id;
             Module = module;
             Name = name;
             Instructions = instructions;
-            Parameters = new ReadOnlyCollection<string>(parameters.ToList());
-            ChildInstructionSets = new ReadOnlyCollection<string>(childInstructionSets.ToList());
             StartDate = startDate;
             CreationDate = creationDate;
         }
@@ -35,17 +33,13 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
         public string Instructions { get; private set; }
 
-        public ReadOnlyCollection<string> Parameters { get; private set; }
-
-        public ReadOnlyCollection<string> ChildInstructionSets { get; private set; }
-
         public DateTime StartDate { get; private set; }
 
         public DateTime CreationDate { get; private set; }
 
-        public static TestInstructionSet Create(string id, string module, string name, string instructions, IEnumerable<string> parameters, IEnumerable<string> childInstructionSets, DateTime startDate, DateTime creationDate)
+        public static TestInstructionSet Create(string id, string module, string name, string instructions, DateTime startDate, DateTime creationDate)
         {
-            return new TestInstructionSet(id, module, name, instructions, parameters, childInstructionSets, startDate, creationDate);
+            return new TestInstructionSet(id, module, name, instructions, startDate, creationDate);
         }
     }
 }

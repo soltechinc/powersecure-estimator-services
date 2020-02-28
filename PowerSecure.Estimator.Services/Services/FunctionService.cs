@@ -29,6 +29,10 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Upsert(JObject document)
         {
+            if (!document.ContainsKey("creationdate"))
+            {
+                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("MM/dd/yyyy")));
+            }
             return (await _functionRepository.Upsert(document),"OK");
         }
 

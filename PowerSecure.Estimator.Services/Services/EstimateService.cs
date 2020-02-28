@@ -77,7 +77,6 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 });
 
-            //TODO - Add evaluate functionality
             var rulesEngine = new RulesEngine();
             //rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository);
             foreach(var key in dataSheet.Keys.ToList())

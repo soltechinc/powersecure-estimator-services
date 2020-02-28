@@ -30,33 +30,6 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> Upsert(JObject document)
         {
-            IInstructionSet instructionSet = document.ToObject<InstructionSet>();
-            DeleteFromCache(instructionSet);
-            instructionSet = this.InsertNew(instructionSet.Module,
-                instructionSet.Name,
-                instructionSet.Instructions,
-                instructionSet.StartDate,
-                DateTime.Now,
-                InstructionSet.Create,
-                _functions);
-
-            if(document.ContainsKey("id"))
-            {
-                var id = document["id"];
-                document = JObject.FromObject(instructionSet);
-                document["id"] = id;
-            }
-            else
-            {
-                document = JObject.FromObject(instructionSet);
-                document.Remove("id");
-            }
-
-            return await _Upsert(document);
-        }
-
-        public async Task<object> _Upsert(JObject document)
-        {
             if (document.ContainsKey("id"))
             {
                 return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["module"].ToString()) });
@@ -67,8 +40,6 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<int> Delete(string id, IDictionary<string, string> queryParams)
         {
-            DeleteFromCache(id);
-
             if (queryParams.ContainsKey("module"))
             {
                 await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(queryParams["module"]) });
@@ -148,138 +119,33 @@ namespace PowerSecure.Estimator.Services.Repositories
             return functions;
         }
 
-        private Dictionary<string, SortedSet<IInstructionSet>> InstructionSetCache { get; } = new Dictionary<string, SortedSet<IInstructionSet>>();
-        
-        private async Task<object> InitializeInstructionSetCache()
+        IInstructionSet IInstructionSetRepository.Get(string module, string name, DateTime effectiveDate)
         {
-            var query = _dbClient.CreateDocumentQuery<Function>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+            var query = _dbClient.CreateDocumentQuery<Function>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
+                .Where(f => f.Module == module)
+                .Where(f => f.Name == name)
+                .AsDocumentQuery();
 
-            while (query.HasMoreResults)
+            var instructionSets = new List<IInstructionSet>();
+
+            Task.Run(async () =>
             {
-                foreach (Function function in await query.ExecuteNextAsync())
+                while (query.HasMoreResults)
                 {
-                    InsertIntoCache(InstructionSet.FromFunction(function));
+                    foreach (InstructionSet instructionSet in await query.ExecuteNextAsync())
+                    {
+                        instructionSets.Add(instructionSet);
+                    }
                 }
-            }
-
-            return null;
+            }).GetAwaiter().GetResult();
+            
+            return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).First();
         }
 
-        void IInstructionSetRepository.Insert(IInstructionSet instructionSet)
+        IInstructionSet IInstructionSetRepository.Get(string key, DateTime effectiveDate)
         {
-            if (InstructionSetCache.Count == 0)
-            {
-                return;
-            }
-
-            InsertIntoCache(instructionSet);
-        }
-
-        private void InsertIntoCache(IInstructionSet instructionSet)
-        {
-            if (!InstructionSetCache.ContainsKey(instructionSet.Key))
-            {
-                InstructionSetCache.Add(instructionSet.Key, new SortedSet<IInstructionSet>(Comparer<IInstructionSet>.Create((first, second) => first.CreationDate.CompareTo(second.CreationDate))));
-            }
-
-            InstructionSetCache[instructionSet.Key].Add(instructionSet);
-        }
-
-        void IInstructionSetRepository.Update(IInstructionSet instructionSet)
-        {
-            if (InstructionSetCache.Count == 0)
-            {
-                return;
-            }
-
-            var o = _Upsert(JObject.FromObject(instructionSet)).Result;
-
-            InstructionSetCache[instructionSet.Key].Remove(instructionSet);
-            InstructionSetCache[instructionSet.Key].Add(instructionSet);
-        }
-
-        private void DeleteFromCache(IInstructionSet instructionSet)
-        {
-            if (InstructionSetCache.Count == 0)
-            {
-                var o = InitializeInstructionSetCache().Result;
-            }
-
-            if(!InstructionSetCache.ContainsKey(instructionSet.Key))
-            {
-                return;
-            }
-
-            InstructionSetCache[instructionSet.Key].Remove(instructionSet);
-            if (InstructionSetCache[instructionSet.Key].Count == 0)
-            {
-                InstructionSetCache.Remove(instructionSet.Key);
-            }
-        }
-
-        private void DeleteFromCache(string id)
-        {
-            if (InstructionSetCache.Count == 0)
-            {
-                var o = InitializeInstructionSetCache().Result;
-            }
-
-            IInstructionSet deletedInstructionSet = InstructionSetCache.SelectMany(x => x.Value).FirstOrDefault(i => i.Id == id);
-
-            if (deletedInstructionSet != null)
-            {
-                DeleteFromCache(deletedInstructionSet);
-
-                InstructionSetCache.SelectMany(x => x.Value)
-                            .Where(x => x.ChildInstructionSets.Contains(deletedInstructionSet.Key))
-                            .ToList()
-                            .ForEach(instructionSet => ((IInstructionSetRepository)this).Update(InstructionSet.Create(instructionSet.Id,
-                                instructionSet.Module,
-                                instructionSet.Name,
-                                instructionSet.Instructions,
-                                instructionSet.Parameters.Union(new List<string> { deletedInstructionSet.Key }),
-                                instructionSet.ChildInstructionSets.Where(x => x != deletedInstructionSet.Key),
-                                instructionSet.StartDate,
-                                instructionSet.CreationDate)));
-            }
-        }
-
-        bool IInstructionSetRepository.ContainsKey(string key)
-        {
-            if (InstructionSetCache.Count == 0)
-            {
-                var o = InitializeInstructionSetCache().Result;
-            }
-
-            return InstructionSetCache.ContainsKey(key);
-        }
-
-        IEnumerable<IInstructionSet> IInstructionSetRepository.SelectByKey(IEnumerable<string> instructionSetKeys, DateTime effectiveDate)
-        {
-            if (InstructionSetCache.Count == 0)
-            {
-                var o = InitializeInstructionSetCache().Result;
-            }
-
-            foreach (string instructionSetKey in instructionSetKeys)
-            {
-                if (InstructionSetCache.TryGetValue(instructionSetKey, out SortedSet<IInstructionSet> instructionSets))
-                {
-                    yield return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).First();
-                }
-            }
-        }
-
-        IEnumerable<IInstructionSet> IInstructionSetRepository.SelectByParameter(string parameter)
-        {
-            if (InstructionSetCache.Count == 0)
-            {
-                var o = InitializeInstructionSetCache().Result;
-            }
-
-            return InstructionSetCache.SelectMany(x => x.Value)
-                        .Where(x => x.Parameters.Contains(parameter))
-                        .ToList(); /* have to project to a new list to allow dictionary modification*/
+            var x = key.Split('.');
+            return ((IInstructionSetRepository)this).Get(x[0], x[1], effectiveDate);
         }
     }
 }

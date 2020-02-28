@@ -10,9 +10,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public static class IInstructionSetMixin
     {
-        public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, object> parameters, IDictionary<string, IFunction> functions, IReferenceDataRepository referenceDataRepository)
+        public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, object> parameters, IDictionary<string, IFunction> functions, IReferenceDataRepository referenceDataRepository, IInstructionSetRepository instructionSetRepository, DateTime effectiveDate)
         {
-            return new UnresolvedParameter() { Token = JObject.Parse(instructionSet.Instructions), Parameters = parameters, Functions = functions, ReferenceDataRepository = referenceDataRepository }.Resolve();
+            return new UnresolvedParameter() { Token = JObject.Parse(instructionSet.Instructions), Parameters = parameters, Functions = functions, ReferenceDataRepository = referenceDataRepository, InstructionSetRepository = instructionSetRepository, EffectiveDate = effectiveDate }.Resolve();
         }
     }
 }

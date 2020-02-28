@@ -6,14 +6,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public interface IInstructionSetRepository
     {
-        IEnumerable<IInstructionSet> SelectByKey(IEnumerable<string> instructionSetNames, DateTime date);
+        IInstructionSet Get(string module, string name, DateTime effectiveDate);
 
-        IEnumerable<IInstructionSet> SelectByParameter(string parameter);
-
-        void Insert(IInstructionSet instructionSet);
-
-        void Update(IInstructionSet instructionSet);
-
-        bool ContainsKey(string key);
+        IInstructionSet Get(string key, DateTime effectiveDate);
     }
 }
