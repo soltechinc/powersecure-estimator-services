@@ -47,11 +47,16 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 var jProp = Token.Children<JProperty>().First();
                                 var unresolvedParameters = jProp.Value.Children().Select(jToken => new UnresolvedParameter(jToken, this)).ToArray();
                                 object retValue = null;
+                                IFunction function = Functions[jProp.Name];
                                 try
                                 {
-                                    retValue = Functions[jProp.Name].Invoke(unresolvedParameters, ReferenceDataRepository);
+                                    retValue = function.Invoke(unresolvedParameters, ReferenceDataRepository);
                                 }
                                 catch (Exception ignored) { return null; }
+                                if(function is IsEmptyPrimitive)
+                                {
+                                    return retValue;
+                                }
                                 return unresolvedParameters.Any(p => p.IsNullValue) ? null : retValue;
                             }
                         case JTokenType.Array when Token.Parent.Type == JTokenType.Array:
@@ -86,7 +91,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     }
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
                                     {
-                                        Parameters[key] = childInstructionSet.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate);
+                                        Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate);
                                     }
 
                                     return Parameters[key];

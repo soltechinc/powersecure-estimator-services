@@ -15,10 +15,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             assembly.GetTypes()
                 .Where(p => typeof(IFunction).IsAssignableFrom(p) && p.IsClass)
-                .ForEach(type =>
+                .Aggregate(functions, (acc,type) =>
                 {
                     var primitive = (IFunction)Activator.CreateInstance(type);
-                    functions.Add(primitive.Name.ToLower(), primitive);
+                    acc.Add(primitive.Name.ToLower(), primitive);
+                    return acc;
                 });
 
             return functions;

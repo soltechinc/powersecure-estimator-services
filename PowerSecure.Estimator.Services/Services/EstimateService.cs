@@ -78,11 +78,7 @@ namespace PowerSecure.Estimator.Services.Services
                 });
 
             var rulesEngine = new RulesEngine();
-            //rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository);
-            foreach(var key in dataSheet.Keys.ToList())
-            {
-                dataSheet[key] = 1;
-            }
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository);
 
             //Convert back
             uiInputs.WalkNodes(PreOrder: jToken =>
@@ -108,14 +104,11 @@ namespace PowerSecure.Estimator.Services.Services
                                     var options = new List<Dictionary<string, string>>();
                                     foreach(var returnedOption in (object[])value)
                                     {
-                                        foreach(var optionPart in (object[])returnedOption)
-                                        {
-                                            var option = new Dictionary<string, string>();
-                                            var optionsParts = (object[])optionPart;
-                                            option.Add("text", optionsParts[0].ToString());
-                                            option.Add("value", optionsParts[1].ToString());
-                                            options.Add(option);
-                                        }
+                                        var option = new Dictionary<string, string>();
+                                        var optionsParts = (object[])returnedOption;
+                                        option.Add("text", optionsParts[0].ToString());
+                                        option.Add("value", optionsParts[1].ToString());
+                                        options.Add(option);
                                     }
 
                                     jObject["options"] = JToken.FromObject(options);

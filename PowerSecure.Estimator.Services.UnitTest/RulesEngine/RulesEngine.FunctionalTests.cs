@@ -155,5 +155,20 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
             Assert.AreEqual("5", dataSheet["all.test"], "Value of test was changed");
         }
+
+        [TestMethod]
+        public void HappyPathTest_isEmpty()
+        {
+            var repository = new InMemoryInstructionSetRepository();
+            var primitives = Primitive.Load();
+            repository.Insert(repository.ValidateInstructionSet("All", "test", " { 'isempty': [ 'y' ]} ", DateTime.MinValue, DateTime.Now, TestInstructionSet.Create, primitives));
+
+            var engine = new Components.RulesEngine.RulesEngine();
+
+            var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["all.test"] = null }, DateTime.Now, primitives, repository, null);
+
+            Assert.AreEqual(1, dataSheet.Count, "Count of items in data sheet is incorrect");
+            Assert.AreEqual("True", dataSheet["all.test"], "Calculation is incorrect");
+        }
     }
 }
