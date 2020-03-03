@@ -55,25 +55,25 @@ namespace PowerSecure.Estimator.Services.Services
                                     case JTokenType.Integer:
                                         {
                                             decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
-                                            inputValue = isCalculated ? null : value;
+                                            inputValue = value;
                                             break;
                                         }
                                     case JTokenType.Float:
                                         {
                                             decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
-                                            inputValue = isCalculated ? null : value;
+                                            inputValue = value;
                                             break;
                                         }
                                     case JTokenType.Boolean:
                                         {
                                             bool? value = inputValueFromJson.ToObject<bool>();
-                                            inputValue = isCalculated ? null : value;
+                                            inputValue = value;
                                             break;
                                         }
                                     default:
                                         {
                                             string value = inputValueFromJson.ToObject<string>();
-                                            inputValue = (isCalculated || string.IsNullOrWhiteSpace(value)) ? null : value;
+                                            inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
                                             break;
                                         }
                                 }
