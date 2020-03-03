@@ -118,7 +118,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         object IReferenceDataRepository.Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, DateTime effectiveDate, string returnFieldName)
         {
-            var str = new StringBuilder("select * from " + _collectionId + " f where f.returnattribute = \"" + returnFieldName.ToLower() + "\"");
+            var str = new StringBuilder("select * from f where f.returnattribute = \"" + returnFieldName.ToLower() + "\"");
             foreach((string searchParam, string value) in criteria)
             {
                 str.Append(" and f." + searchParam.ToLower().Trim() + " = \"" + value.ToLower().Trim() + "\"");
