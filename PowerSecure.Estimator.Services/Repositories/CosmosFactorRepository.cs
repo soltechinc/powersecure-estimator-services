@@ -118,17 +118,17 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         object IReferenceDataRepository.Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, DateTime effectiveDate, string returnFieldName)
         {
-            var str = new StringBuilder("select * from " + _collectionId + " f where f.returnattribute = \"" + returnFieldName + "\"");
+            var str = new StringBuilder("select * from " + _collectionId + " f where f.returnattribute = \"" + returnFieldName.ToLower() + "\"");
             foreach((string searchParam, string value) in criteria)
             {
-                str.Append(" and f." + searchParam.ToLower().Trim() + " = \"" + value.Trim() + "\"");
+                str.Append(" and f." + searchParam.ToLower().Trim() + " = \"" + value.ToLower().Trim() + "\"");
             }
 
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId),
                             str.ToString()).AsDocumentQuery();
 
-            Factor result = query.ExecuteNextAsync().Result.Where(f => f.StartDate < effectiveDate)
-                          .OrderByDescending(f => f.CreationDate)
+            Factor result = query.ExecuteNextAsync().Result.Where(f => DateTime.Parse(f.startdate) < effectiveDate)
+                          .OrderByDescending(f => f.creationdate)
                           .FirstOrDefault();
 
             if(result == null)
