@@ -31,7 +31,15 @@ namespace PowerSecure.Estimator.Services.Services
         {
             if (!document.ContainsKey("creationdate"))
             {
-                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("MM/dd/yyyy")));
+                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
+            }
+            if(document.ContainsKey("module"))
+            {
+                document["module"] = document["module"].ToString().ToLower();
+            }
+            if (document.ContainsKey("name"))
+            {
+                document["name"] = document["name"].ToString().ToLower();
             }
             return (await _functionRepository.Upsert(document),"OK");
         }

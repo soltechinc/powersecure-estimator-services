@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,8 +16,10 @@ namespace PowerSecure.Estimator.Services.ActionResults
         {
             switch(obj)
             {
+                case JObject jObj:
+                    return ResultFromStatusCode(new List<object> { obj }, message, HttpStatusCode.OK);
                 case IEnumerable e:
-                        return ResultFromStatusCode(obj, message, HttpStatusCode.OK);
+                    return ResultFromStatusCode(obj, message, HttpStatusCode.OK);
                 default:
                     return ResultFromStatusCode(new List<object> { obj }, message, HttpStatusCode.OK);
             }
@@ -25,6 +28,8 @@ namespace PowerSecure.Estimator.Services.ActionResults
         {
             switch (obj)
             {
+                case JObject jObj:
+                    return ResultFromStatusCode(new List<object> { obj }, message, HttpStatusCode.InternalServerError);
                 case IEnumerable e:
                     return ResultFromStatusCode(obj, message, HttpStatusCode.InternalServerError);
                 default:
