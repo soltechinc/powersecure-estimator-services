@@ -115,8 +115,8 @@ namespace PowerSecure.Estimator.Services.Services
                                     {
                                         var option = new Dictionary<string, string>();
                                         var optionsParts = (object[])returnedOption;
-                                        option.Add("text", optionsParts[0].ToString());
-                                        option.Add("value", optionsParts[1].ToString());
+                                        option.Add("text", UnwrapString(optionsParts[0].ToString()));
+                                        option.Add("value", UnwrapString(optionsParts[1].ToString()));
                                         options.Add(option);
                                     }
 
@@ -124,7 +124,7 @@ namespace PowerSecure.Estimator.Services.Services
                                 }
                                 else
                                 {
-                                    jObject["inputValue"] = JToken.FromObject(value);
+                                    jObject["inputValue"] = UnwrapString(JToken.FromObject(value).ToString());
                                 }
                                 break;
                             }
@@ -135,6 +135,20 @@ namespace PowerSecure.Estimator.Services.Services
             });
 
             return (uiInputs, "");
+        }
+
+        private static string UnwrapString(string str)
+        {
+            if(string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            if(str.StartsWith("$"))
+            {
+                return str.Substring(1);
+            }
+            return str;
         }
     }
 }
