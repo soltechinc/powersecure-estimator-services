@@ -27,7 +27,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 }
             }
 
-            return parameters[2];
+            return parameters[2].ToResolvedParameter();
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
