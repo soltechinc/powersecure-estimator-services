@@ -55,9 +55,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 {
                                     retValue = function.Invoke(unresolvedParameters, ReferenceDataRepository);
                                 }
-                                catch (Exception ignored)
+                                catch (Exception ex)
                                 {
-                                    Log?.LogWarning($"Attempted to find run primitive {jProp.Name} but failed");
+                                    Log?.LogWarning(ex, $"Exception while attempting to run primitive {jProp.Name}");
                                     return null;
                                 }
 
