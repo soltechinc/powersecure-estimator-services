@@ -80,6 +80,7 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 });
 
+            _log.LogInformation("Data sheet to calculate: " + JToken.FromObject(dataSheet));
             var rulesEngine = new RulesEngine();
             rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, _log);
 
