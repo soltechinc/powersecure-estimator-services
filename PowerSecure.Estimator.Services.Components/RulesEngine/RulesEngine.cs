@@ -37,7 +37,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     IInstructionSet instructionSet = instructionSetRepository.Get(key, effectiveDate);
                     if(instructionSet == null)
                     {
-                        log.LogWarning($"Unable to find instruction set {key}");
+                        log?.LogWarning($"Unable to find instruction set {key}");
                     }
 
                     parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log));

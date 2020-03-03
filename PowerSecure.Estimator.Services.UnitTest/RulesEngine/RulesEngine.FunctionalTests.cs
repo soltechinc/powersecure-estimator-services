@@ -24,7 +24,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = "2", ["y"] = "3", ["all.test"] = null }, DateTime.Now, primitives, repository, null, null);
             
             Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("12", dataSheet["all.test"], "Calculation is incorrect");
+            Assert.AreEqual(12m, dataSheet["all.test"], "Calculation is incorrect");
         }
 
         [TestMethod]
@@ -40,7 +40,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = 2, ["y"] = "3", ["all.test2"] = null }, DateTime.Now, primitives, repository, null, null);
 
             Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("36", dataSheet["all.test2"], "Calculation is incorrect");
+            Assert.AreEqual(36m, dataSheet["all.test2"], "Calculation is incorrect");
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = 2, ["y"] = "3", ["z"] = "nan", ["all.test2"] = null }, DateTime.Now, primitives, repository, null, null);
 
             Assert.AreEqual(4, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("12", dataSheet["all.test2"], "Calculation is incorrect");
+            Assert.AreEqual(12m, dataSheet["all.test2"], "Calculation is incorrect");
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = 2, ["y"] = "3", ["all.test2"] = null }, DateTime.Now, primitives, repository, null, null);
 
             Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("12", dataSheet["all.test2"], "Calculation is incorrect");
+            Assert.AreEqual(12m, dataSheet["all.test2"], "Calculation is incorrect");
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["x"] = "2", ["y"] = "3", ["all.test"] = null }, DateTime.Now, primitives, repository, null, null);
 
             Assert.AreEqual(3, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("15", dataSheet["all.test"], "Calculation is incorrect");
+            Assert.AreEqual(15m, dataSheet["all.test"], "Calculation is incorrect");
         }
 
         [TestMethod]
@@ -138,7 +138,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["all.test"] = 4, ["all.test2"] = null }, DateTime.Now, primitives, repository, null, null);
 
             Assert.AreEqual(2, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("12", dataSheet["all.test2"], "Calculation is incorrect");
+            Assert.AreEqual(12m, dataSheet["all.test2"], "Calculation is incorrect");
         }
 
         [TestMethod]
@@ -168,7 +168,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = engine.EvaluateDataSheet(new Dictionary<string, object> { ["all.test"] = null }, DateTime.Now, primitives, repository, null, null);
 
             Assert.AreEqual(1, dataSheet.Count, "Count of items in data sheet is incorrect");
-            Assert.AreEqual("True", dataSheet["all.test"], "Calculation is incorrect");
+            Assert.AreEqual(true, dataSheet["all.test"], "Calculation is incorrect");
         }
     }
 }

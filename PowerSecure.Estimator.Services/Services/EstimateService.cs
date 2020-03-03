@@ -39,14 +39,14 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         case JObject jObject:
                             {
-                                if(!(jObject.Properties().Any(prop => prop.Name == "calculated") &&
-                                    jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                if(!(jObject.Properties().Any(prop => prop.Name == "variableName") &&
                                     jObject.Properties().Any(prop => prop.Name == "inputValue")))
                                 {
                                     break;
                                 }
 
-                                bool isCalculated = jObject["calculated"].ToObject<bool>();
+                                bool isCalculated = IsCalculated(jObject);
+
                                 string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 object inputValue;
                                 JToken inputValueFromJson = jObject["inputValue"];
@@ -78,7 +78,7 @@ namespace PowerSecure.Estimator.Services.Services
                                         }
                                 }
 
-                                dataSheet.Add($"{moduleName}.{name}", inputValue);
+                                dataSheet.Add($"{moduleName}.{name}", isCalculated ? null : inputValue);
                                 break;
                             }
                     }
@@ -96,14 +96,14 @@ namespace PowerSecure.Estimator.Services.Services
                 {
                     case JObject jObject:
                         {
-                            if (!(jObject.Properties().Any(prop => prop.Name == "calculated") &&
-                                jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                            if (!(jObject.Properties().Any(prop => prop.Name == "variableName") &&
                                 jObject.Properties().Any(prop => prop.Name == "inputValue")))
                             {
                                 break;
                             }
 
-                            bool isCalculated = jObject["calculated"].ToObject<bool>();
+                            bool isCalculated = IsCalculated(jObject);
+
                             string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
 
                             if(isCalculated && dataSheet.TryGetValue($"{moduleName}.{name}", out object value) && value != null)
@@ -128,7 +128,15 @@ namespace PowerSecure.Estimator.Services.Services
                                 }
                                 else
                                 {
-                                    jObject["inputValue"] = UnwrapString(JToken.FromObject(value).ToString());
+                                    JToken valueJToken = JToken.FromObject(value);
+                                    if(valueJToken.Type == JTokenType.String)
+                                    {
+                                        jObject["inputValue"] = UnwrapString(valueJToken.ToObject<string>());
+                                    }
+                                    else
+                                    {
+                                        jObject["inputValue"] = valueJToken;
+                                    }
                                 }
                                 break;
                             }
@@ -153,6 +161,25 @@ namespace PowerSecure.Estimator.Services.Services
                 return str.Substring(1);
             }
             return str;
+        }
+
+        private static bool IsCalculated(JObject jObject)
+        {
+            bool isCalculated = false;
+            if (jObject.Properties().Any(prop => prop.Name == "input"))
+            {
+                isCalculated = !jObject["input"].ToObject<bool>();
+            }
+            if (!isCalculated && jObject.Properties().Any(prop => prop.Name == "parent"))
+            {
+                isCalculated = jObject["parent"].ToObject<string>() != "None";
+            }
+            if (!isCalculated && jObject.Properties().Any(prop => prop.Name == "inputValue"))
+            {
+                isCalculated = string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
+            }
+
+            return isCalculated;
         }
     }
 }
