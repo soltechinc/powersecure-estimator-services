@@ -121,6 +121,10 @@ namespace PowerSecure.Estimator.Services.Services
                                     }
 
                                     jObject["options"] = JToken.FromObject(options);
+                                    if(options.Count == 1)
+                                    {
+                                        jObject["inputValue"] = options[0]["value"];
+                                    }
                                 }
                                 else
                                 {
