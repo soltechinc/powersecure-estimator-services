@@ -29,14 +29,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
                 }
             }
-            log.LogInformation("Parameters first pass: " + JToken.FromObject(dataSheet));
 
             foreach (var key in missingParameters)
             {
                 if(!parameters.ContainsKey(key))
                 {
-                    log.LogInformation($"Adding parameter {key}");
-                    parameters.Add(key, instructionSetRepository.Get(key, effectiveDate)?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log));
+                    IInstructionSet instructionSet = instructionSetRepository.Get(key, effectiveDate);
+                    if(instructionSet == null)
+                    {
+                        log.LogWarning($"Unable to find instruction set {key}");
+                    }
+
+                    parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log));
                 }
 
                 dataSheet[key] = parameters[key]?.ToRawString();
