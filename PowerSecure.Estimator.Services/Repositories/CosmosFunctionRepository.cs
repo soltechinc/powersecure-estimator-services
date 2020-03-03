@@ -139,7 +139,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                 }
             }).GetAwaiter().GetResult();
             
-            return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).First();
+            return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).FirstOrDefault();
         }
 
         IInstructionSet IInstructionSetRepository.Get(string key, DateTime effectiveDate)
