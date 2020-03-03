@@ -57,7 +57,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 }
                                 catch (Exception ignored)
                                 {
-                                    Log.LogWarning($"Attempted to find run primitive {function.Name} but failed");
+                                    Log?.LogWarning($"Attempted to find run primitive {jProp.Name} but failed");
                                     return null;
                                 }
 
@@ -92,7 +92,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                         
                                         if(instructionSet == null)
                                         {
-                                            Log.LogWarning($"Attempted to find instruction set {key} but failed");
+                                            Log?.LogWarning($"Attempted to find instruction set {key} but failed");
 
                                             return null;
                                         }
@@ -101,7 +101,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     }
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
                                     {
-                                        Log.LogInformation($"Running instruction set {key}");
+                                        Log?.LogInformation($"Running instruction set {key}");
 
                                         Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log);
                                     }
