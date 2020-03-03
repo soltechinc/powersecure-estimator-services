@@ -6,6 +6,7 @@ using System.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     public class RulesEngine
@@ -28,11 +29,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
                 }
             }
-            
-            foreach(var key in missingParameters)
+            log.LogInformation("Parameters first pass: " + JToken.FromObject(dataSheet));
+
+            foreach (var key in missingParameters)
             {
                 if(!parameters.ContainsKey(key))
                 {
+                    log.LogInformation($"Adding parameter {key}");
                     parameters.Add(key, instructionSetRepository.Get(key, effectiveDate)?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log));
                 }
 
