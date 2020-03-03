@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using Microsoft.Extensions.Logging;
 
 namespace PowerSecure.Estimator.Services.Services
 {
@@ -16,12 +17,14 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IInstructionSetRepository _instructionSetRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IDictionary<string, IFunction> _functions;
+        private readonly ILogger _log;
 
-        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository)
+        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log)
         {
             _instructionSetRepository = instructionSetRepository;
             _referenceDataRepository = referenceDataRepository;
             _functions = Primitive.Load();
+            _log = log;
         }
 
         public async Task<(object, string)> Evaluate(JObject uiInputs)
@@ -78,7 +81,7 @@ namespace PowerSecure.Estimator.Services.Services
                 });
 
             var rulesEngine = new RulesEngine();
-            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, _log);
 
             //Convert back
             uiInputs.WalkNodes(PreOrder: jToken =>

@@ -67,7 +67,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository, null);
         }
 
 
@@ -92,7 +92,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository, null);
         }
 
         [TestMethod]
@@ -161,7 +161,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
 
             var rulesEngine = new Components.RulesEngine.RulesEngine();
 
-            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository);
+            rulesEngine.EvaluateDataSheet(dataSheet, DateTime.Now, primitives, instructionSetRepository, referenceDataRepository, null);
         }
     }
 }

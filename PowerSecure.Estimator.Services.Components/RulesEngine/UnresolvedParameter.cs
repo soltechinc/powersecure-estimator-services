@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
@@ -19,6 +20,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public IInstructionSetRepository InstructionSetRepository { get; set; }
         public DateTime EffectiveDate { get; set; }
         public bool IsNullValue { get; private set; } = false;
+        public ILogger Log { get; set; }
 
         private UnresolvedParameter(JToken jToken, UnresolvedParameter parentParameter)
         {
@@ -28,6 +30,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             ReferenceDataRepository = parentParameter.ReferenceDataRepository;
             InstructionSetRepository = parentParameter.InstructionSetRepository;
             EffectiveDate = parentParameter.EffectiveDate;
+            Log = parentParameter.Log;
         }
 
         public object Resolve()
@@ -52,7 +55,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 {
                                     retValue = function.Invoke(unresolvedParameters, ReferenceDataRepository);
                                 }
-                                catch (Exception ignored) { return null; }
+                                catch (Exception ignored)
+                                {
+                                    Log.LogWarning($"Attempted to find run primitive {function.Name} but failed");
+                                    return null;
+                                }
+
                                 if(function is IsEmptyPrimitive)
                                 {
                                     return retValue;
@@ -81,9 +89,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     if (!Parameters.ContainsKey(key))
                                     {
                                         var instructionSet = InstructionSetRepository.Get(key, EffectiveDate);
-
+                                        
                                         if(instructionSet == null)
                                         {
+                                            Log.LogWarning($"Attempted to find instruction set {key} but failed");
+
                                             return null;
                                         }
 
@@ -91,7 +101,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     }
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
                                     {
-                                        Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate);
+                                        Log.LogInformation($"Running instruction set {key}");
+
+                                        Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log);
                                     }
 
                                     return Parameters[key];
