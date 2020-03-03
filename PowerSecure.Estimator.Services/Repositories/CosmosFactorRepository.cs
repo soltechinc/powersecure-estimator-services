@@ -29,7 +29,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         {
             if(document.ContainsKey("id"))
             {
-                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["key"].ToString()) });
+                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["module"].ToString()) });
             }
 
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
@@ -37,9 +37,9 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<int> Delete(string id, IDictionary<string, string> queryParams)
         {
-            if (queryParams.ContainsKey("key"))
+            if (queryParams.ContainsKey("module"))
             {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(queryParams["key"]) });
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(queryParams["module"]) });
                 return 1;
             }
 
@@ -52,7 +52,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 foreach (Factor factor in await query.ExecuteNextAsync())
                 {
-                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: factor.Id), new RequestOptions { PartitionKey = new PartitionKey(factor.Key) }));
+                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: factor.Id), new RequestOptions { PartitionKey = new PartitionKey(factor.Module) }));
                 }
             }
 
@@ -94,9 +94,9 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> Get(string id, IDictionary<string, string> queryParams)
         {
-            if (queryParams.ContainsKey("key"))
+            if (queryParams.ContainsKey("module"))
             {
-                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(queryParams["key"]) });
+                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(queryParams["module"]) });
             }
             
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
