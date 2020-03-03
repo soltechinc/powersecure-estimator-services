@@ -155,7 +155,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                     {
                         if(s.StartsWith('$'))
                         {
-                            return s;
+                            return s.Substring(1);
                         }
 
                         if(decimal.TryParse(s, out decimal d))

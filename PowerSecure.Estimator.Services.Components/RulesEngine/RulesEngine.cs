@@ -43,7 +43,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log));
                 }
 
-                dataSheet[key] = parameters[key]?.ToRawString();
+                dataSheet[key] = parameters[key];
             }
 
             return dataSheet;

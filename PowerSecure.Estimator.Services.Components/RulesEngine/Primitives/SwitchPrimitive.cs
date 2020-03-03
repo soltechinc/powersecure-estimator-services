@@ -23,7 +23,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 var pair = obj.ToObjectArray();
                 if(value.CompareTo(pair[0].ToComparable()) == 0)
                 {
-                    return pair[1];
+                    return pair[1].ToResolvedParameter();
                 }
             }
 
