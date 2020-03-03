@@ -54,27 +54,31 @@ namespace PowerSecure.Estimator.Services.Services
                                 {
                                     case JTokenType.Integer:
                                         {
-                                            inputValue = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
+                                            decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
+                                            inputValue = isCalculated ? null : value;
                                             break;
                                         }
                                     case JTokenType.Float:
                                         {
-                                            inputValue = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
+                                            decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
+                                            inputValue = isCalculated ? null : value;
                                             break;
                                         }
                                     case JTokenType.Boolean:
                                         {
-                                            inputValue = inputValueFromJson.ToObject<bool>();
+                                            bool? value = inputValueFromJson.ToObject<bool>();
+                                            inputValue = isCalculated ? null : value;
                                             break;
                                         }
                                     default:
                                         {
-                                            inputValue = inputValueFromJson.ToObject<string>();
+                                            string value = inputValueFromJson.ToObject<string>();
+                                            inputValue = (isCalculated || string.IsNullOrWhiteSpace(value)) ? null : value;
                                             break;
                                         }
                                 }
 
-                                dataSheet.Add($"{moduleName}.{name}", isCalculated ? inputValue : null);
+                                dataSheet.Add($"{moduleName}.{name}", inputValue);
                                 break;
                             }
                     }
