@@ -169,21 +169,24 @@ namespace PowerSecure.Estimator.Services.Services
 
         private static bool IsCalculated(JObject jObject)
         {
-            bool isCalculated = false;
             if (jObject.Properties().Any(prop => prop.Name == "input"))
             {
-                isCalculated = !jObject["input"].ToObject<bool>();
+                bool isCalculated = !jObject["input"].ToObject<bool>();
+                if(isCalculated)
+                {
+                    return true;
+                }
             }
-            if (!isCalculated && jObject.Properties().Any(prop => prop.Name == "parent"))
+            if (jObject.Properties().Any(prop => prop.Name == "parent"))
             {
-                isCalculated = jObject["parent"].ToObject<string>() != "None";
-            }
-            if (!isCalculated && jObject.Properties().Any(prop => prop.Name == "inputValue"))
-            {
-                isCalculated = string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
+                bool isCalculated = jObject["parent"].ToObject<string>() != "None";
+                if (!isCalculated)
+                {
+                    return false;
+                }
             }
 
-            return isCalculated;
+            return string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
         }
     }
 }
