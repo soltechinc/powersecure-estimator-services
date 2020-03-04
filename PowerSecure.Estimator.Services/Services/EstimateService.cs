@@ -78,7 +78,14 @@ namespace PowerSecure.Estimator.Services.Services
                                         }
                                 }
 
-                                dataSheet.Add($"{moduleName}.{name}", isCalculated ? null : inputValue);
+                                if (name.Contains('.'))
+                                {
+                                    dataSheet.Add($"{name}", isCalculated ? null : inputValue);
+                                }
+                                else
+                                {
+                                    dataSheet.Add($"{moduleName}.{name}", isCalculated ? null : inputValue);
+                                }
                                 break;
                             }
                     }
