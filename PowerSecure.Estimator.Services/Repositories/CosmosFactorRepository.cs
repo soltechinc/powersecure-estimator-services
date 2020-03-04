@@ -121,7 +121,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             var str = new StringBuilder("select * from f where f.returnattribute = \"" + returnFieldName.ToLower() + "\"");
             foreach((string searchParam, string value) in criteria)
             {
-                str.Append(" and f." + searchParam.ToLower().Trim() + " = \"" + value.ToLower().Trim() + "\"");
+                str.Append(" and f[\"" + searchParam.ToLower().Trim() + "\"] = \"" + value.ToLower().Trim() + "\"");
             }
 
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId),
