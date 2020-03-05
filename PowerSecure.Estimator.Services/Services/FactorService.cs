@@ -30,7 +30,7 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Upsert(JObject document)
         {
-            document["key"] = string.Join('-', string.Empty, document["module"], document["returnAttribute"]);
+            document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
             document["hash"] = CreateHash(document.Properties()
                                 .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
                                 .SelectMany(o => new string[] { o.Name, o.Value.ToString() })
