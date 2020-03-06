@@ -155,7 +155,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                     {
                         if(s.StartsWith('$'))
                         {
-                            return s.Substring(1);
+                            return s.Substring(1).ToLower();
                         }
 
                         if(decimal.TryParse(s, out decimal d))
@@ -168,7 +168,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                             return b ? 1m : 0m;
                         }
 
-                        return s;
+                        return s.ToLower();
                     }
                 case bool b:
                     {
