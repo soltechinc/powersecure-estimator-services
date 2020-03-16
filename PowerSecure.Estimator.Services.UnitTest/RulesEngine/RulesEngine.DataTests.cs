@@ -56,8 +56,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = new Dictionary<string, object>();
 
             instructionSetRepository.Items.Select(o => o.Value.First()).ForEach(set => {
-                dataSheet.Add(set.Key, null);
-                Trace.WriteLine(set.Key);
+                dataSheet.Add(((TestInstructionSet)set).Key, null);
+                Trace.WriteLine(((TestInstructionSet)set).Key);
             });
 
             dataSheet["EffectiveDate"] = DateTime.Now.ToString();
@@ -82,8 +82,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = new Dictionary<string, object>();
             
             instructionSetRepository.Items.Select(o => o.Value.First()).ForEach(set => {
-                dataSheet.Add(set.Key, null);
-                Trace.WriteLine(set.Key);
+                dataSheet.Add(((TestInstructionSet)set).Key, null);
+                Trace.WriteLine(((TestInstructionSet)set).Key);
             });
 
             dataSheet["EffectiveDate"] = DateTime.Now.ToString();
@@ -108,8 +108,8 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var dataSheet = new Dictionary<string, object>();
 
             instructionSetRepository.Items.Select(o => o.Value.First()).ForEach(set => {
-                dataSheet.Add(set.Key, null); 
-                Trace.WriteLine(set.Key);
+                dataSheet.Add(((TestInstructionSet)set).Key, null); 
+                Trace.WriteLine(((TestInstructionSet)set).Key);
             });
 
             dataSheet["EffectiveDate"] = DateTime.Now.ToString();

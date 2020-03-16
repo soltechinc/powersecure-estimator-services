@@ -29,10 +29,7 @@ namespace PowerSecure.Estimator.Services.Models
 
         [JsonProperty("name")]
         public string Name { get; private set; }
-
-        [JsonIgnore]
-        public string Key => $"{Module}.{Name}";
-
+        
         [JsonProperty("instructions")]
         public string Instructions { get; private set; }
 

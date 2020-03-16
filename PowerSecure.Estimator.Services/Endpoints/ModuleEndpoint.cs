@@ -107,5 +107,32 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ImportModules")]
+        public static async Task<IActionResult> Import(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modules/import/{env}")] HttpRequest req,
+            string env,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ImportModules (Env: {env})");
+
+                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Import(env);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }

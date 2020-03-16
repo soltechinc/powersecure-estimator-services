@@ -108,5 +108,39 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ImportFunctions")]
+        public static async Task<IActionResult> Import(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "functions/import/{env}")] HttpRequest req,
+            string env,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ImportFunctions (Env: {env})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                if (!queryParams.ContainsKey("module"))
+                {
+                    return new object().ToServerErrorObjectResult(message: "Query params do not contain module name");
+                }
+
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Import(env, queryParams["module"]);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }

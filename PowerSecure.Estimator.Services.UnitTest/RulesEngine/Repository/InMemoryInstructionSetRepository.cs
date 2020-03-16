@@ -18,11 +18,11 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine.Repository
 
         public void Insert(IInstructionSet instructionSet)
         {
-            if (!Items.ContainsKey(instructionSet.Key))
+            if (!Items.ContainsKey(((TestInstructionSet)instructionSet).Key))
             {
-                Items.Add(instructionSet.Key, new List<IInstructionSet>());
+                Items.Add(((TestInstructionSet)instructionSet).Key, new List<IInstructionSet>());
             }
-            Items[instructionSet.Key].Add(instructionSet);
+            Items[((TestInstructionSet)instructionSet).Key].Add(instructionSet);
         }
 
         public IInstructionSet Get(string module, string name, DateTime effectiveDate)

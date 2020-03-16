@@ -3,6 +3,7 @@ using PowerSecure.Estimator.Services.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +37,30 @@ namespace PowerSecure.Estimator.Services.Services
         {
             int deletedDocumentCount = await _moduleRepository.Delete(id, queryParams);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
+        }
+
+        private static readonly HttpClient _httpClient = new HttpClient();
+
+        public async Task<(object, string)> Import(string env)
+        {
+            string envSetting = $"{env}-url";
+            string url = Environment.GetEnvironmentVariable(envSetting);
+            if (url == null)
+            {
+                return (null, $"Unable to find environment setting: {envSetting}");
+            }
+
+            string returnValue = await _httpClient.GetStringAsync($"{url}/api/modules/?object=full");
+            var jObj = JObject.Parse(returnValue);
+
+            if (jObj["Status"].ToString() != "200")
+            {
+                return (null, "Error when calling list api");
+            }
+
+            int newDocumentCount = await _moduleRepository.Reset(jObj["Items"]);
+
+            return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
     }
 }

@@ -147,5 +147,43 @@ namespace PowerSecure.Estimator.Services.Repositories
             var x = key.Split('.');
             return ((IInstructionSetRepository)this).Get(x[0], x[1], effectiveDate);
         }
+
+        public async Task<int> Reset(string module, JToken jToken)
+        {
+            var documentQuery = _dbClient.CreateDocumentQuery<Function>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = false })
+                .Where(f => f.Module == module).AsDocumentQuery();
+
+            var ids = new List<string>();
+
+            while (documentQuery.HasMoreResults)
+            {
+                foreach (Function function in await documentQuery.ExecuteNextAsync())
+                {
+                    ids.Add(function.Id);
+                }
+            }
+
+            foreach (var id in ids)
+            {
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(module) });
+            }
+
+            int count = 0;
+            foreach (var child in jToken.Children())
+            {
+                if (child.Type != JTokenType.Object)
+                {
+                    continue;
+                }
+
+                var instructionSet = child.ToObject<InstructionSet>();
+
+                await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), instructionSet);
+
+                count++;
+            }
+
+            return count;
+        }
     }
 }

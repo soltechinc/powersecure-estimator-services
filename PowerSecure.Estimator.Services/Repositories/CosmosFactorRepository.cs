@@ -127,8 +127,8 @@ namespace PowerSecure.Estimator.Services.Repositories
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId),
                             str.ToString()).AsDocumentQuery();
 
-            Factor result = query.ExecuteNextAsync().Result.Where(f => DateTime.Parse(f.startdate) < effectiveDate)
-                          .OrderByDescending(f => f.creationdate)
+            Factor result = query.ExecuteNextAsync().Result.Where(f => DateTime.Parse(f.startdate.ToString()) < effectiveDate)
+                          .OrderByDescending(f => f.creationdate.ToString())
                           .FirstOrDefault();
 
             if(result == null)
@@ -137,6 +137,42 @@ namespace PowerSecure.Estimator.Services.Repositories
             }
 
             return result.ReturnValue;
+        }
+
+        public async Task<int> Reset(string module, JToken jToken)
+        {
+            var documentQuery = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = false })
+                .Where(f => f.Module == module).AsDocumentQuery();
+
+            var ids = new List<string>();
+
+            while (documentQuery.HasMoreResults)
+            {
+                foreach (Factor factor in await documentQuery.ExecuteNextAsync())
+                {
+                    ids.Add(factor.Id);
+                }
+            }
+            
+            foreach (var id in ids)
+            {
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(module) });
+            }
+
+            int count = 0;
+            foreach(var child in jToken.Children())
+            {
+                if(child.Type != JTokenType.Object)
+                {
+                    continue;
+                }
+                
+                await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), (JObject)child);
+                
+                count++;
+            }
+
+            return count;
         }
     }
 }
