@@ -13,25 +13,25 @@ using PowerSecure.Estimator.Services.ActionResults;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
-    public static class HealthEndpoint
-    {
-        [FunctionName("CheckProperties")]
-        public static IActionResult CheckProperties(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "health/properties")] HttpRequest req,
-            ILogger log)
-        {
-            try
-            {
-                log.LogDebug("Function called - CheckProperties");
+    //public static class HealthEndpoint
+    //{
+    //    [FunctionName("CheckProperties")]
+    //    public static IActionResult CheckProperties(
+    //        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "health/properties")] HttpRequest req,
+    //        ILogger log)
+    //    {
+    //        try
+    //        {
+    //            log.LogDebug("Function called - CheckProperties");
 
-                (object returnValue, string message) = new HealthService().CheckProperties();
-                return returnValue.ToOkObjectResult(message: message);
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
-    }
+    //            (object returnValue, string message) = new HealthService().CheckProperties();
+    //            return returnValue.ToOkObjectResult(message: message);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            log.LogError(ex, "Caught exception");
+    //            return new object().ToServerErrorObjectResult();
+    //        }
+    //    }
+    //}
 }
