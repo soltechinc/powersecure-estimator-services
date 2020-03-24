@@ -14,35 +14,28 @@ using System.Text;
 using System.Threading.Tasks;
 using PowerSecure.Estimator.Services.Services;
 using PowerSecure.Estimator.Services.Repositories;
+using Newtonsoft.Json;
 
 namespace PowerSecure.Estimator.Services.Endpoints {
     public static class BlobStorageEndpoint {
         
     [FunctionName("GetABS")]
         public static async Task<IActionResult> Get(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "abs")] HttpRequest req,
-        string id,
-        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-        ILogger log
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "abs")] HttpRequest req, ILogger log
         ) {
 
-
-            var testClass = new TestClass();
-
-
-            var test = ABSParameters.Get("BlobStorageAccountName");
-            testClass.test = test;
-
-
-            //log.LogDebug($"Function called - GetFactor (Id: {id})");
-
-            //var queryParams = req.GetQueryParameterDictionary();
-
-            //(object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams);
-            //return returnValue.ToOkObjectResult(message: message);
-
-            return testClass.ToOkObjectResult();
-          //  return test;
+            try {
+                log.LogDebug("Function called - GetABS");
+                var abs = new ABSDTO();
+                abs.blobStorageAccountName = AppSettings.Get("BlobStorageAccountName");
+                abs.blobStorageConnectionString = AppSettings.Get("BlobStorageConnectionString");
+                abs.blobStorageKey = AppSettings.Get("BlobStorageKey");
+                string results = JsonConvert.SerializeObject(abs);
+                return new JsonResult(results);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
         }
     }
 }
