@@ -17,29 +17,31 @@ using PowerSecure.Estimator.Services.Repositories;
 
 namespace PowerSecure.Estimator.Services.Endpoints {
     public static class BlobStorageEndpoint {
-
-        [FunctionName("GetABS")]
+        
+    [FunctionName("GetABS")]
         public static async Task<IActionResult> Get(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "abs")] HttpRequest req,
         string id,
-        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient, 
+        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
         ILogger log
         ) {
 
+
+            var testClass = new TestClass();
+
+
+            var test = ABSParameters.Get("BlobStorageAccountName");
+            testClass.test = test;
+
+
+            //log.LogDebug($"Function called - GetFactor (Id: {id})");
+
             //var queryParams = req.GetQueryParameterDictionary();
 
-           // (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams);
-            var obj = new object();
-            var test = ABSParameters.Get("BlobStorageAccountName");
-            var test2 = "";
+            //(object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams);
+            //return returnValue.ToOkObjectResult(message: message);
 
-            log.LogDebug($"Function called - GetFactor (Id: {id})");
-
-            var queryParams = req.GetQueryParameterDictionary();
-
-            (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams);
-            return returnValue.ToOkObjectResult(message: message);
-
+            return testClass.ToOkObjectResult();
           //  return test;
         }
     }
