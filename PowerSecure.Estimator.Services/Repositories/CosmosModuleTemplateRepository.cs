@@ -44,16 +44,16 @@ namespace PowerSecure.Estimator.Services.Repositories
                 return 1;
             }
 
-            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
+            var query = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
                 .Where(m => m.ModuleTitle == moduleTitle)
                 .AsDocumentQuery();
 
             var list = new List<Document>();
             while (query.HasMoreResults)
             {
-                foreach (Module module in await query.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
                 {
-                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: module.Id), new RequestOptions { PartitionKey = new PartitionKey(module.ModuleTitle) }));
+                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: moduleTemplate.Id), new RequestOptions { PartitionKey = new PartitionKey(moduleTemplate.ModuleTitle) }));
                 }
             }
 
@@ -93,41 +93,41 @@ namespace PowerSecure.Estimator.Services.Repositories
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(moduleTitle) });
             }
 
-            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
+            var query = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
                 .Where(m => m.ModuleTitle == moduleTitle)
                 .AsDocumentQuery();
 
-            var modules = new List<Module>();
+            var moduleTemplates = new List<ModuleTemplate>();
 
             while (query.HasMoreResults)
             {
-                foreach (Module module in await query.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
                 {
-                    modules.Add(module);
+                    moduleTemplates.Add(moduleTemplate);
                 }
             }
 
-            return modules;
+            return moduleTemplates;
         }
 
         public async Task<int> Reset(JToken jToken)
         {
-            var documentQuery = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
+            var documentQuery = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .AsDocumentQuery();
 
-            var modules = new List<Module>();
+            var moduleTemplates = new List<ModuleTemplate>();
 
             while (documentQuery.HasMoreResults)
             {
-                foreach (Module moduleDoc in await documentQuery.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleDoc in await documentQuery.ExecuteNextAsync())
                 {
-                    modules.Add(moduleDoc);
+                    moduleTemplates.Add(moduleDoc);
                 }
             }
 
-            foreach (var module in modules)
+            foreach (var moduleTemplate in moduleTemplates)
             {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: module.Id), new RequestOptions { PartitionKey = new PartitionKey(module.ModuleTitle) });
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: moduleTemplate.Id), new RequestOptions { PartitionKey = new PartitionKey(moduleTemplate.ModuleTitle) });
             }
 
             int count = 0;
