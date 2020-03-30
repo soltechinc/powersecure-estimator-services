@@ -30,7 +30,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).List(queryParams);
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).List(queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -53,7 +53,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Get(id, queryParams);
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).Get(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).Upsert(JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Delete(id, queryParams);
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).Delete(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -119,7 +119,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug($"Function called - ImportModuleTemplates (Env: {env})");
 
-                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Import(env);
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).Import(env);
 
                 if (returnValue == null)
                 {
