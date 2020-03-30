@@ -13,12 +13,13 @@ using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using PowerSecure.Estimator.Services.Services;
+using PowerSecure.Estimator.Services.Models;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
     public class DocumentEndpoint {
-        public static HttpClient httpClient = new HttpClient();
-        private static readonly object FileUpload1;
+        public static HttpClient httpClient;
+        public static Models.File file;
 
         [FunctionName("PostDocument")]
         public static async Task<HttpResponseMessage> Run(
@@ -35,12 +36,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("GetDocuments")]
         public static async Task<IActionResult> Get(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents")] HttpRequest req,
-            ILogger log) {
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents")] HttpRequest req, ILogger log) {
             HttpContext context = req.HttpContext;
-            var containerName = "file-uploads";                                  
+            var containerName = "file-uploads";      // change later                            
             string storageConnection = AppSettings.Get("BlobStorageConnectionString");
-            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(storageConnection); 
+            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(storageConnection);
             CloudBlobClient blobClient = cloudStorageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer = blobClient.GetContainerReference(containerName);
             CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference("blob-test-file.docx");
@@ -49,37 +49,26 @@ namespace PowerSecure.Estimator.Services.Endpoints
             context.Response.ContentType = blockBlob.Properties.ContentType.ToString();
             context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blockBlob.ToString());
             context.Response.Headers.Add("Content-Length", blockBlob.Properties.Length.ToString());
+
+            //-- Beginning of test code --//
             string description = "";
             if (blockBlob.Metadata.Count > 0) {
-                foreach(var val in blockBlob.Metadata.Values) {
+                foreach (var val in blockBlob.Metadata.Values) {
                     description = val;
                 }
             }
             context.Response.Body.Write(memStream.ToArray());
-            var obj = new {
-                name = blockBlob.Name,
-                url = blockBlob.Uri,
-                description = description
-            };
 
-            string results = JsonConvert.SerializeObject(obj);
+            file.Name = blockBlob.Name;
+            file.Uri = blockBlob.Uri.ToString();
+            file.Description = description;
+            
+
+            //-- end of test code --//
+
+            string results = JsonConvert.SerializeObject(file);
             //memStream.Flush();
-
-            // var test = new JsonResult(results);
-            //memStream.EndRead(test);
-            //return blockBlob;
-            if (context.Response.StatusCode == 200) {
-                return new JsonResult(results); //context.Response.WriteAsync()
-            } else {
-                return null;
-            }
-
-
-
-
-            //abs.blobStorageAccountName = AppSettings.Get("BlobStorageAccountName");
-            //abs.blobStorageConnectionString = 
-            //abs.blobStorageKey = AppSettings.Get("BlobStorageKey");
+            return new JsonResult(results);
         }
     }
 }
