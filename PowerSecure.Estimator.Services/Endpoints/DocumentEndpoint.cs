@@ -19,7 +19,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 {
     public class DocumentEndpoint {
         public static HttpClient httpClient;
-        public static Models.File file;
+        public static Models.File file = new Models.File();
 
         [FunctionName("PostDocument")]
         public static async Task<HttpResponseMessage> Run(
@@ -50,7 +50,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blockBlob.ToString());
             context.Response.Headers.Add("Content-Length", blockBlob.Properties.Length.ToString());
 
-            //-- Beginning of test code --//
+            //-- Beginning of hardcoded test code --//
             string description = "";
             if (blockBlob.Metadata.Count > 0) {
                 foreach (var val in blockBlob.Metadata.Values) {
@@ -62,9 +62,8 @@ namespace PowerSecure.Estimator.Services.Endpoints
             file.Name = blockBlob.Name;
             file.Uri = blockBlob.Uri.ToString();
             file.Description = description;
-            
 
-            //-- end of test code --//
+            //-- end of hardcoded test code --//
 
             string results = JsonConvert.SerializeObject(file);
             //memStream.Flush();
