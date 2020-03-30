@@ -38,13 +38,21 @@ namespace PowerSecure.Estimator.Services.Endpoints
         public static async Task<IActionResult> Get(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents")] HttpRequest req, ILogger log) {
             HttpContext context = req.HttpContext;
-            var containerName = "file-uploads";      // change later                            
-            string storageConnection = AppSettings.Get("BlobStorageConnectionString");
+            
+            //-- change later begin --//
+
+            var containerName = "file-uploads";
+            string storageConnection = "BlobEndpoint=https://powersecureestimatorblob.blob.core.windows.net/;TableEndpoint=https://powersecureestimatorblob.table.core.windows.net/;SharedAccessSignature=sv=2019-02-02&ss=b&srt=sco&sp=rwdlac&se=2099-03-25T03:59:59Z&st=2020-03-24T15:10:40Z&spr=https&sig=j53pQUYsB7IU7GXexc4cm3kAknx9BDC8n%2BdNrUczacs%3D";
+
+            //-- change later end --//
+
+            //string storageConnection = AppSettings.Get("BlobStorageConnectionString");
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(storageConnection);
             CloudBlobClient blobClient = cloudStorageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer = blobClient.GetContainerReference(containerName);
             CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference("blob-test-file.docx");
             MemoryStream memStream = new MemoryStream();
+            //blobClient.ListBlobsSegmentedAsync();
             await blockBlob.DownloadToStreamAsync(memStream);
             context.Response.ContentType = blockBlob.Properties.ContentType.ToString();
             context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blockBlob.ToString());
