@@ -62,9 +62,9 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> List(IDictionary<string, string> queryParams)
         {
-            var query = _dbClient.CreateDocumentQuery<Module>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+            var query = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
-            var modules = new List<Module>();
+            var moduleTemplates = new List<ModuleTemplate>();
 
             bool reportFullObject = false;
             if (queryParams.TryGetValue("object", out string value))
@@ -73,17 +73,17 @@ namespace PowerSecure.Estimator.Services.Repositories
             }
             while (query.HasMoreResults)
             {
-                foreach (Module module in await query.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
                 {
                     if(!reportFullObject)
                     {
-                         module.Rest = null;
+                         moduleTemplate.Rest = null;
                     }
-                    modules.Add(module);
+                    moduleTemplates.Add(moduleTemplate);
                 }
             }
 
-            return modules;
+            return moduleTemplates;
         }
 
         public async Task<object> Get(string moduleTitle, IDictionary<string, string> queryParams)
