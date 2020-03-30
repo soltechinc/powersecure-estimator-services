@@ -39,7 +39,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
             ILogger log) {
             HttpContext context = req.HttpContext;
             var containerName = "file-uploads";                        
-            string storageConnection = AppSettings.Get("BlobStorageConnectionString");
+            string storageConnection = "BlobEndpoint=https://powersecureestimatorblob.blob.core.windows.net/;TableEndpoint=https://powersecureestimatorblob.table.core.windows.net/;SharedAccessSignature=sv=2019-02-02&ss=b&srt=sco&sp=rwdlac&se=2099-03-25T03:59:59Z&st=2020-03-24T15:10:40Z&spr=https&sig=j53pQUYsB7IU7GXexc4cm3kAknx9BDC8n%2BdNrUczacs%3D";
+
+            //string storageConnection = AppSettings.Get("BlobStorageConnectionString");
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(storageConnection); 
             CloudBlobClient blobClient = cloudStorageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer = blobClient.GetContainerReference(containerName);
@@ -49,15 +51,27 @@ namespace PowerSecure.Estimator.Services.Endpoints
             context.Response.ContentType = blockBlob.Properties.ContentType.ToString();
             context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blockBlob.ToString());
             context.Response.Headers.Add("Content-Length", blockBlob.Properties.Length.ToString());
+            string description = "";
+            if (blockBlob.Metadata.Count > 0) {
+                foreach(var val in blockBlob.Metadata.Values) {
+                    description = val;
+                }
+            }
             context.Response.Body.Write(memStream.ToArray());
             var obj = new {
                 name = blockBlob.Name,
-                url = blockBlob.Uri
+                url = blockBlob.Uri,
+                description = description
             };
+
             string results = JsonConvert.SerializeObject(obj);
             //memStream.Flush();
+
+            // var test = new JsonResult(results);
+            //memStream.EndRead(test);
+            //return blockBlob;
             if (context.Response.StatusCode == 200) {
-                return new JsonResult(results);
+                return new JsonResult(results); //context.Response.WriteAsync()
             } else {
                 return null;
             }
