@@ -23,7 +23,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         {
             _dbClient = dbClient;
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("modulesCollectionId", EnvironmentVariableTarget.Process);
+            _collectionId = Environment.GetEnvironmentVariable("moduleTemplatesCollectionId", EnvironmentVariableTarget.Process);
         }
 
         public async Task<object> Upsert(JObject document)
