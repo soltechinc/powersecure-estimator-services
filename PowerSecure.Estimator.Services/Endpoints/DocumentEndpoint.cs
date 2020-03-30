@@ -38,46 +38,26 @@ namespace PowerSecure.Estimator.Services.Endpoints
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents")] HttpRequest req,
             ILogger log) {
             HttpContext context = req.HttpContext;
-            var containerName = "file-uploads"; // "powersecureestimatorblob";
-            
-            //Remove when pushing to dev
-            string storageConnection = "BlobEndpoint=https://powersecureestimatorblob.blob.core.windows.net/;TableEndpoint=https://powersecureestimatorblob.table.core.windows.net/;SharedAccessSignature=sv=2019-02-02&ss=b&srt=sco&sp=rwdlac&se=2099-03-25T03:59:59Z&st=2020-03-24T15:10:40Z&spr=https&sig=j53pQUYsB7IU7GXexc4cm3kAknx9BDC8n%2BdNrUczacs%3D";
-
-            //string storageConnection = AppSettings.Get("BlobStorageConnectionString");
+            var containerName = "file-uploads";                        
+            string storageConnection = AppSettings.Get("BlobStorageConnectionString");
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(storageConnection); 
             CloudBlobClient blobClient = cloudStorageAccount.CreateCloudBlobClient();
             CloudBlobContainer cloudBlobContainer = blobClient.GetContainerReference(containerName);
             CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference("blob-test-file.docx");
             MemoryStream memStream = new MemoryStream();
             await blockBlob.DownloadToStreamAsync(memStream);
-
-
-
-
-
-
-
-
-
-
             context.Response.ContentType = blockBlob.Properties.ContentType.ToString();
             context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blockBlob.ToString());
-
             context.Response.Headers.Add("Content-Length", blockBlob.Properties.Length.ToString());
             context.Response.Body.Write(memStream.ToArray());
             var obj = new {
                 name = blockBlob.Name,
                 url = blockBlob.Uri
             };
-
             string results = JsonConvert.SerializeObject(obj);
             //memStream.Flush();
-
-            // var test = new JsonResult(results);
-            //memStream.EndRead(test);
-            //return blockBlob;
             if (context.Response.StatusCode == 200) {
-                return new JsonResult(results); //context.Response.WriteAsync()
+                return new JsonResult(results);
             } else {
                 return null;
             }
