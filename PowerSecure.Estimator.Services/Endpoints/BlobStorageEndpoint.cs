@@ -22,6 +22,7 @@ namespace PowerSecure.Estimator.Services.Endpoints {
                 abs.blobStorageAccountName = AppSettings.Get("BlobStorageAccountName");
                 abs.blobStorageConnectionString = AppSettings.Get("BlobStorageConnectionString");
                 abs.blobStorageKey = AppSettings.Get("BlobStorageKey");
+                abs.sasToken = AppSettings.Get("StorageAccountSASToken");
                 string results = JsonConvert.SerializeObject(abs);
                 return new JsonResult(results);
             } catch (Exception ex) {
