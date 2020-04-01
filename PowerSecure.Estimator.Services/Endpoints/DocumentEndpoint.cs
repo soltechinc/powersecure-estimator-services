@@ -42,7 +42,7 @@ namespace PowerSecure.Estimator.Services.Endpoints {
                     await blob.DownloadToStreamAsync(memStream);
                 }
                 List<Models.File> files = new List<Models.File>();
-                List<object> list = BlobStorageSettings.ConvertBlobListToFile(files);
+                List<Models.File> list = BlobStorageSettings.ConvertBlobListToFile(files);
                 string results = JsonConvert.SerializeObject(list);
                 return new JsonResult(results);
             } catch (Exception ex) {

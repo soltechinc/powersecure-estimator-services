@@ -31,7 +31,7 @@ namespace PowerSecure.Estimator.Services.Services {
             }
             return value;
         }
-        public static List<object> ConvertBlobListToFile(dynamic values) {
+        public static List<Models.File> ConvertBlobListToFile(dynamic values) {
             foreach(var blob in BlobList) {
                 Models.File file = new Models.File();
                 file.Name = blob.Name;
