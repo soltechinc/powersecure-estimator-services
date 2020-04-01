@@ -23,11 +23,11 @@ namespace PowerSecure.Estimator.Services.Endpoints {
  
         [FunctionName("PostDocument")]
         public static async Task<IActionResult> Post(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "document")] HttpRequest req, ILogger log) {
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "document")] HttpRequest req, ILogger log, IFormFile file) {
             try {
                 Models.File newFile = new Models.File();
-               // newFile.CreateFileInDirectory(file);
-               // BlobStorageSettings.UploadIntoBlobStorage(newFile, file);
+                newFile.CreateFileInDirectory(file);
+                BlobStorageSettings.UploadIntoBlobStorage(newFile, file);
             } catch (Exception ex) {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();

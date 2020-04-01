@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace PowerSecure.Estimator.Services.Models {
@@ -34,6 +36,20 @@ namespace PowerSecure.Estimator.Services.Models {
 
         public File() : base() {
 
+        }
+
+        public async void CreateFileInDirectory(IFormFile file) {
+            try {
+                //check if file exist
+                var fileName = Path.GetFileName(file.Name);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"www", fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create)) {
+                    await file.CopyToAsync(fileStream);
+                }
+
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public File(string title) : base(title) {
