@@ -12,7 +12,7 @@ namespace PowerSecure.Estimator.Services.Services {
         
         public static List<CloudBlob> BlobList { get; set; }
         static string containerName = "file-uploads";
-        static string _storageConnection = AppSettings.Get("BlobStorageConnectionString");
+        static string _storageConnection = "BlobEndpoint=https://powersecureestimatorblob.blob.core.windows.net/;TableEndpoint=https://powersecureestimatorblob.table.core.windows.net/;SharedAccessSignature=sv=2019-02-02&ss=b&srt=sco&sp=rwdlac&se=2099-03-25T03:59:59Z&st=2020-03-24T15:10:40Z&spr=https&sig=j53pQUYsB7IU7GXexc4cm3kAknx9BDC8n%2BdNrUczacs%3D"; // AppSettings.Get("BlobStorageConnectionString");
         static CloudStorageAccount _storageAccount = CloudStorageAccount.Parse(_storageConnection);
         static CloudBlobClient _blobClient = _storageAccount.CreateCloudBlobClient();
         static CloudBlobContainer _blobContainer = _blobClient.GetContainerReference(containerName);
@@ -31,15 +31,17 @@ namespace PowerSecure.Estimator.Services.Services {
             }
             return value;
         }
-        public static List<object> ConvertBlobListToFile(dynamic value) {
-            List<object> list = new List<object>();
+        public static List<object> ConvertBlobListToFile(dynamic values) {
             foreach(var blob in BlobList) {
-                value.Name = blob.Name;
-                value.Uri = blob.Uri.ToString();
-                value.Description = FindDescription(blob.Metadata);
-                list.Add(value);                
+                Models.File file = new Models.File();
+                file.Name = blob.Name;
+                file.Uri = blob.Uri.ToString();
+                file.Created = (DateTime)blob.Properties.Created?.DateTime;
+                file.Description = FindDescription(blob.Metadata);
+                values.Add(file);
+
             }
-            return list;
+            return values;
         }
 
         public async static void GetAllFiles() {           
