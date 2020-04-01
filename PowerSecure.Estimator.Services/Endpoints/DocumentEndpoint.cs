@@ -40,16 +40,16 @@ namespace PowerSecure.Estimator.Services.Endpoints {
                 long contentLength = 0;
                 for (int i = 0; blobList.Count > i; i++) {
                     var blob = blobList[i];
-                    if (i == 0) { context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blob.ToString()); }
+                    //if (i == 0) { context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blob.ToString()); }
                     await blob.DownloadToStreamAsync(memStream);
-                    context.Response.ContentType = "application/json"; // blob.Properties.ContentType.ToString();
-                    contentLength = contentLength + blob.Properties.Length;
+                   //context.Response.ContentType = "application/json"; // blob.Properties.ContentType.ToString();
+                   // contentLength = contentLength + blob.Properties.Length;
                 }
-                context.Response.Headers.Add("Content-Length", contentLength.ToString());
+               // context.Response.Headers.Add("Content-Length", contentLength.ToString());
                 List<object> list = BlobStorageSettings.ConvertBlobListToFile(file);
-                context.Response.Body.Write(memStream.ToArray());
+               // context.Response.Body.Write(memStream.ToArray());
                 string results = JsonConvert.SerializeObject(list, Formatting.Indented);
-                memStream.Flush();
+               // memStream.Flush();
                 return new JsonResult(results);
             } catch (Exception ex) {
                 log.LogError(ex, "Caught exception");
