@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace PowerSecure.Estimator.Services.Services {
     public static class BlobStorageSettings {
@@ -17,6 +19,19 @@ namespace PowerSecure.Estimator.Services.Services {
         static CloudBlobClient _blobClient = _storageAccount.CreateCloudBlobClient();
         static CloudBlobContainer _blobContainer = _blobClient.GetContainerReference(containerName);
         public static CloudBlob Blob { get; set; }
+
+
+        public static async void UploadIntoBlobStorage(Models.File newFile, IFormFile file) {
+            if (await _blobContainer.CreateIfNotExistsAsync()) {
+                await _blobContainer.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
+            }
+            string imageName = "Test-" + Path.GetExtension(file.Name);
+            CloudBlockBlob cloudBlockBlob = _blobContainer.GetBlockBlobReference(containerName);
+            //using (var filestream = newFile.CreateFileInDirectory()) {
+            //    cloudBlockBlob.UploadFromStreamAsync(filestream);
+
+            //}
+        }
 
         private static string FindDescription(IDictionary<string, string> dict) {
             string value = "";
