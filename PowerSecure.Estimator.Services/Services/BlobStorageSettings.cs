@@ -12,7 +12,7 @@ namespace PowerSecure.Estimator.Services.Services {
         
         public static List<CloudBlob> BlobList { get; set; }
         static string containerName = "file-uploads";
-        static string _storageConnection = "BlobEndpoint=https://powersecureestimatorblob.blob.core.windows.net/;TableEndpoint=https://powersecureestimatorblob.table.core.windows.net/;SharedAccessSignature=sv=2019-02-02&ss=b&srt=sco&sp=rwdlac&se=2099-03-25T03:59:59Z&st=2020-03-24T15:10:40Z&spr=https&sig=j53pQUYsB7IU7GXexc4cm3kAknx9BDC8n%2BdNrUczacs%3D";  //AppSettings.Get("BlobStorageConnectionString");;
+        static string _storageConnection = AppSettings.Get("BlobStorageConnectionString");
         static CloudStorageAccount _storageAccount = CloudStorageAccount.Parse(_storageConnection);
         static CloudBlobClient _blobClient = _storageAccount.CreateCloudBlobClient();
         static CloudBlobContainer _blobContainer = _blobClient.GetContainerReference(containerName);

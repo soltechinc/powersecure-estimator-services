@@ -17,18 +17,13 @@ using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.ActionResults;
 using System.Collections.Generic;
 
-namespace PowerSecure.Estimator.Services.Endpoints
-{
+namespace PowerSecure.Estimator.Services.Endpoints {
     public class DocumentEndpoint {
-        //public static HttpClient httpClient;
         public static Models.File file = new Models.File();
-        //public static HttpRequest req = new HttpRequest();
-        
-
-
+ 
         [FunctionName("PostDocument")]
         public static async Task<IActionResult> Post(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route ="document")] HttpRequest req, ILogger log) {
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "document")] HttpRequest req, ILogger log) {
 
             return null;
         }
@@ -38,30 +33,24 @@ namespace PowerSecure.Estimator.Services.Endpoints
         public static async Task<IActionResult> Get(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents")] HttpRequest req, ILogger log) {
             try {
-                HttpContext context = req.HttpContext;                
+                HttpContext context = req.HttpContext;
                 MemoryStream memStream = new MemoryStream();
                 BlobStorageSettings.GetAllFiles();
                 var blobList = BlobStorageSettings.BlobList;
                 long contentLength = 0;
-                for (int i = 0; blobList.Count > i; i++) {                    
+                for (int i = 0; blobList.Count > i; i++) {
                     var blob = blobList[i];
-                    if (blobList.Count == 0) { context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blob.ToString()); }
+                    if (i == 0) { context.Response.Headers.Add("Content-Disposition", "Attachment; filename=" + blob.ToString()); }
                     await blob.DownloadToStreamAsync(memStream);
                     context.Response.ContentType = "application/json"; // blob.Properties.ContentType.ToString();
-                    contentLength = contentLength + blob.Properties.Length;                   
+                    contentLength = contentLength + blob.Properties.Length;
                 }
                 context.Response.Headers.Add("Content-Length", contentLength.ToString());
                 List<object> list = BlobStorageSettings.ConvertBlobListToFile(file);
                 context.Response.Body.Write(memStream.ToArray());
                 string results = JsonConvert.SerializeObject(list, Formatting.Indented);
                 memStream.Flush();
-               // if(context.Response.StatusCode == 200) {
-                    return new JsonResult(results);
-                //} else {
-                //    return null;
-               // }
-                
-                
+                return new JsonResult(results);
             } catch (Exception ex) {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
