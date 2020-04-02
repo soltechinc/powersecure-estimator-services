@@ -195,5 +195,22 @@ namespace PowerSecure.Estimator.Services.Services
 
             return string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
         }
+
+        //public async Task<(object, string)> List(IDictionary<string, string> queryParams) {
+        //    return (await _moduleRepository.List(queryParams), "OK");
+        //}
+
+        //public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams) {
+        //    return (await _moduleRepository.Get(id, queryParams), "OK");
+        //}
+
+        //public async Task<(object, string)> Upsert(JObject document) {
+        //    return (await _moduleRepository.Upsert(document), "OK");
+        //}
+
+        //public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams) {
+        //    int deletedDocumentCount = await _moduleRepository.Delete(id, queryParams);
+        //    return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
+        //}
     }
 }
