@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.Models {
         public string Description { get; set; }
 
         [JsonProperty("blobGuid")]
-        public Guid BlobGuid { get; set; }
+        public Guid BlobGuid { get; set; } // unsure if we need
 
         [JsonProperty("uploadedBy")]
         public string UploadedBy { get; set; }
@@ -32,7 +32,7 @@ namespace PowerSecure.Estimator.Services.Models {
         public string DocumentType { get; set; }
 
         [JsonProperty("moduleId")]
-        public Guid ModuleId { get; set; }
+        public string ModuleId { get; set; }
 
         public File() : base() {
 

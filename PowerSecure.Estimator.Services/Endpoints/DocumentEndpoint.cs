@@ -21,6 +21,7 @@ namespace PowerSecure.Estimator.Services.Endpoints {
     public class DocumentEndpoint {
         public static Models.File file = new Models.File();
 
+
         //[FunctionName("PostDocument")]
         //public static async Task<IActionResult> Post(
         //    [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "document")] HttpRequest req, ILogger log, IFormFile file) {

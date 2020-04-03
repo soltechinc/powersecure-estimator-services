@@ -90,7 +90,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return items;
         }
 
-        public async Task<int> Reset(string module, JToken jToken) {
+        public async Task<int> Reset(JToken jToken) {
             var documentQuery = _dbClient.CreateDocumentQuery<Estimate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .AsDocumentQuery();
 
@@ -118,6 +118,10 @@ namespace PowerSecure.Estimator.Services.Repositories {
             }
 
             return count;
+        }
+
+        public Task<int> Reset(string module, JToken jToken) {
+            throw new NotImplementedException();
         }
     }
 }

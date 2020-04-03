@@ -34,6 +34,6 @@ namespace PowerSecure.Estimator.Services.Models {
         public string EstimatePrice { get; set; }
 
         [JsonProperty("includedModules")]
-        public List<Module> Modules { get; set; }
+        public List<ModuleDefinition> Modules { get; set; }
     }
 }
