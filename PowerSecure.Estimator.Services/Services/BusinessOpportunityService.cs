@@ -47,7 +47,7 @@ namespace PowerSecure.Estimator.Services.Services
                 return (null, $"Unable to find environment setting: {envSetting}");
             }
 
-            string returnValue = await _httpClient.GetStringAsync($"{url}/api/modules/?object=full");
+            string returnValue = await _httpClient.GetStringAsync($"{url}/api/businessOpportunities/?object=full");
             var jObj = JObject.Parse(returnValue);
 
             if (jObj["Status"].ToString() != "200") {
