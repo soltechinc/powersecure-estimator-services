@@ -8,10 +8,10 @@ namespace PowerSecure.Estimator.Services.Repositories {
     public interface IBusinessOpportunityRepository {
         Task<object> List(IDictionary<string, string> queryParams);
 
-        Task<object> Get(string ifsboNumber, IDictionary<string, string> queryParams);
+        Task<object> Get(string id, IDictionary<string, string> queryParams);
 
         Task<object> Upsert(JObject document);
 
-        Task<int> Delete(string ifsboNumber, IDictionary<string, string> queryParams);
+        Task<int> Delete(string id, IDictionary<string, string> queryParams);
     }
 }

@@ -22,9 +22,9 @@ namespace PowerSecure.Estimator.Services.Services
             return (await _businessOpportunityRepository.List(queryParams), "OK");
         }
 
-        public async Task<(object, string)> Get(string ifsboNumber, IDictionary<string, string> queryParams)
+        public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
         {
-            return (await _businessOpportunityRepository.Get(ifsboNumber, queryParams), "OK");
+            return (await _businessOpportunityRepository.Get(id, queryParams), "OK");
         }
 
         public async Task<(object, string)> Upsert(JObject document)

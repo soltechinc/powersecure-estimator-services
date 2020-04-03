@@ -14,18 +14,16 @@ namespace PowerSecure.Estimator.Services.Repositories {
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
         private readonly string _collectionId;
-        private readonly string _queryParamsKey;
 
         public CosmosBusinessOpportunityRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
             _collectionId = Environment.GetEnvironmentVariable("businessOpportunityCollectionId", EnvironmentVariableTarget.Process);
-            _queryParamsKey = "ifsboNumber";
         }
 
         public async Task<int> Delete(string ifsBONumber, IDictionary<string, string> queryParams) {
-            if (queryParams.ContainsKey(_queryParamsKey)) {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams[_queryParamsKey]),
+            if (queryParams.ContainsKey("id")) {
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
                     new RequestOptions { PartitionKey = new PartitionKey(ifsBONumber) });
                 return 1;
             }
@@ -46,24 +44,24 @@ namespace PowerSecure.Estimator.Services.Repositories {
         }
 
         public async Task<object> Get(string ifsBONumber, IDictionary<string, string> queryParams) {
-            if (queryParams.ContainsKey(_queryParamsKey)) {
-                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams[_queryParamsKey]), 
-                    new RequestOptions { PartitionKey = new PartitionKey(queryParams[_queryParamsKey]) });
+            if (queryParams.ContainsKey("id")) {
+                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
+                    new RequestOptions { PartitionKey = new PartitionKey(ifsBONumber) });
             }
 
             var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .Where(i => i.IFSBONumber == ifsBONumber)
                 .AsDocumentQuery();
 
-            var businessOpportunities = new List<BusinessOpportunity>();
+            var items = new List<BusinessOpportunity>();
 
             while (query.HasMoreResults) {
-                foreach (BusinessOpportunity businessOpportunity in await query.ExecuteNextAsync()) {
-                    businessOpportunities.Add(businessOpportunity);
+                foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
+                    items.Add(item);
                 }
             }
 
-            return businessOpportunities;
+            return items;
         }
 
         public async Task<object> List(IDictionary<string, string> queryParams) {
@@ -87,8 +85,8 @@ namespace PowerSecure.Estimator.Services.Repositories {
         }
 
         public async Task<object> Upsert(JObject document) {
-            if (document.ContainsKey(_queryParamsKey)) {
-                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document[_queryParamsKey].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["module"].ToString()) });
+            if (document.ContainsKey("id")) {
+                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["ifsBONumber"].ToString()) });
             }
 
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
