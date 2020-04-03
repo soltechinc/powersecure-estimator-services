@@ -6,6 +6,177 @@
 	},
 	"item": [
 		{
+			"name": "BusinessOpportunities",
+			"item": [
+				{
+					"name": "List BusinessOpportunities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunities",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Business Opportunities with Full Object",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunities?object=full",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunities"
+							],
+							"query": [
+								{
+									"key": "object",
+									"value": "full"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get BusinessOpportunity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunities/942ba732-7564-4aca-b69e-a7a14b82ce62",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunities",
+								"942ba732-7564-4aca-b69e-a7a14b82ce62"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Business Opportunity With Optional Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunities/PowerBlock?id=942ba732-7564-4aca-b69e-a7a14b82ce62",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunities",
+								"PowerBlock"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "942ba732-7564-4aca-b69e-a7a14b82ce62"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert Business Opportunity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ifsboNumber\": \"a\",\n    \"data\": [\n        1\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/businessOpportunities/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunities",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Business Opportunities",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunities/title%20with%20space",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunities",
+								"title%20with%20space"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Business Opportunity With Optional Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunities/a?id=85ba2cdf-e93b-455e-a107-d5ffee503e88",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunities",
+								"a"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "85ba2cdf-e93b-455e-a107-d5ffee503e88"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},		
+		{
 			"name": "Modules",
 			"item": [
 				{
