@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PowerSecure.Estimator.Services.Models
 {
-    public class ModuleTemplate 
+    public class _ModuleTemplate
     {
         [JsonProperty("id")]
         public string Id { get; set; }

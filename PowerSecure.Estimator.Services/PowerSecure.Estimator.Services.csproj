@@ -2,7 +2,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <ApplicationIcon />
+    <Win32Resource />
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Models\BlobStorage.cs" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Services\HealthService.CheckProperties.cs">
       <DesignTime>True</DesignTime>
@@ -13,6 +18,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" Version="3.0.5" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.29" />
+    <PackageReference Include="Microsoft.ServiceFabric.Actors" Version="4.0.470" />
     <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager" Version="3.2.3" />
   </ItemGroup>
   <ItemGroup>
