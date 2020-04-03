@@ -18,7 +18,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
         public CosmosBusinessOpportunityRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("dev-businessOpportunity", EnvironmentVariableTarget.Process);
+            _collectionId = Environment.GetEnvironmentVariable("businessOpportunityCollectionId", EnvironmentVariableTarget.Process);
         }
 
         public async Task<object> Upsert(JObject document) {
