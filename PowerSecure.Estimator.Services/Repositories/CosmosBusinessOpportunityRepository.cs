@@ -21,47 +21,32 @@ namespace PowerSecure.Estimator.Services.Repositories {
             _collectionId = Environment.GetEnvironmentVariable("businessOpportunityCollectionId", EnvironmentVariableTarget.Process);
         }
 
-        public async Task<int> Delete(string ifsBONumber, IDictionary<string, string> queryParams) {
+        public async Task<object> Upsert(JObject document) {
+            if (document.ContainsKey("id")) {
+                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["ifsboNumber"].ToString()) });
+            }
+
+            return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
+        }
+
+        public async Task<int> Delete(string ifsboNumber, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
-                    new RequestOptions { PartitionKey = new PartitionKey(ifsBONumber) });
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(ifsboNumber) });
                 return 1;
             }
 
             var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
-                .Where(i => i.IFSBONumber == ifsBONumber)
+                .Where(i => i.IFSBONumber == ifsboNumber)
                 .AsDocumentQuery();
 
             var list = new List<Document>();
             while (query.HasMoreResults) {
-                foreach (BusinessOpportunity businessOpportunity in await query.ExecuteNextAsync()) {
-                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: businessOpportunity.IFSBONumber), 
-                        new RequestOptions { PartitionKey = new PartitionKey(businessOpportunity.IFSBONumber) }));
+                foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
+                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: item.Id), new RequestOptions { PartitionKey = new PartitionKey(item.IFSBONumber) }));
                 }
             }
 
             return list.Count;
-        }
-
-        public async Task<object> Get(string ifsBONumber, IDictionary<string, string> queryParams) {
-            if (queryParams.ContainsKey("id")) {
-                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
-                    new RequestOptions { PartitionKey = new PartitionKey(ifsBONumber) });
-            }
-
-            var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
-                .Where(i => i.IFSBONumber == ifsBONumber)
-                .AsDocumentQuery();
-
-            var items = new List<BusinessOpportunity>();
-
-            while (query.HasMoreResults) {
-                foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
-                    items.Add(item);
-                }
-            }
-
-            return items;
         }
 
         public async Task<object> List(IDictionary<string, string> queryParams) {
@@ -76,22 +61,35 @@ namespace PowerSecure.Estimator.Services.Repositories {
             while (query.HasMoreResults) {
                 foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
                     if (!reportFullObject) {
-                        //item.Rest = null;
+                        //module.Rest = null;
                     }
                     items.Add(item);
                 }
             }
+
             return items;
         }
 
-        public async Task<object> Upsert(JObject document) {
-            if (document.ContainsKey("id")) {
-                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["ifsboNumber"].ToString()) });
+        public async Task<object> Get(string ifsboNumber, IDictionary<string, string> queryParams) {
+            if (queryParams.ContainsKey("id")) {
+                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
+                    new RequestOptions { PartitionKey = new PartitionKey(ifsboNumber) });
             }
 
-            return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
-        }
+            var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
+                .Where(i => i.IFSBONumber == ifsboNumber)
+                .AsDocumentQuery();
 
+            var items = new List<BusinessOpportunity>();
+
+            while (query.HasMoreResults) {
+                foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
+                    items.Add(item);
+                }
+            }
+
+            return items;
+        }
 
         public async Task<int> Reset(JToken jToken) {
             var documentQuery = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })

@@ -10,31 +10,26 @@ using System.Threading.Tasks;
 namespace PowerSecure.Estimator.Services.Services
 {
     public class BusinessOpportunityService {
-        private readonly IBusinessOpportunityRepository _businessOpportunityRepository;
+        private readonly IBusinessOpportunityRepository _businessOpportunity;
 
-        public BusinessOpportunityService(IBusinessOpportunityRepository businessOpportunityRepository)
-        {
-            _businessOpportunityRepository = businessOpportunityRepository;
+        public BusinessOpportunityService(IBusinessOpportunityRepository businessOpportunity) {
+            _businessOpportunity = businessOpportunity;
         }
 
-        public async Task<(object,string)> List(IDictionary<string, string> queryParams)
-        {
-            return (await _businessOpportunityRepository.List(queryParams), "OK");
+        public async Task<(object, string)> List(IDictionary<string, string> queryParams) {
+            return (await _businessOpportunity.List(queryParams), "OK");
         }
 
-        public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
-        {
-            return (await _businessOpportunityRepository.Get(id, queryParams), "OK");
+        public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams) {
+            return (await _businessOpportunity.Get(id, queryParams), "OK");
         }
 
-        public async Task<(object, string)> Upsert(JObject document)
-        {
-            return (await _businessOpportunityRepository.Upsert(document), "OK");
+        public async Task<(object, string)> Upsert(JObject document) {
+            return (await _businessOpportunity.Upsert(document), "OK");
         }
-        
-        public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
-        {
-            int deletedDocumentCount = await _businessOpportunityRepository.Delete(id, queryParams);
+
+        public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams) {
+            int deletedDocumentCount = await _businessOpportunity.Delete(id, queryParams);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
         }
 
@@ -54,7 +49,7 @@ namespace PowerSecure.Estimator.Services.Services
                 return (null, "Error when calling list api");
             }
 
-            int newDocumentCount = await _businessOpportunityRepository.Reset(jObj["Items"]);
+            int newDocumentCount = await _businessOpportunity.Reset(jObj["Items"]);
 
             return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
