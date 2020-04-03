@@ -94,7 +94,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             { 
-                log.LogDebug($"Function called - DeleteModule (Id: {id})");
+                log.LogDebug($"Function called - DeleteBusinessOpportunity (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
@@ -117,9 +117,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogDebug($"Function called - ImportModules (Env: {env})");
+                log.LogDebug($"Function called - ImportBusinessOpportunities (Env: {env})");
 
-                (object returnValue, string message) = await new ModuleService(new CosmosModuleRepository(dbClient)).Import(env);
+                (object returnValue, string message) = await new BusinessOpportunityService(new CosmosBusinessOpportunityRepository(dbClient)).Import(env);
 
                 if (returnValue == null)
                 {
