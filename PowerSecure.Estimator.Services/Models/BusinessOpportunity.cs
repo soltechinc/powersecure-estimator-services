@@ -4,6 +4,9 @@ using System;
 namespace PowerSecure.Estimator.Services.Models {
     public class BusinessOpportunity {
 
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         [JsonProperty("ifsboNumber")]
         public string IFSBONumber { get; set; }
 
