@@ -6,20 +6,17 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("title")]
+        [JsonProperty("versionName")]
         public string Title { get; set; }
 
-        [JsonProperty("status")]
-        public string Status { get; set; } // unsure we need
+        [JsonProperty("description")]
+        public string Description { get; set; }
 
         [JsonProperty("boNumber")]
         public string BONumber { get; set; }
 
         [JsonProperty("boliNumber")]
         public string BOLINumber { get; set; }
-
-        [JsonProperty("estimateNumber")]
-        public string EstimateNumber { get; set; } // unsure we need
 
         [JsonProperty("revisionNumber")]
         public string RevisionNumber { get; set; }
@@ -33,7 +30,10 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("projectType")]
         public string ProjectType { get; set; }
 
-        [JsonProperty("modules")]
+        [JsonProperty("estimatePrice")]
+        public string EstimatePrice { get; set; }
+
+        [JsonProperty("includedModules")]
         public List<Module> Modules { get; set; }
     }
 }

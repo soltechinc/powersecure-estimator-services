@@ -13,9 +13,6 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("opportunityName")]
         public string OpportunityName { get; set; }
 
-        [JsonProperty("status")]
-        public string Status { get; set; }
-
         [JsonProperty("created")]
         public DateTime Created { get; set; }
 

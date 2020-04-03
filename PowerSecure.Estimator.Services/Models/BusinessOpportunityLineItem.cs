@@ -25,6 +25,9 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("state")]
         public string State { get; set; }
 
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
         [JsonProperty("fav")]
         public bool Favorite { get; set; }
 
