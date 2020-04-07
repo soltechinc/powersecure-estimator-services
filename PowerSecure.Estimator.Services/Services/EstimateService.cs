@@ -46,7 +46,8 @@ namespace PowerSecure.Estimator.Services.Services
                         case JObject jObject:
                             {
                                 if(!(jObject.Properties().Any(prop => prop.Name == "variableName") &&
-                                    jObject.Properties().Any(prop => prop.Name == "inputValue")))
+                                    (jObject.Properties().Any(prop => prop.Name == "inputValue") ||
+                                    jObject.Properties().Any(prop => prop.Name == "quantity"))))
                                 {
                                     break;
                                 }
@@ -55,7 +56,7 @@ namespace PowerSecure.Estimator.Services.Services
 
                                 string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 object inputValue;
-                                JToken inputValueFromJson = jObject["inputValue"];
+                                JToken inputValueFromJson = jObject.Properties().Any(prop => prop.Name == "inputValue") ? jObject["inputValue"] : jObject["quantity"];
                                 switch(inputValueFromJson.Type)
                                 {
                                     case JTokenType.Integer:
@@ -114,7 +115,8 @@ namespace PowerSecure.Estimator.Services.Services
                     case JObject jObject:
                         {
                             if (!(jObject.Properties().Any(prop => prop.Name == "variableName") &&
-                                jObject.Properties().Any(prop => prop.Name == "inputValue")))
+                                (jObject.Properties().Any(prop => prop.Name == "inputValue") ||
+                                jObject.Properties().Any(prop => prop.Name == "quantity"))))
                             {
                                 break;
                             }
@@ -146,13 +148,15 @@ namespace PowerSecure.Estimator.Services.Services
                                 else
                                 {
                                     JToken valueJToken = JToken.FromObject(value);
-                                    if(valueJToken.Type == JTokenType.String)
+                                    string jObjKey = jObject.Properties().Any(prop => prop.Name == "inputValue") ? "inputValue" : "quantity";
+
+                                    if (valueJToken.Type == JTokenType.String)
                                     {
-                                        jObject["inputValue"] = UnwrapString(valueJToken.ToObject<string>());
+                                        jObject[jObjKey] = UnwrapString(valueJToken.ToObject<string>());
                                     }
                                     else
                                     {
-                                        jObject["inputValue"] = valueJToken;
+                                        jObject[jObjKey] = valueJToken;
                                     }
                                 }
                                 break;
