@@ -49,17 +49,25 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return list.Count;
         }
 
+
+
         public async Task<object> List(IDictionary<string, string> queryParams) {
-            var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+            IQueryable<Function> query = _dbClient.CreateDocumentQuery<Function>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
+
+            if (queryParams.ContainsKey("ifsboNumber")) {
+                query = query.Where(f => f.Module == queryParams["ifsboNumber"].ToLower());
+            }
 
             var items = new List<BusinessOpportunity>();
+
+            var documentQuery = query.AsDocumentQuery();
 
             bool reportFullObject = false;
             if (queryParams.TryGetValue("object", out string value)) {
                 reportFullObject = (value.Trim().ToLower() == "full");
             }
-            while (query.HasMoreResults) {
-                foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
+            while (documentQuery.HasMoreResults) {
+                foreach (BusinessOpportunity item in await documentQuery.ExecuteNextAsync()) {
                     if (!reportFullObject) {
                         item.Rest = null;
                     }
@@ -69,6 +77,26 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
             return items;
         }
+        //public async Task<object> List(IDictionary<string, string> queryParams) {
+        //    var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+
+        //    var items = new List<BusinessOpportunity>();
+
+        //    bool reportFullObject = false;
+        //    if (queryParams.TryGetValue("object", out string value)) {
+        //        reportFullObject = (value.Trim().ToLower() == "full");
+        //    }
+        //    while (query.HasMoreResults) {
+        //        foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
+        //            if (!reportFullObject) {
+        //                item.Rest = null;
+        //            }
+        //            items.Add(item);
+        //        }
+        //    }
+
+        //    return items;
+        //}
 
         public async Task<object> Get(string ifsboNumber, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
