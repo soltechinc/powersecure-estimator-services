@@ -6,6 +6,11 @@
     <Win32Resource />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="Models\BlobStorage.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -29,10 +34,6 @@
   <ItemGroup>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="local.settings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
     <None Update="Services\HealthService.CheckProperties.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

@@ -13,6 +13,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.Services
     [TestClass]
     public class EstimateServiceTests
     {
+        [TestMethod]
         public void HappyPathTest_evaluate()
         {
             var estimateService = new EstimateService(null,null,null);
@@ -23,3 +24,4 @@ namespace PowerSecure.Estimator.Services.UnitTest.Services
         }
     }
 }
+

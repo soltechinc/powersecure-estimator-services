@@ -1,0 +1,589 @@
+﻿{
+  "moduleInputs": [
+    {
+      "inputLabel": "PowerBlock Type",
+      "inputType": "Select",
+      "input": true,
+      "gridRow": 0,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "None",
+      "inputValue": "t2 powerblock",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        },
+        {
+          "text": "Other Manufacturer",
+          "value": "othermanufacturer"
+        },
+        {
+          "text": "T2 PowerBlock",
+          "value": "t2 powerblock"
+        },
+        {
+          "text": "T4F PowerBlock",
+          "value": "T4F PowerBlock"
+        },
+        {
+          "text": "Volvo",
+          "value": "volvo"
+        },
+        {
+          "text": "NG",
+          "value": "ng"
+        },
+        {
+          "text": "Mobile PowerBlock",
+          "value": "mobilepowerblock"
+        },
+        {
+          "text": "T2 Skintight",
+          "value": "t2 skintight"
+        },
+        {
+          "text": "T4 Skintight",
+          "value": "t4 skintight"
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false,
+        "required": true
+      },
+      "variableName": "powerblocktype"
+    },
+    {
+      "inputLabel": "Enclosure Type",
+      "inputType": "Select",
+      "input": true,
+      "gridRow": 0,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "None",
+      "inputValue": "Standard",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        },
+        {
+          "text": "Standard",
+          "value": "Standard"
+        },
+        {
+          "text": "Skid",
+          "value": "Skid"
+        }
+      ],
+      "parent": "PowerBlock Type",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false,
+        "required": true
+      },
+      "variableName": "enclosuretype"
+    },
+    {
+      "inputLabel": "PowerBlock Capacity",
+      "inputType": "Select",
+      "input": true,
+      "gridRow": 1,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "None",
+      "inputValue": "650",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        },
+        {
+          "text": "650 kW",
+          "value": "650"
+        },
+        {
+          "text": "1300 kW",
+          "value": "1300"
+        },
+        {
+          "text": "1950 kW",
+          "value": "1950"
+        },
+        {
+          "text": "2600 kW",
+          "value": "2600"
+        },
+        {
+          "text": "3250 kW",
+          "value": "3250"
+        },
+        {
+          "text": "3900 kW",
+          "value": "3900"
+        }
+      ],
+      "parent": "PowerBlock Type",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false,
+        "required": true
+      },
+      "variableName": "powerblockcapacity"
+    },
+    {
+      "inputLabel": "Total kW",
+      "inputType": "Text",
+      "input": false,
+      "gridRow": 1,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "None",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "PowerBlock Capacity",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "totalkw"
+    },
+    {
+      "inputLabel": "Number of Identical PowerBlocks",
+      "inputType": "Number",
+      "input": true,
+      "gridRow": 2,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "None",
+      "inputValue": "1",
+      "standardValue": "1",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "PowerBlock Type",
+      "meta": {
+        "min": "1",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "numberofidenticalpowerblocks"
+    },
+    {
+      "inputLabel": "Number of Engines/PowerBlock",
+      "inputType": "Text",
+      "input": false,
+      "gridRow": 2,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "None",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "PowerBlock Capacity",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "numberofengines"
+    },
+    {
+      "inputLabel": "Day Tank Quote",
+      "inputType": "Text",
+      "input": true,
+      "gridRow": 3,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "Equipment",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false,
+        "required": false
+      },
+      "variableName": "manualDayTankQuote"
+    },
+    {
+      "inputLabel": "Upload Quote",
+      "inputType": "File Input",
+      "input": true,
+      "gridRow": 3,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "Equipment",
+      "inputValue": null,
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "files"
+    },
+    {
+      "inputLabel": "Fuel Tank Upgrade",
+      "inputType": "Select",
+      "input": true,
+      "gridRow": 4,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "Equipment",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        },
+        {
+          "text": "48 Hour Fuel Tank",
+          "value": "48hourfueltank"
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "fueltankupgradetype"
+    },
+    {
+      "inputLabel": "Sound Attenuation",
+      "inputType": "Select",
+      "input": true,
+      "gridRow": 4,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "Equipment",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        },
+        {
+          "text": "SA III  ( ≈ 72 dBA)",
+          "value": "SoundAttenuationEnabled"
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "SoundAttenuationUpgradeType"
+    },
+    {
+      "inputLabel": "Weather Package",
+      "inputType": "Select",
+      "input": true,
+      "gridRow": 5,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "Equipment",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        },
+        {
+          "text": "Cold Weather",
+          "value": "WP2"
+        },
+        {
+          "text": "Extreme Weather",
+          "value": "WP3"
+        }
+      ],
+      "parent": "PowerBlock Type",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "weatherPackageUpgradeType"
+    },
+    {
+      "inputLabel": "Add/Deduct Engines",
+      "inputType": "Number",
+      "input": true,
+      "gridRow": 5,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "Equipment",
+      "inputValue": "0",
+      "standardValue": "0",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "enginemodifier"
+    },
+    {
+      "inputLabel": "Onsite Control Wiring",
+      "inputType": "Checkbox",
+      "input": true,
+      "gridRow": 6,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "Assembly and Installation",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "onsitecontrolwiring"
+    },
+    {
+      "inputLabel": "Onsite Install",
+      "inputType": "Checkbox",
+      "input": true,
+      "gridRow": 6,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "Assembly and Installation",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "onsiteinstall"
+    },
+    {
+      "inputLabel": "Grounding",
+      "inputType": "Checkbox",
+      "input": true,
+      "gridRow": 6,
+      "gridCol": 2,
+      "calculated": true,
+      "fieldGroup": "Assembly and Installation",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "grounding"
+    },
+    {
+      "inputLabel": "Pads",
+      "inputType": "Checkbox",
+      "input": true,
+      "gridRow": 7,
+      "gridCol": 0,
+      "calculated": true,
+      "fieldGroup": "Assembly and Installation",
+      "inputValue": false,
+      "standardValue": false,
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "pads"
+    },
+    {
+      "inputLabel": "Rigging",
+      "inputType": "Checkbox",
+      "input": true,
+      "gridRow": 7,
+      "gridCol": 1,
+      "calculated": true,
+      "fieldGroup": "Assembly and Installation",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "rigging"
+    },
+    {
+      "inputLabel": "Onsite Assembly",
+      "inputType": "Checkbox",
+      "input": true,
+      "gridRow": 7,
+      "gridCol": 2,
+      "calculated": true,
+      "fieldGroup": "Assembly and Installation",
+      "inputValue": "",
+      "standardValue": "",
+      "options": [
+        {
+          "text": "--No Selection--",
+          "value": ""
+        }
+      ],
+      "parent": "None",
+      "meta": {
+        "min": "",
+        "max": "",
+        "step": "",
+        "popupInfo": "",
+        "popup": false
+      },
+      "variableName": "onsiteassembly"
+    }
+  ],
+  "moduleTitle": "PowerBlock",
+  "moduleId": "52ed94a1-c627-417b-8531-9a7a63deb3ae",
+  "equipmentArray": [
+    {
+      "input": false,
+      "inputValue": null,
+      "inputLabel": "PowerBlock",
+      "variableName": "powerblockcost",
+      "inputVariableName": null
+    },
+    {
+      "input": false,
+      "inputValue": null,
+      "inputLabel": "PowerBlock",
+      "variableName": "powerblockmargin",
+      "inputVariableName": null
+    },
+    {
+      "input": false,
+      "inputValue": null,
+      "inputLabel": "PowerBlock",
+      "variableName": "powerblocksell",
+      "inputVariableName": null
+    }
+  ],
+  "assemblyArray": [
+
+  ],
+  "hiddenValue": [
+    {
+      "intialIFSValue": false
+    }
+  ]
+}
