@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Repositories {
     public interface IBusinessOpportunityRepository {
-        Task<object> List(IDictionary<string, string> queryParams);
+        Task<object> List(string id, IDictionary<string, string> queryParams);
 
         Task<object> Get(string id, IDictionary<string, string> queryParams);
 
