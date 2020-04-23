@@ -16,6 +16,9 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("blobGuid")]
         public Guid BlobGuid { get; set; } // unsure if we need
 
+        [JsonProperty("includeInProposal")]
+        public bool IncludeInProposal { get; set; }
+
         [JsonProperty("uploadedBy")]
         public string UploadedBy { get; set; }
         
@@ -36,20 +39,6 @@ namespace PowerSecure.Estimator.Services.Models {
 
         public File() : base() {
 
-        }
-
-        public async void CreateFileInDirectory(IFormFile file) {
-            try {
-                //check if file exist
-                var fileName = Path.GetFileName(file.Name);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"www", fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create)) {
-                    await file.CopyToAsync(fileStream);
-                }
-
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
         }
 
         public File(string title) : base(title) {

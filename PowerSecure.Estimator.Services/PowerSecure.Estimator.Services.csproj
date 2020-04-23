@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Models\BlobStorage.cs" />
+    <Compile Remove="Models\_ModuleTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Services\HealthService.CheckProperties.cs">

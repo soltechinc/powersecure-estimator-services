@@ -44,14 +44,14 @@ namespace PowerSecure.Estimator.Services.Repositories
                 return 1;
             }
 
-            var query = _dbClient.CreateDocumentQuery<_ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
+            var query = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
                 .Where(m => m.ModuleTitle == moduleTitle)
                 .AsDocumentQuery();
 
             var list = new List<Document>();
             while (query.HasMoreResults)
             {
-                foreach (_ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
                 {
                     list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: moduleTemplate.Id), new RequestOptions { PartitionKey = new PartitionKey(moduleTemplate.ModuleTitle) }));
                 }
@@ -62,9 +62,9 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> List(IDictionary<string, string> queryParams)
         {
-            var query = _dbClient.CreateDocumentQuery<_ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+            var query = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
-            var moduleTemplates = new List<_ModuleTemplate>();
+            var moduleTemplates = new List<ModuleTemplate>();
 
             bool reportFullObject = false;
             if (queryParams.TryGetValue("object", out string value))
@@ -73,7 +73,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             }
             while (query.HasMoreResults)
             {
-                foreach (_ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
                 {
                     if(!reportFullObject)
                     {
@@ -93,15 +93,15 @@ namespace PowerSecure.Estimator.Services.Repositories
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(moduleTitle) });
             }
 
-            var query = _dbClient.CreateDocumentQuery<_ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
+            var query = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
                 .Where(m => m.ModuleTitle == moduleTitle)
                 .AsDocumentQuery();
 
-            var moduleTemplates = new List<_ModuleTemplate>();
+            var moduleTemplates = new List<ModuleTemplate>();
 
             while (query.HasMoreResults)
             {
-                foreach (_ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleTemplate in await query.ExecuteNextAsync())
                 {
                     moduleTemplates.Add(moduleTemplate);
                 }
@@ -112,14 +112,14 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<int> Reset(JToken jToken)
         {
-            var documentQuery = _dbClient.CreateDocumentQuery<_ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
+            var documentQuery = _dbClient.CreateDocumentQuery<ModuleTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .AsDocumentQuery();
 
-            var moduleTemplates = new List<_ModuleTemplate>();
+            var moduleTemplates = new List<ModuleTemplate>();
 
             while (documentQuery.HasMoreResults)
             {
-                foreach (_ModuleTemplate moduleDoc in await documentQuery.ExecuteNextAsync())
+                foreach (ModuleTemplate moduleDoc in await documentQuery.ExecuteNextAsync())
                 {
                     moduleTemplates.Add(moduleDoc);
                 }

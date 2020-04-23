@@ -29,14 +29,14 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
-        public async Task<int> Delete(string ifsboNumber, IDictionary<string, string> queryParams) {
+        public async Task<int> Delete(string id, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(ifsboNumber) });
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(id) });
                 return 1;
             }
 
             var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
-                .Where(i => i.IFSBONumber == ifsboNumber)
+                .Where(i => i.Id == id)
                 .AsDocumentQuery();
 
             var list = new List<Document>();
@@ -51,32 +51,6 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
 
 
-        //public async Task<object> List(IDictionary<string, string> queryParams) {
-        //    IQueryable<Function> query = _dbClient.CreateDocumentQuery<Function>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
-
-        //    if (queryParams.ContainsKey("ifsboNumber")) {
-        //        query = query.Where(i => i.Id == id);
-        //    }
-
-        //    var items = new List<BusinessOpportunity>();
-
-        //    var documentQuery = query.AsDocumentQuery();
-
-        //    bool reportFullObject = false;
-        //    if (queryParams.TryGetValue("object", out string value)) {
-        //        reportFullObject = (value.Trim().ToLower() == "full");
-        //    }
-        //    while (documentQuery.HasMoreResults) {
-        //        foreach (BusinessOpportunity item in await documentQuery.ExecuteNextAsync()) {
-        //            if (!reportFullObject) {
-        //                item.Rest = null;
-        //            }
-        //            items.Add(item);
-        //        }
-        //    }
-
-        //    return items;
-        //}
         public async Task<object> List(IDictionary<string, string> queryParams) {
             var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
@@ -94,9 +68,10 @@ namespace PowerSecure.Estimator.Services.Repositories {
                     items.Add(item);
                 }
             }
-
             return items;
         }
+
+
 
         public async Task<object> Get(string id, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
