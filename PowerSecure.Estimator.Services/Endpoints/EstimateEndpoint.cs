@@ -80,6 +80,8 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
+
+
         [FunctionName("EditEstimate")]
         public static async Task<IActionResult> Upsert(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimates")] HttpRequest req,
@@ -97,6 +99,27 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+
+        [FunctionName("CloneEstimate")]
+        public static async Task<IActionResult> Clone(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimates/clone")] HttpRequest req,
+        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+        ILogger log) {
+            try {
+                log.LogDebug("Function called - CloneEstimate");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                return returnValue.ToOkObjectResult(message: message);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+
 
         [FunctionName("DeleteEstimate")]
         public static async Task<IActionResult> Delete(
