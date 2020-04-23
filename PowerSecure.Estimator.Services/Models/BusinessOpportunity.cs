@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace PowerSecure.Estimator.Services.Models {
     public class BusinessOpportunity {
@@ -21,5 +22,9 @@ namespace PowerSecure.Estimator.Services.Models {
 
         [JsonProperty("createdBy")]
         public string CreatedBy { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object> Rest { get; set; }
+
     }
 }

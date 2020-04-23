@@ -61,7 +61,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
             while (query.HasMoreResults) {
                 foreach (BusinessOpportunity item in await query.ExecuteNextAsync()) {
                     if (!reportFullObject) {
-                        //module.Rest = null;
+                        item.Rest = null;
                     }
                     items.Add(item);
                 }
