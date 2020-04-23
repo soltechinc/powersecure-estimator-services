@@ -98,14 +98,14 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return items;
         }
 
-        public async Task<object> Get(string ifsboNumber, IDictionary<string, string> queryParams) {
+        public async Task<object> Get(string id, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
-                    new RequestOptions { PartitionKey = new PartitionKey(ifsboNumber) });
+                    new RequestOptions { PartitionKey = new PartitionKey(id) });
             }
 
             var query = _dbClient.CreateDocumentQuery<BusinessOpportunity>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
-                .Where(i => i.IFSBONumber == ifsboNumber)
+                .Where(i => i.Id == id)
                 .AsDocumentQuery();
 
             var items = new List<BusinessOpportunity>();
