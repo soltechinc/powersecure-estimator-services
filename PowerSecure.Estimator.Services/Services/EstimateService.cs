@@ -205,13 +205,13 @@ namespace PowerSecure.Estimator.Services.Services
             if (jObject.Properties().Any(prop => prop.Name == "inputValue"))
             {
                 bool isCalculated = string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
-                if (!isCalculated)
+                if (isCalculated)
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams) {
