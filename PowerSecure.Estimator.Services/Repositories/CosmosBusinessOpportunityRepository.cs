@@ -51,11 +51,11 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
 
 
-        public async Task<object> List(IDictionary<string, string> queryParams) {
+        public async Task<object> List(string id, IDictionary<string, string> queryParams) {
             IQueryable<Function> query = _dbClient.CreateDocumentQuery<Function>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
 
-            if (queryParams.ContainsKey("id")) {
-                query = query.Where(f => f.Module == queryParams["id"].ToLower());
+            if (queryParams.ContainsKey("ifsboNumber")) {
+                query = query.Where(i => i.Id == id);
             }
 
             var items = new List<BusinessOpportunity>();
