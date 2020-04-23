@@ -202,8 +202,16 @@ namespace PowerSecure.Estimator.Services.Services
                     return false;
                 }
             }
+            if (jObject.Properties().Any(prop => prop.Name == "inputValue"))
+            {
+                bool isCalculated = string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
+                if (!isCalculated)
+                {
+                    return false;
+                }
+            }
 
-            return string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
+            return true;
         }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams) {
