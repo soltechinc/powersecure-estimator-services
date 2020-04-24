@@ -82,6 +82,11 @@ namespace PowerSecure.Estimator.Services.Services
         {
             (object obj, string str) = await UpsertFromRequestBody(requestBody);
 
+            if (obj == null)
+            {
+                return (obj, str);
+            }
+
             JObject requestBodyJObject = JObject.Parse(requestBody);
             JObject instructionSet = JObject.FromObject(obj);
 
