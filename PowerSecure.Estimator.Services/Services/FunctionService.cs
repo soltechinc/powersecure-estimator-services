@@ -1,7 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Azure.Documents;
+using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -79,15 +82,24 @@ namespace PowerSecure.Estimator.Services.Services
         {
             (object obj, string str) = await UpsertFromRequestBody(requestBody);
 
-            /*
-            if(instructionSetJObject.ContainsKey("id"))
+            JObject requestBodyJObject = JObject.Parse(requestBody);
+            JObject instructionSet = JObject.FromObject(obj);
+
+            if (!requestBodyJObject.ContainsKey("id"))
             {
-                return (obj, str);
-            }*/
+                requestBodyJObject.Add("id", instructionSet["id"].ToString());
+            }
 
-            //add id from returned object and uijson and re-upsert
+            if(instructionSet.ContainsKey("uijson"))
+            {
+                instructionSet["uijson"] = requestBodyJObject;
+            }
+            else
+            {
+                instructionSet.Add("uijson", requestBodyJObject);
+            }
 
-            return (null, "");
+            return await Upsert(instructionSet);
         }
 
         private async Task<(object, string)> UpsertFromRequestBody(string requestBody)
@@ -98,20 +110,19 @@ namespace PowerSecure.Estimator.Services.Services
             if (requestJObject.ContainsKey("id"))
             {
                 instructionSetJObject.Add("id", requestJObject["id"]);
-                instructionSetJObject.Add("uijson", requestBody);
             }
 
-            if (!requestJObject.ContainsKey("moduleTitle"))
+            if (!requestJObject.ContainsKey("moduleTitle") || string.IsNullOrWhiteSpace(requestJObject["moduleTitle"].ToString()))
             {
                 return (null, "Invalid instruction set - no module title");
             }
             instructionSetJObject.Add("module", requestJObject["moduleTitle"]);
 
-            if (!requestJObject.ContainsKey("effectiveDate"))
+            if (!requestJObject.ContainsKey("effectiveDate") || string.IsNullOrWhiteSpace(requestJObject["effectiveDate"].ToString()))
             {
                 return (null, "Invalid instruction set - no effective date");
             }
-            instructionSetJObject.Add("startdate", requestJObject["effectiveDate"]);
+            instructionSetJObject.Add("startdate", DateTime.ParseExact(requestJObject["effectiveDate"].ToString(),"yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("M/d/yyyy"));
 
             if (!requestJObject.ContainsKey("calculatedVariable"))
             {
@@ -119,7 +130,7 @@ namespace PowerSecure.Estimator.Services.Services
             }
             {
                 var jObject = (JObject)requestJObject["calculatedVariable"];
-                if(!jObject.ContainsKey("variableName"))
+                if(!jObject.ContainsKey("variableName") || string.IsNullOrWhiteSpace(jObject["variableName"].ToString()))
                 {
                     return (null, "Invalid instruction set - no variableName");
                 }
@@ -127,11 +138,240 @@ namespace PowerSecure.Estimator.Services.Services
                 instructionSetJObject.Add("name", jObject["variableName"]);
             }
 
+            {
+                var finalSets = new List<JObject>();
+                requestJObject.WalkNodes(PreOrder: jToken =>
+                {
+                    switch (jToken)
+                    {
+                        case JObject jObject:
+                            {
+                                if(jObject.ContainsKey("final") && (bool)jObject["final"])
+                                {
+                                    finalSets.Add(jObject);
+                                }
+                                break;
+                            }
+                    }
+                });
 
+                if(finalSets.Count == 0)
+                {
+                    return (null, "Invalid instruction set - no final set");
+                }
+
+                if(finalSets.Count > 1)
+                {
+                    return (null, "Invalid instruction set - more than one final set");
+                }
+
+                var finalSet = finalSets[0];
+                int firstId = int.MinValue;
+                Dictionary<int, (string, List<object>)> dict = new Dictionary<int, (string, List<object>)>();
+                finalSet.WalkNodes(PreOrder: jToken =>
+                {
+                    switch (jToken)
+                    {
+                        case JObject jObject:
+                            {
+                                if (!jObject.ContainsKey("id"))
+                                {
+                                    break;
+                                }
+
+                                int id = jObject["id"].ToObject<int>();
+                                if(firstId == int.MinValue)
+                                {
+                                    firstId = id;
+                                }
+                                if (dict.ContainsKey(id))
+                                {
+                                    break;
+                                }
+
+                                ParseInstructionSetsToDictionary(jObject, dict);
+                                break;
+                            }
+                    }
+                },
+                PostOrder: jToken =>
+                {
+                    switch (jToken)
+                    {
+                        case JObject jObject:
+                            {
+                                if (!jObject.ContainsKey("id"))
+                                {
+                                    break;
+                                }
+
+                                int id = jObject["id"].ToObject<int>();
+
+                                if(dict[id].Item2 == null)
+                                {
+                                    break;
+                                }
+
+                                ResolveInstructionSetsFromDictionary(id, dict);
+                                break;
+                            }
+                    }
+                });
+
+                instructionSetJObject.Add("instructions", dict[firstId].Item1);
+            }
 
             return await Upsert(instructionSetJObject);
         }
 
+        private void ParseInstructionSetsToDictionary(JObject jObject, Dictionary<int, (string, List<object>)> dict)
+        {
+            int id = jObject["id"].ToObject<int>();
+            string primitive = ((JObject)jObject["instructionMethod"])["v"].ToString();
+            JArray instructionParamsJArray = (JArray)jObject["instructionParams"];
+            var instructionParams = new List<object>();
+            foreach (JToken instructionParamToken in instructionParamsJArray)
+            {
+                if (instructionParamToken is JObject instructionParam)
+                {
+                    if (instructionParam.ContainsKey("value"))
+                    {
+                        JToken valueToken = instructionParam["value"];
+                        switch (valueToken.Type)
+                        {
+                            case JTokenType.Null:
+                                break;
+                            case JTokenType.Object:
+                                {
+                                    JObject valueObj = (JObject)valueToken;
+                                    if(valueObj.ContainsKey("id"))
+                                    {
+                                        instructionParams.Add(new UnresolvedSet() { Id = valueObj["id"].ToObject<int>() });
+                                    }
+                                    else
+                                    {
+                                        instructionParams.Add($"{valueObj["moduleTitle"].ToString().ToLower()}.{valueObj["variableName"].ToString().ToLower()}");
+                                    }
+                                    break;
+                                }
+                            default:
+                                {
+                                    instructionParams.Add(valueToken);
+                                    break;
+                                }
+                        }
+                    }
+                    else
+                    {
+                        instructionParams.Add(instructionParam);
+                    }
+                }
+            }
+
+            dict.Add(id, (primitive.ToLower(), instructionParams));
+        }
+
+        private void ResolveInstructionSetsFromDictionary(int currentId, Dictionary<int, (string, List<object>)> dict)
+        {
+            (string primitive, List<object> parameters) = dict[currentId];
+            for(int i = 0; i < parameters.Count; ++i)
+            {
+                switch(parameters[i])
+                {
+                    case UnresolvedSet unresolvedSet:
+                        {
+                            parameters[i] = dict[unresolvedSet.Id].Item1;
+                            break;
+                        }
+                    case JObject jObject:
+                        {
+                            if(primitive != "find")
+                            {
+                                break;
+                            }
+
+                            StringBuilder str = new StringBuilder();
+                            str.Append("\"$Factor\",[");
+                            bool first = true;
+                            string moduleName = jObject["module"].ToString();
+                            foreach(var pair in jObject)
+                            {
+                                if(pair.Key == "returnattribute" ||
+                                   pair.Key == "returnvalue" ||
+                                   string.IsNullOrWhiteSpace(pair.Value.ToString()))
+                                {
+                                    continue;
+                                }
+                                if(first)
+                                {
+                                    first = false;
+                                }
+                                else
+                                {
+                                    str.Append(",");
+                                }
+
+                                if(pair.Value is JObject variableInput)
+                                {
+                                    str.Append($"[\"${pair.Key.ToLower()}\",\"{variableInput["moduleTitle"].ToString().ToLower()}.{variableInput["variableName"].ToString().ToLower()}\"]");
+                                }
+                                else
+                                {
+                                    str.Append($"[\"${pair.Key.ToLower()}\",\"${pair.Value.ToString().ToLower()}\"]");
+                                }
+                            }
+                            str.Append("],\"All.EffectiveDate\",");
+
+                            JToken returnAttribute = jObject["returnattribute"];
+                            if (returnAttribute is JObject returnAttributeInput)
+                            {
+                                str.Append($"\"{returnAttributeInput["moduleTitle"].ToString().ToLower()}.{returnAttributeInput["variableName"].ToString().ToLower()}\"");
+                            }
+                            else
+                            {
+                                str.Append($"\"${returnAttribute.ToString().ToLower()}\"");
+                            }
+
+                            parameters[i] = str.ToString();
+
+                            break;
+                        }
+                    case JToken jToken:
+                        {
+                            parameters[i] = jToken.ToString();
+                            break;
+                        }
+                }
+            }
+
+            if(primitive == "#")
+            {
+                dict[currentId] = (parameters[0].ToString(), null);
+            }
+            else
+            {
+                StringBuilder str = new StringBuilder();
+                str.Append($"{{\"{primitive}\":[");
+                bool first = true;
+                foreach(object parameter in parameters)
+                {
+                    if(first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        str.Append(",");
+                    }
+                    str.Append(parameter.ToString());
+                }
+                str.Append("]}");
+                dict[currentId] = (str.ToString(), null);
+            }
+        }
+
+        private class UnresolvedSet { public int Id { get; set; } }
+        
         public async Task<(object, string)> GetFromUi(string id)
         {
             return (null, "");
