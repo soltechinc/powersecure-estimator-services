@@ -142,5 +142,50 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+        
+        [FunctionName("EditFunctionFromUi")]
+        public static async Task<IActionResult> UpsertFromUi(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "functions/ui")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug("Function called - EditFunctionFromUi");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                log.LogInformation(requestBody);
+
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).UpsertFromUi(requestBody);
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+        [FunctionName("GetFunctionFromUi")]
+        public static async Task<IActionResult> GetFromUi(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "functions/ui/{id}")] HttpRequest req,
+            string id,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug("Function called - GetFunctionFromUi");
+
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).GetFromUi(id);
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }

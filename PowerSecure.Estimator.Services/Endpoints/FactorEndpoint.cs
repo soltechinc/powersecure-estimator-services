@@ -143,51 +143,5 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
-
-        [FunctionName("EditFactorFromUi")]
-        public static async Task<IActionResult> UpsertFromUi(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "factors/ui")] HttpRequest req,
-            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log)
-        {
-            try
-            {
-                log.LogDebug("Function called - EditFactorFromUi");
-
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-
-                log.LogInformation(requestBody);
-
-                //(object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody.ToLower()));
-                //return returnValue.ToOkObjectResult(message: message);
-                return new object().ToOkObjectResult();
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
-
-        [FunctionName("GetFactorFromUi")]
-        public static async Task<IActionResult> GetFromUi(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "factors/ui/{id}")] HttpRequest req,
-            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log)
-        {
-            try
-            {
-                log.LogDebug("Function called - GetFactorFromUi");
-
-                //(object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody.ToLower()));
-                //return returnValue.ToOkObjectResult(message: message);
-                return new object().ToOkObjectResult();
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
     }
 }

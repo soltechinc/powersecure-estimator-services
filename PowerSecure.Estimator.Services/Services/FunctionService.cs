@@ -74,5 +74,16 @@ namespace PowerSecure.Estimator.Services.Services
 
             return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
+
+        public async Task<(object, string)> UpsertFromUi(string requestBody)
+        {
+
+            return (null, "");
+        }
+
+        public async Task<(object, string)> GetFromUi(string id)
+        {
+            return (null, "");
+        }
     }
 }
