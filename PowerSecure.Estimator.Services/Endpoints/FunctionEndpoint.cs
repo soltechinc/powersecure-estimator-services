@@ -158,6 +158,12 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 log.LogInformation(requestBody);
 
                 (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).UpsertFromUi(requestBody);
+                
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

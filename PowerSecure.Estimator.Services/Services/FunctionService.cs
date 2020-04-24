@@ -77,8 +77,59 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> UpsertFromUi(string requestBody)
         {
+            (object obj, string str) = await UpsertFromRequestBody(requestBody);
+
+            /*
+            if(instructionSetJObject.ContainsKey("id"))
+            {
+                return (obj, str);
+            }*/
+
+            //add id from returned object and uijson and re-upsert
 
             return (null, "");
+        }
+
+        private async Task<(object, string)> UpsertFromRequestBody(string requestBody)
+        {
+            var requestJObject = JObject.Parse(requestBody);
+            var instructionSetJObject = new JObject();
+
+            if (requestJObject.ContainsKey("id"))
+            {
+                instructionSetJObject.Add("id", requestJObject["id"]);
+                instructionSetJObject.Add("uijson", requestBody);
+            }
+
+            if (!requestJObject.ContainsKey("moduleTitle"))
+            {
+                return (null, "Invalid instruction set - no module title");
+            }
+            instructionSetJObject.Add("module", requestJObject["moduleTitle"]);
+
+            if (!requestJObject.ContainsKey("effectiveDate"))
+            {
+                return (null, "Invalid instruction set - no effective date");
+            }
+            instructionSetJObject.Add("startdate", requestJObject["effectiveDate"]);
+
+            if (!requestJObject.ContainsKey("calculatedVariable"))
+            {
+                return (null, "Invalid instruction set - no calculatedVariable");
+            }
+            {
+                var jObject = (JObject)requestJObject["calculatedVariable"];
+                if(!jObject.ContainsKey("variableName"))
+                {
+                    return (null, "Invalid instruction set - no variableName");
+                }
+
+                instructionSetJObject.Add("name", jObject["variableName"]);
+            }
+
+
+
+            return await Upsert(instructionSetJObject);
         }
 
         public async Task<(object, string)> GetFromUi(string id)

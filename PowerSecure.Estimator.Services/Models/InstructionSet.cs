@@ -11,7 +11,7 @@ namespace PowerSecure.Estimator.Services.Models
 {
     public class InstructionSet : IInstructionSet
     {
-        public InstructionSet(string id, string module, string name, string instructions, DateTime startDate, DateTime creationDate)
+        public InstructionSet(string id, string module, string name, string instructions, DateTime startDate, DateTime creationDate, string uiJson)
         {
             Id = id;
             Module = module;
@@ -19,6 +19,7 @@ namespace PowerSecure.Estimator.Services.Models
             Instructions = instructions;
             StartDate = startDate;
             CreationDate = creationDate;
+            UiJson = uiJson;
         }
 
         [JsonProperty("id")]
@@ -39,17 +40,7 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("creationdate")]
         public DateTime CreationDate { get; private set; }
 
-        public static InstructionSet Create(string id, string module, string name, string instructions, DateTime startDate, DateTime creationDate)
-        {
-            return new InstructionSet(id, module, name, instructions, startDate, creationDate);
-        }
-
-        public static InstructionSet FromFunction(Function f)
-        {
-            return new InstructionSet(f.Id, f.Module, f.Name, 
-                f.Rest.ContainsKey("instructions") ? f.Rest["instructions"].ToString() : string.Empty,
-                f.Rest.ContainsKey("startdate") ? DateTime.Parse(f.Rest["startdate"].ToString()) : DateTime.MinValue,
-                f.Rest.ContainsKey("creationdate") ? DateTime.Parse(f.Rest["creationdate"].ToString()) : DateTime.MinValue);
-        }
+        [JsonProperty("uijson")]
+        public string UiJson { get; private set; }
     }
 }
