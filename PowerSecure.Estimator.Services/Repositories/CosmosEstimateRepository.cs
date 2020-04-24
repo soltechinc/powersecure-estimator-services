@@ -69,14 +69,14 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return items;
         }
 
-        public async Task<object> Get(string versionName, IDictionary<string, string> queryParams) {
+        public async Task<object> Get(string boli, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
-                    new RequestOptions { PartitionKey = new PartitionKey(versionName) });
+                    new RequestOptions { PartitionKey = new PartitionKey(boli) });
             }
 
             var query = _dbClient.CreateDocumentQuery<Estimate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
-                .Where(i => i.Title == versionName)
+                .Where(i => i.BOLINumber == boli)
                 .AsDocumentQuery();
 
             var items = new List<Estimate>();

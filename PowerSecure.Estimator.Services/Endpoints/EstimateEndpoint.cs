@@ -14,11 +14,20 @@ using System.Text;
 using System.Threading.Tasks;
 using PowerSecure.Estimator.Services.Services;
 using PowerSecure.Estimator.Services.Repositories;
+using System.ComponentModel;
+using Microsoft.Azure.Documents;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
     public static class EstimateEndpoint
     {
+        // The Azure Cosmos DB endpoint for running this sample.
+        private static readonly string EndpointUri = "<your endpoint here>";
+        // The primary key for the Azure Cosmos account.
+        private static readonly string PrimaryKey = "<your primary key>";
+
+
+
         [FunctionName("EvaluateEstimate")]
         public static async Task<IActionResult> Evaluate(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "estimates/evaluate")] HttpRequest req,
