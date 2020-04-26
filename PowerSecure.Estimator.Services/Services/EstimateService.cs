@@ -10,6 +10,9 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
+using PowerSecure.Estimator.Services.Endpoints;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace PowerSecure.Estimator.Services.Services
 {
@@ -213,6 +216,13 @@ namespace PowerSecure.Estimator.Services.Services
 
             return false;
         }
+        
+        public async Task<(object, string)> Clone(JObject document, string path) {
+            path = path.Split('/').Last();
+            document = JTokenExtension.WalkNode(document, path);
+            return (await _estimateRepository.Clone(document), "OK");
+        }
+
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams) {
             return (await _estimateRepository.List(queryParams), "OK");
