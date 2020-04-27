@@ -379,7 +379,7 @@ namespace PowerSecure.Estimator.Services.Services
         
         public async Task<(object, string)> GetFromUi(string id)
         {
-            return (null, "");
+            return await Get(id, new Dictionary<string,string>());
         }
     }
 }
