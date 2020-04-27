@@ -21,12 +21,6 @@ namespace PowerSecure.Estimator.Services.Endpoints
 {
     public static class EstimateEndpoint
     {
-        // The Azure Cosmos DB endpoint for running this sample.
-        private static readonly string EndpointUri = "<your endpoint here>";
-        // The primary key for the Azure Cosmos account.
-        private static readonly string PrimaryKey = "<your primary key>";
-
-
 
         [FunctionName("EvaluateEstimate")]
         public static async Task<IActionResult> Evaluate(
@@ -70,6 +64,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
+
         [FunctionName("GetEstimate")]
         public static async Task<IActionResult> Get(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "estimates/{id}")] HttpRequest req,
@@ -110,9 +105,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
         }
 
 
-        [FunctionName("CloneEstimate")]
-        public static async Task<IActionResult> Clone(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimates/clone")] HttpRequest req,
+        [FunctionName("CloneVersion")]
+        public static async Task<IActionResult> CloneVersion(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimates/clone/version")] HttpRequest req,
         [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
         ILogger log) {
             try {
@@ -120,7 +115,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), req.Path.Value);
                 return returnValue.ToOkObjectResult(message: message);
             } catch (Exception ex) {
                 log.LogError(ex, "Caught exception");
@@ -128,6 +123,24 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
+
+        [FunctionName("CloneRevision")]
+        public static async Task<IActionResult> CloneRevision(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimates/clone/revision")] HttpRequest req,
+        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+        ILogger log) {
+            try {
+                log.LogDebug("Function called - CloneEstimate");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), req.Path.Value);
+                return returnValue.ToOkObjectResult(message: message);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
 
 
         [FunctionName("DeleteEstimate")]
