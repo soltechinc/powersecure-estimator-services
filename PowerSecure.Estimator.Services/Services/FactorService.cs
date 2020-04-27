@@ -79,5 +79,19 @@ namespace PowerSecure.Estimator.Services.Services
 
             return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
+
+        public async Task<(object, string)> ListStates()
+        {
+            IDictionary<string, string> queryParams = new Dictionary<string, string>() { { "module", "all" }, { "returnattribute", "usstate" } };
+
+            return (await _factorRepository.List(queryParams), "OK");
+        }
+
+        public async Task<(object, string)> ListVerticalMarkets()
+        {
+            IDictionary<string, string> queryParams = new Dictionary<string, string>() { { "module", "all" }, { "returnattribute", "verticalmarket" } };
+
+            return (await _factorRepository.List(queryParams), "OK");
+        }
     }
 }

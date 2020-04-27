@@ -112,5 +112,57 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ListStates")]
+        public static async Task<IActionResult> ListStates(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "businessOpportunityLineItems/data/states")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ListStates");
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).ListStates();
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+        [FunctionName("ListVerticalMarkets")]
+        public static async Task<IActionResult> ListVerticalMarkets(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "businessOpportunityLineItems/data/verticalMarkets")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ListVerticalMarkets");
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).ListVerticalMarkets();
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }

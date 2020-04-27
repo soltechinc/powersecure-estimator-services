@@ -67,6 +67,10 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 query = query.Where(f => f.Module == queryParams["module"]);
             }
+            if(queryParams.ContainsKey("returnattribute"))
+            {
+                query = query.Where(f => f.ReturnAttribute == queryParams["returnattribute"]);
+            }
 
             var factors = new List<Factor>();
 
