@@ -146,20 +146,20 @@ namespace PowerSecure.Estimator.Services.Repositories
             return count;
         }
 
-        public async Task<object> UpsertFromEstimate(JToken document) {
-            JObject jToken = JTokenExtension.WalkNode(document);
-            try {
-                if (jToken.ContainsKey("moduleName")) {
-                    return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["moduleName"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["moduleName"].ToString()) });
-                }
+        //public async Task<object> UpsertFromEstimate(JToken document) {
+        //    JObject jToken = JTokenExtension.WalkNode(document);
+        //    try {
+        //        if (jToken.ContainsKey("moduleName")) {
+        //            return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["moduleName"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["moduleName"].ToString()) });
+        //        }
 
-                return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
+        //        return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
 
             
-            } catch(Exception ex) {
-                Console.WriteLine(ex);
-            }
-            return null;
-        }
+        //    } catch(Exception ex) {
+        //        Console.WriteLine(ex);
+        //    }
+        //    return null;
+        //}
     }
 }

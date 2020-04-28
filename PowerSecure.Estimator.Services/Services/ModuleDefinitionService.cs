@@ -34,9 +34,9 @@ namespace PowerSecure.Estimator.Services.Services
         }
 
 
-        public async Task<(object, string)> UpsertFromEstimate(JToken document) {
-            return (await _moduleDefinitionRepository.UpsertFromEstimate(document), "OK");
-        }
+        //public async Task<(object, string)> UpsertFromEstimate(JToken document) {
+        //    return (await _moduleDefinitionRepository.UpsertFromEstimate(document), "OK");
+        //}
         
 
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)

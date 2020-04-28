@@ -85,23 +85,23 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
-        [FunctionName("EditModuleDefinitionFromEstimate")]
-        public static async Task<IActionResult> UpsertFromEstimate(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimate/moduleDefinitions")] HttpRequest req,
-        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-        ILogger log, object obj) {
-            try {
-                log.LogDebug("Function called - EditModuleDefinition");
+        //[FunctionName("EditModuleDefinitionFromEstimate")]
+        //public static async Task<IActionResult> UpsertFromEstimate(
+        //[HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimate/moduleDefinitions")] HttpRequest req,
+        //[CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+        //ILogger log, object obj) {
+        //    try {
+        //        log.LogDebug("Function called - EditModuleDefinition");
 
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                JToken jToken = JToken.FromObject(obj);
-                (object returnValue, string message) = await new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient)).UpsertFromEstimate(jToken);
-                return returnValue.ToOkObjectResult(message: message);
-            } catch (Exception ex) {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
+        //        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+        //        JToken jToken = JToken.FromObject(obj);
+        //        (object returnValue, string message) = await new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient)).UpsertFromEstimate(jToken);
+        //        return returnValue.ToOkObjectResult(message: message);
+        //    } catch (Exception ex) {
+        //        log.LogError(ex, "Caught exception");
+        //        return new object().ToServerErrorObjectResult();
+        //    }
+        //}
 
 
 
