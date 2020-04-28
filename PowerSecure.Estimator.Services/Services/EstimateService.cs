@@ -162,7 +162,7 @@ namespace PowerSecure.Estimator.Services.Services
                                             break;
                                         case JTokenType.Float:
                                             {
-                                                jObject[jObjKey] = Math.Round(valueJToken.ToObject<decimal>()-0.05m, 2);
+                                                jObject[jObjKey] = Math.Round(valueJToken.ToObject<decimal>()-0.005m, 2);
                                             }
                                             break;
                                         default:
