@@ -193,5 +193,25 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ListPrimitives")]
+        public static async Task<IActionResult> ListPrimitives(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "primitives")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug("Function called - ListPrimitives");
+
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).ListPrimitives();
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }

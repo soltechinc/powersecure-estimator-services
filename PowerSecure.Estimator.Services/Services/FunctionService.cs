@@ -381,5 +381,43 @@ namespace PowerSecure.Estimator.Services.Services
         {
             return await Get(id, new Dictionary<string,string>());
         }
+
+        public async Task<(object, string)> ListPrimitives()
+        {
+            return (new List<Dictionary<string, string>>()
+            {
+                new Dictionary<string,string>(){ ["label"] = "Add", ["value"] = "+", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "And", ["value"] = "and", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Check", ["value"] = "if", ["maxParams"] = "3", ["minParams"] = "3" },
+                new Dictionary<string,string>(){ ["label"] = "Concatenate", ["value"] = "str", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Division", ["value"] = "/", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Equal", ["value"] = "=", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Find", ["value"] = "find", ["maxParams"] = "3", ["minParams"] = "3" },
+                new Dictionary<string,string>(){ ["label"] = "Floor", ["value"] = "floor", ["maxParams"] = "2", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "GreaterThan", ["value"] = ">", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "GreaterThanOrEqual", ["value"] = ">=", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "IsEmpty", ["value"] = "isempty", ["maxParams"] = "1", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "LessThan", ["value"] = "<", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "LessThanOrEqual", ["value"] = "<=", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "List", ["value"] = "list", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Margin", ["value"] = "margin", ["maxParams"] = "3", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Max", ["value"] = "max", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Min", ["value"] = "min", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "MinusOne", ["value"] = "--", ["maxParams"] = "1", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Multiply", ["value"] = "*", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "NotEqual", ["value"] = "!=", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Not", ["value"] = "not", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Number", ["value"] = "number", ["maxParams"] = "1", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Or", ["value"] = "or", ["maxParams"] = "none", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Power", ["value"] = "^", ["maxParams"] = "2", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Price", ["value"] = "price", ["maxParams"] = "4", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Step", ["value"] = "++", ["maxParams"] = "1", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Subtract", ["value"] = "-", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "SumProduct", ["value"] = "sumproduct", ["maxParams"] = "2", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Switch", ["value"] = "switch", ["maxParams"] = "3", ["minParams"] = "3" },
+                new Dictionary<string,string>(){ ["label"] = "Threshold", ["value"] = "threshold", ["maxParams"] = "4", ["minParams"] = "4" },
+                new Dictionary<string,string>(){ ["label"] = "Zero", ["value"] = "zero", ["maxParams"] = "1", ["minParams"] = "1" }
+            }, "OK");
+        }
     }
 }
