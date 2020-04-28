@@ -153,13 +153,23 @@ namespace PowerSecure.Estimator.Services.Services
                                     JToken valueJToken = JToken.FromObject(value);
                                     string jObjKey = jObject.Properties().Any(prop => prop.Name == "inputValue") ? "inputValue" : "quantity";
 
-                                    if (valueJToken.Type == JTokenType.String)
+                                    switch(valueJToken.Type)
                                     {
-                                        jObject[jObjKey] = UnwrapString(valueJToken.ToObject<string>());
-                                    }
-                                    else
-                                    {
-                                        jObject[jObjKey] = valueJToken;
+                                        case JTokenType.String:
+                                            {
+                                                jObject[jObjKey] = UnwrapString(valueJToken.ToObject<string>());
+                                            }
+                                            break;
+                                        case JTokenType.Float:
+                                            {
+                                                jObject[jObjKey] = Math.Round(valueJToken.ToObject<decimal>(), 2);
+                                            }
+                                            break;
+                                        default:
+                                            {
+                                                jObject[jObjKey] = valueJToken;
+                                            }
+                                            break;
                                     }
                                 }
                                 break;
