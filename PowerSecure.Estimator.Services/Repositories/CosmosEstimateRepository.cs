@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Models;
 using System;
@@ -13,6 +14,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
         private readonly string _collectionId;
+        private readonly string _childCollectionId;
 
         public CosmosEstimateRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
@@ -29,9 +31,9 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
-
         public async Task<object> Upsert(JObject document) {
             if (document.ContainsKey("id")) {
+                var results = (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _childCollectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["moduleName"].ToString()) });
                 return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
             }
 
@@ -93,6 +95,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
             while (query.HasMoreResults) {
                 foreach (Estimate item in await query.ExecuteNextAsync()) {
+                    var module = new List<ModuleDefinition>();
                     items.Add(item);
                 }
             }
@@ -128,10 +131,6 @@ namespace PowerSecure.Estimator.Services.Repositories {
             }
 
             return count;
-        }
-
-        public Task<int> Reset(string module, JToken jToken) {
-            throw new NotImplementedException();
         }
     }
 }

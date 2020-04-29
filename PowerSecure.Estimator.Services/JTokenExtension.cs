@@ -3,11 +3,30 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace PowerSecure.Estimator.Services {
     public static class JTokenExtension {
+        public static string CreateGUID(JObject document) {
+            string guid = null;
+            JToken jToken;
+            if (document.TryGetValue("moduleId", out jToken)) {
+                var result = document.GetValue("moduleId");
+                if (!result.HasValues) {
+                    guid = Guid.NewGuid().ToString();
+                    guid = Regex.Replace(guid, "-", "");
+                }
+            }
+            return guid;
+        }
+        
+        public static JObject SetGUID(JObject document, string id) {
+            document["moduleId"] = id;
+            return document;
+        }
 
         private static string IncrementString(string value) {
             var prefix = Regex.Match(value, "^\\D+").Value;

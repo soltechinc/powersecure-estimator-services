@@ -17,6 +17,5 @@ namespace PowerSecure.Estimator.Services.Repositories
         Task<int> Delete(string id, IDictionary<string, string> queryParams);
 
         Task<int> Reset(JToken jToken);
-        //Task<object> UpsertFromEstimate(JToken document);
     }
 }

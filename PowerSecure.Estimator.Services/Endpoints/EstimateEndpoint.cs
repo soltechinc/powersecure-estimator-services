@@ -83,8 +83,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
-
-
+        
 
         [FunctionName("EditEstimate")]
         public static async Task<IActionResult> Upsert(

@@ -33,6 +33,15 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("estimatePrice")]
         public string EstimatePrice { get; set; }
 
+        [JsonProperty("outsideEquipmentPercent")]
+        public string OutsideEquipmentPercent { get; set; }
+
+        [JsonProperty("softCostPercent")]
+        public string SoftCostPercent { get; set; }
+
+        [JsonProperty("desiredRateForInstall")]
+        public string DesiredRateForInstall { get; set; }
+
         [JsonProperty("includedModules")]
         public List<ModuleDefinition> Modules { get; set; }
     }

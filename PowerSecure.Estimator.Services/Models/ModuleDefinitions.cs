@@ -11,8 +11,14 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("moduleName")]
-        public string ModuleName { get; set; }
+        [JsonProperty("moduleId")]
+        public string ModuleId { get; set; }
+
+        [JsonProperty("moduleTitle")]
+        public string ModuleTitle { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
 
         [JsonProperty("laborCost")]
         public string LaborCost { get; set; }
