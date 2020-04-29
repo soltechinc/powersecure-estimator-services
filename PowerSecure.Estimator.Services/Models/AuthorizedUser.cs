@@ -1,27 +1,18 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.Models {
     public class AuthorizedUser {
-        
-        [JsonProperty("boliNumber")]
-        public string BOLINumber { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
-        [JsonProperty("ifsUserID")]
-        public string IFSUserID { get; set; }
+        [JsonProperty("firstName")]
+        public string FirstName { get; set; }
 
-        [JsonProperty("authorizedUserFirstName")]
-        public string AuthorizedUserFirstName { get; set; }
+        [JsonProperty("lastName")]
+        public string LastName { get; set; }
 
-        [JsonProperty("authorizedUserLastName")]
-        public string AuthorizedUserLastName { get; set; }
-
-        public string InferredIFSUserID {
-            get {
-                return $"{AuthorizedUserFirstName.Substring(0, 1).ToUpper()}{AuthorizedUserLastName.ToUpper()}";
-            }
-        }
+        [JsonProperty("role")]
+        public string Role { get; set; }
     }
 }
