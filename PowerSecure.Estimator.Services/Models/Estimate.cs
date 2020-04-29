@@ -18,6 +18,9 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("boliNumber")]
         public string BOLINumber { get; set; }
 
+        [JsonProperty("estimateNumber")]
+        public string EstimateNumber { get; set; }
+
         [JsonProperty("revisionNumber")]
         public string RevisionNumber { get; set; }
 

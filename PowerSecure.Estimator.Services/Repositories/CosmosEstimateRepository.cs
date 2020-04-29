@@ -33,7 +33,6 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
         public async Task<object> Upsert(JObject document) {
             if (document.ContainsKey("id")) {
-                var results = (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _childCollectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["moduleName"].ToString()) });
                 return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
             }
 
