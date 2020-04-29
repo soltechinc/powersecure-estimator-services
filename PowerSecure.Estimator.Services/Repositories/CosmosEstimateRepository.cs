@@ -31,8 +31,20 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
+        private async Task<JObject> UpdateNumber(JObject document) {
+            JToken result;
+            document.TryGetValue("estimateNumber", out result);
+            if (result.Type == JTokenType.String) {
+                string estimateNumber = JTokenExtension.IncrementString(result.ToString());
+                document["estimateNumber"] = estimateNumber;
+            }
+
+            return document;
+        }
+
         public async Task<object> Upsert(JObject document) {
             if (document.ContainsKey("id")) {
+                document = await UpdateNumber(document);
                 return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
             }
 
