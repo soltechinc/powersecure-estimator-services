@@ -28,7 +28,7 @@ namespace PowerSecure.Estimator.Services {
             return document;
         }
 
-        private static string IncrementString(string value) {
+        public static string IncrementString(string value) {
             var prefix = Regex.Match(value, "^\\D+").Value;
             var number = Regex.Replace(value, "^\\D+", "");
             var i = int.Parse(number) + 1;
