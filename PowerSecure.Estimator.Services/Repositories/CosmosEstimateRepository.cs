@@ -33,12 +33,12 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
         private async Task<JObject> UpdateNumber(JObject document) {
             JToken result;
+            string estimateNumber = "1";
             document.TryGetValue("estimateNumber", out result);
             if (result.Type == JTokenType.String) {
-                string estimateNumber = JTokenExtension.IncrementString(result.ToString());
-                document["estimateNumber"] = estimateNumber;
+                estimateNumber = JTokenExtension.IncrementString(result.ToString());                
             }
-
+            document["estimateNumber"] = estimateNumber;
             return document;
         }
 
