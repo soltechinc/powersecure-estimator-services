@@ -164,5 +164,31 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ListProjectTypes")]
+        public static async Task<IActionResult> ListProjectTypes(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "businessOpportunityLineItems/data/projectTypes")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ListProjectTypes");
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).ListProjectTypes();
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }

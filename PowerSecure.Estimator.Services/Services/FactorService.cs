@@ -93,5 +93,12 @@ namespace PowerSecure.Estimator.Services.Services
 
             return (await _factorRepository.List(queryParams), "OK");
         }
+
+        public async Task<(object, string)> ListProjectTypes()
+        {
+            IDictionary<string, string> queryParams = new Dictionary<string, string>() { { "module", "all" }, { "returnattribute", "projecttype" } };
+
+            return (await _factorRepository.List(queryParams), "OK");
+        }
     }
 }
