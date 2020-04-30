@@ -6,6 +6,15 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        [JsonProperty("boName")]
+        public string BOName { get; set; }
+
+        [JsonProperty("boliName")]
+        public string BOLIName { get; set; }
+
+        [JsonProperty("boliDescription")]
+        public string BOLIDescription { get; set; }
+
         [JsonProperty("versionName")]
         public string Title { get; set; }
 
