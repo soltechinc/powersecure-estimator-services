@@ -6,177 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "BusinessOpportunities",
-			"item": [
-				{
-					"name": "List BusinessOpportunities",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/businessOpportunities",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"businessOpportunities"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List Business Opportunities with Full Object",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/businessOpportunities?object=full",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"businessOpportunities"
-							],
-							"query": [
-								{
-									"key": "object",
-									"value": "full"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get BusinessOpportunity",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/businessOpportunities/942ba732-7564-4aca-b69e-a7a14b82ce62",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"businessOpportunities",
-								"942ba732-7564-4aca-b69e-a7a14b82ce62"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Business Opportunity With Optional Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/businessOpportunities/PowerBlock?id=942ba732-7564-4aca-b69e-a7a14b82ce62",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"businessOpportunities",
-								"PowerBlock"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "942ba732-7564-4aca-b69e-a7a14b82ce62"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Upsert Business Opportunity",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"ifsboNumber\": \"a\",\n    \"data\": [\n        1\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/api/businessOpportunities/",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"businessOpportunities",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Business Opportunities",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/businessOpportunities/title%20with%20space",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"businessOpportunities",
-								"title%20with%20space"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Business Opportunity With Optional Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/businessOpportunities/a?id=85ba2cdf-e93b-455e-a107-d5ffee503e88",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"businessOpportunities",
-								"a"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "85ba2cdf-e93b-455e-a107-d5ffee503e88"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"protocolProfileBehavior": {}
-		},		
-		{
 			"name": "Modules",
 			"item": [
 				{
@@ -185,13 +14,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/modules",
+							"raw": "{{host}}/api/moduleTemplates",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"modules"
+								"moduleTemplates"
 							]
 						}
 					},
@@ -227,14 +56,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/modules/942ba732-7564-4aca-b69e-a7a14b82ce62",
+							"raw": "{{host}}/api/moduleTemplates/General Conditions",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"modules",
-								"942ba732-7564-4aca-b69e-a7a14b82ce62"
+								"moduleTemplates",
+								"General Conditions"
 							]
 						}
 					},
@@ -246,7 +75,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/modules/PowerBlock?id=942ba732-7564-4aca-b69e-a7a14b82ce62",
+							"raw": "{{host}}/api/modules/PowerBlock?id=6ace2512-4742-4027-95b8-b8bf0fcf7a7f",
 							"host": [
 								"{{host}}"
 							],
@@ -258,7 +87,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "942ba732-7564-4aca-b69e-a7a14b82ce62"
+									"value": "6ace2512-4742-4027-95b8-b8bf0fcf7a7f"
 								}
 							]
 						}
@@ -279,7 +108,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"moduleTitle\": \"a\",\n    \"data\": [\n        1\n    ]\n}",
+							"raw": "{\r\n            \"id\": \"2e277d6d-ad9c-4998-9b36-98b702a4dcb3\",\r\n            \"moduleTitle\": \"General Conditions\",\r\n            \"inputs\": [\r\n                {\r\n                    \"inputLabel\": \"Self Perform/Sub-out\",\r\n                    \"inputType\": \"Select\",\r\n                    \"input\": true,\r\n                    \"gridRow\": 0,\r\n                    \"gridCol\": 0,\r\n                    \"calculated\": true,\r\n                    \"fieldGroup\": \"None\",\r\n                    \"inputValue\": \"\",\r\n                    \"submoduleData\": [],\r\n                    \"allowMultipleSubmodules\": false,\r\n                    \"standardValue\": \"\",\r\n                    \"options\": [\r\n                        {\r\n                            \"text\": \"--No Selection--\",\r\n                            \"value\": \"\"\r\n                        },\r\n                        {\r\n                            \"text\": \"Self Perform\",\r\n                            \"value\": \"selfperform\"\r\n                        },\r\n                        {\r\n                            \"text\": \"Sub-Out\",\r\n                            \"value\": \"subout\"\r\n                        }\r\n                    ],\r\n                    \"parent\": \"None\",\r\n                    \"meta\": {\r\n                        \"headers\": [],\r\n                        \"min\": \"\",\r\n                        \"max\": \"\",\r\n                        \"step\": \"\",\r\n                        \"popupInfo\": \"\",\r\n                        \"required\": false,\r\n                        \"popup\": false\r\n                    },\r\n                    \"variableName\": \"selfperformsubout\"\r\n                },\r\n                {\r\n                    \"inputLabel\": \"Crew\",\r\n                    \"inputType\": \"Select\",\r\n                    \"input\": true,\r\n                    \"gridRow\": 0,\r\n                    \"gridCol\": 1,\r\n                    \"calculated\": true,\r\n                    \"fieldGroup\": \"None\",\r\n                    \"inputValue\": \"\",\r\n                    \"submoduleData\": [\r\n                        {\r\n                            \"tableTitle\": \"\",\r\n                            \"title\": \"3rd Party Commissions\",\r\n                            \"template\": [\r\n                                2\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Alliance Partner Fees ($)\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"alliancepartnerfees$\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Alliance Partner Fee (%)\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 1,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"alliancepartnerfee%\"\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        }\r\n                    ],\r\n                    \"allowMultipleSubmodules\": false,\r\n                    \"standardValue\": \"\",\r\n                    \"options\": [\r\n                        {\r\n                            \"text\": \"--No Selection--\",\r\n                            \"value\": \"\"\r\n                        }\r\n                    ],\r\n                    \"parent\": \"None\",\r\n                    \"meta\": {\r\n                        \"headers\": [],\r\n                        \"min\": \"\",\r\n                        \"max\": \"\",\r\n                        \"step\": \"\",\r\n                        \"popupInfo\": \"\",\r\n                        \"required\": false,\r\n                        \"popup\": false\r\n                    },\r\n                    \"variableName\": \"crew\"\r\n                },\r\n                {\r\n                    \"inputLabel\": \"\",\r\n                    \"inputType\": \"Submodule\",\r\n                    \"input\": true,\r\n                    \"gridRow\": 1,\r\n                    \"gridCol\": 0,\r\n                    \"calculated\": true,\r\n                    \"fieldGroup\": \"None\",\r\n                    \"inputValue\": \"\",\r\n                    \"submoduleData\": [\r\n                        {\r\n                            \"tableTitle\": \"General Conditions Summary\",\r\n                            \"title\": \"Air Permitting Quote\",\r\n                            \"template\": [\r\n                                2\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Quoted Price\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"airpermittingquote\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"UploadQuote\",\r\n                                    \"inputType\": \"File Input\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 1,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": null,\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"airpermittingfile\"\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Item\",\r\n                                    \"align\": \"left\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"description\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        },\r\n                        {\r\n                            \"tableTitle\": \"\",\r\n                            \"title\": \"Factory Witness Testing\",\r\n                            \"template\": [\r\n                                2\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Select Stage\",\r\n                                    \"inputType\": \"Select\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        },\r\n                                        {\r\n                                            \"text\": \"Stage 1\",\r\n                                            \"value\": \"stage 1\"\r\n                                        },\r\n                                        {\r\n                                            \"text\": \"Stage 2\",\r\n                                            \"value\": \"stage2\"\r\n                                        },\r\n                                        {\r\n                                            \"text\": \"Stage 3\",\r\n                                            \"value\": \"stage3\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"selectstage\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Factory Witness Testing Days\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": false,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 1,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"factorywitnesstestingdays\"\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Item\",\r\n                                    \"align\": \"left\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"description\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        },\r\n                        {\r\n                            \"tableTitle\": \"\",\r\n                            \"title\": \"Outside Consultant\",\r\n                            \"template\": [\r\n                                2\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Quoted Price\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"consultantquoteprice\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Upload Quote\",\r\n                                    \"inputType\": \"File Input\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 1,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": null,\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"consultantquotefile\"\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Item\",\r\n                                    \"align\": \"left\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"description\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        },\r\n                        {\r\n                            \"tableTitle\": \"\",\r\n                            \"title\": \"3rd Party Commissioning\",\r\n                            \"template\": [\r\n                                2,\r\n                                2\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Agent Quote\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"agentquote\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Upload Quote\",\r\n                                    \"inputType\": \"File Input\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 1,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": null,\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"uploadquoteagent\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Alliance Partner Fees ($)\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 1,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"alliancepartnerfeedollar\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Alliance Partner Fee (%)\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 1,\r\n                                    \"gridCol\": 1,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"alliancepartnerfeepercent\"\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Item\",\r\n                                    \"align\": \"left\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"description\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        },\r\n                        {\r\n                            \"tableTitle\": \"\",\r\n                            \"title\": \"Freight Shipping\",\r\n                            \"template\": [\r\n                                3,\r\n                                1\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Miles from Durham, NC to Project Site\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"milesfromdurham\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Additional Shipping\",\r\n                                    \"inputType\": \"Quantity Group\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 1,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"label\": \"Other EG Manufacturer\",\r\n                                            \"variableName\": \"otheregmanufacturershipping\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"Switchgear Sections (7 per Truck)\",\r\n                                            \"variableName\": \"switchgearsections\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"PEC/Control House\",\r\n                                            \"variableName\": \"peccontrolhouse\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    }\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Quoted Price\",\r\n                                    \"inputType\": \"Text\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 1,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"quotedprice\"\r\n                                },\r\n                                {\r\n                                    \"inputLabel\": \"Upload Quote\",\r\n                                    \"inputType\": \"File Input\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 2,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": null,\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"text\": \"--No Selection--\",\r\n                                            \"value\": \"\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    },\r\n                                    \"variableName\": \"uploadquote\"\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Item\",\r\n                                    \"align\": \"left\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"description\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        },\r\n                        {\r\n                            \"tableTitle\": \"\",\r\n                            \"title\": \"Project Management & Engineering\",\r\n                            \"template\": [\r\n                                1\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Project Management & Engineer Options\",\r\n                                    \"inputType\": \"Quantity Group\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"label\": \"Field PM\",\r\n                                            \"variableName\": \"fieldpm\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"Construction Manager\",\r\n                                            \"variableName\": \"constructionmanager\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"SR PM\",\r\n                                            \"variableName\": \"srpm\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"Engineering\",\r\n                                            \"variableName\": \"engineering\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    }\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Item\",\r\n                                    \"align\": \"left\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"description\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        },\r\n                        {\r\n                            \"tableTitle\": \"\",\r\n                            \"title\": \"General Conditions Options\",\r\n                            \"template\": [\r\n                                1\r\n                            ],\r\n                            \"inputs\": [\r\n                                {\r\n                                    \"inputLabel\": \"Additional Options\",\r\n                                    \"inputType\": \"Quantity Group\",\r\n                                    \"input\": true,\r\n                                    \"gridRow\": 0,\r\n                                    \"gridCol\": 0,\r\n                                    \"calculated\": true,\r\n                                    \"inputValue\": \"\",\r\n                                    \"standardValue\": \"\",\r\n                                    \"options\": [\r\n                                        {\r\n                                            \"label\": \"Start Up Days (+/-)\",\r\n                                            \"variableName\": \"startupdays\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"Commissioning Days (+/-)\",\r\n                                            \"variableName\": \"commissioningdays\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"5 Year Standard Warranty\",\r\n                                            \"variableName\": \"5yearwarranty\"\r\n                                        },\r\n                                        {\r\n                                            \"label\": \"6-10 Year Warranty\",\r\n                                            \"variableName\": \"6to10yearwarranty\"\r\n                                        }\r\n                                    ],\r\n                                    \"parent\": \"None\",\r\n                                    \"meta\": {\r\n                                        \"headers\": [\r\n                                            {\r\n                                                \"text\": \"Item\",\r\n                                                \"align\": \"left\",\r\n                                                \"value\": \"inputLabel\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Quantity\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"quantity\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Cost\",\r\n                                                \"align\": \"right\",\r\n                                                \"value\": \"cost\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Original % Margin\",\r\n                                                \"value\": \"margin\",\r\n                                                \"align\": \"right\"\r\n                                            },\r\n                                            {\r\n                                                \"text\": \"Sell\",\r\n                                                \"value\": \"sell\",\r\n                                                \"align\": \"right\"\r\n                                            }\r\n                                        ],\r\n                                        \"min\": \"\",\r\n                                        \"max\": \"\",\r\n                                        \"step\": \"\",\r\n                                        \"popupInfo\": \"\",\r\n                                        \"required\": false,\r\n                                        \"popup\": false\r\n                                    }\r\n                                }\r\n                            ],\r\n                            \"summaryHeader\": [\r\n                                {\r\n                                    \"text\": \"Item\",\r\n                                    \"align\": \"left\",\r\n                                    \"value\": \"number\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Description\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"description\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Cost\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"cost\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Margin\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"margin\"\r\n                                },\r\n                                {\r\n                                    \"text\": \"Sell\",\r\n                                    \"align\": \"right\",\r\n                                    \"value\": \"sell\"\r\n                                }\r\n                            ],\r\n                            \"summaryData\": []\r\n                        }\r\n                    ],\r\n                    \"allowMultipleSubmodules\": false,\r\n                    \"standardValue\": \"\",\r\n                    \"options\": [\r\n                        {\r\n                            \"text\": \"--No Selection--\",\r\n                            \"value\": \"\"\r\n                        }\r\n                    ],\r\n                    \"parent\": \"None\",\r\n                    \"meta\": {\r\n                        \"headers\": [],\r\n                        \"min\": \"\",\r\n                        \"max\": \"\",\r\n                        \"step\": \"\",\r\n                        \"popupInfo\": \"\",\r\n                        \"required\": false,\r\n                        \"popup\": false\r\n                    }\r\n                }\r\n            ],\r\n            \"template\": [\r\n                2,\r\n                1,\r\n                1,\r\n                1\r\n            ],\r\n            \"equipmentHeaderRow\": 3,\r\n            \"assemblyInstallHeaderRow\": 4,\r\n            \"additionalEquipment\": [],\r\n            \"additionalAssembly\": [],\r\n            \"_rid\": \"siUeAIMQPIwQAAAAAAAAAA==\",\r\n            \"_self\": \"dbs/siUeAA==/colls/siUeAIMQPIw=/docs/siUeAIMQPIwQAAAAAAAAAA==/\",\r\n            \"_etag\": \"\\\"0200dbf9-0000-0300-0000-5ea099970000\\\"\",\r\n            \"_attachments\": \"attachments/\",\r\n            \"_ts\": 1587583383\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -287,13 +116,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/modules/",
+							"raw": "{{host}}/api/moduleTemplates/",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"modules",
+								"moduleTemplates",
 								""
 							]
 						}
@@ -306,13 +135,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/modules/title%20with%20space",
+							"raw": "{{host}}/api/moduleTemplates/title%20with%20space",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"modules",
+								"moduleTemplates",
 								"title%20with%20space"
 							]
 						}
@@ -325,19 +154,46 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/modules/a?id=85ba2cdf-e93b-455e-a107-d5ffee503e88",
+							"raw": "{{host}}/api/moduleTemplates/PowerBlock?id=abfdc11d-f5f4-4885-845f-5715d06e18a7",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"modules",
-								"a"
+								"moduleTemplates",
+								"PowerBlock"
 							],
 							"query": [
 								{
 									"key": "id",
-									"value": "85ba2cdf-e93b-455e-a107-d5ffee503e88"
+									"value": "abfdc11d-f5f4-4885-845f-5715d06e18a7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Import Modules",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/moduleTemplates/import/qa",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"moduleTemplates",
+								"import",
+								"qa"
+							],
+							"query": [
+								{
+									"key": "module",
+									"value": "powerblock",
+									"disabled": true
 								}
 							]
 						}
@@ -398,7 +254,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors?module=pec",
+							"raw": "{{host}}/api/factors?module=powerblock&object=full",
 							"host": [
 								"{{host}}"
 							],
@@ -409,7 +265,11 @@
 							"query": [
 								{
 									"key": "module",
-									"value": "pec"
+									"value": "powerblock"
+								},
+								{
+									"key": "object",
+									"value": "full"
 								}
 							]
 						}
@@ -422,14 +282,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors/84edde5a-6696-4837-ab3a-fc38b66e2315",
+							"raw": "{{host}}/api/factors/82384a87-395c-49be-b496-d542eb8d79b3",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"factors",
-								"84edde5a-6696-4837-ab3a-fc38b66e2315"
+								"82384a87-395c-49be-b496-d542eb8d79b3"
 							]
 						}
 					},
@@ -474,7 +334,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"9fb1874b-050f-4306-b6c5-01aa83c8e235\",\r\n    \"module\": \"PEC\",\r\n    \"returnAttribute\": \"SwitchgearLength\",\r\n    \"data\": [\r\n        3\r\n    ],\r\n    \"key\": \"PEC-SwitchgearLength\"\r\n}",
+							"raw": "\r\n        {\r\n            \"module\": \"all\",\r\n            \"returnattribute\": \"projecttype\",\r\n            \"returnvalue\": \"turnkey\",\r\n            \"startdate\": \"1900-01-01T00:00:00\",\r\n            \"creationdate\": \"1900-01-01T00:00:00\"\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -501,14 +361,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/factors/540b0c67-c22f-4517-8ef6-81af912afdb5",
+							"raw": "{{host}}/api/factors/db3bd618-daaa-4a74-b103-1acd16d65747",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"factors",
-								"540b0c67-c22f-4517-8ef6-81af912afdb5"
+								"db3bd618-daaa-4a74-b103-1acd16d65747"
 							]
 						}
 					},
@@ -533,6 +393,32 @@
 								{
 									"key": "key",
 									"value": "%2FPEC%2FSwitchgearLength"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Import Factors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/factors/import/dev?module=powerblock",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"factors",
+								"import",
+								"dev"
+							],
+							"query": [
+								{
+									"key": "module",
+									"value": "powerblock"
 								}
 							]
 						}
@@ -593,7 +479,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/functions?module=PEC",
+							"raw": "{{host}}/api/functions?module=powerblock&object=full",
 							"host": [
 								"{{host}}"
 							],
@@ -604,7 +490,11 @@
 							"query": [
 								{
 									"key": "module",
-									"value": "PEC"
+									"value": "powerblock"
+								},
+								{
+									"key": "object",
+									"value": "full"
 								}
 							]
 						}
@@ -617,14 +507,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/functions/1daef620-17e9-44ad-bd1e-9fc8cb55f3e5",
+							"raw": "{{host}}/api/functions/5e041340-e241-468d-9174-77b3cd887dff",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"functions",
-								"1daef620-17e9-44ad-bd1e-9fc8cb55f3e5"
+								"5e041340-e241-468d-9174-77b3cd887dff"
 							]
 						}
 					},
@@ -669,7 +559,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"module\": \"All\",\n    \"name\" : \"Tax\",\n    \"data\": [\n        4\n    ]\n}",
+							"raw": "\r\n        {\r\n            \"id\": \"da506e8e-d42b-4284-8322-dec7ca8c2e2e\",\r\n            \"module\": \"powerblock\",\r\n            \"name\": \"controlwiringlaborhours\",\r\n            \"instructions\": \"{\\\"/\\\":[{\\\"-\\\":[\\\"PowerBlock.ControlWiringOriginalCost\\\",\\\"PowerBlock.controlwiringcost\\\"]},\\\"All.InstallRate\\\"]}\",\r\n            \"startdate\": \"1/1/1980\",\r\n            \"creationdate\": \"1/1/1980\"\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -696,14 +586,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/functions/88febc51-9e81-4e0c-9c89-82c56dfe539c",
+							"raw": "{{host}}/api/functions/ed1d2d8d-4075-41d8-9dcc-74b2cdd420fc",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"functions",
-								"88febc51-9e81-4e0c-9c89-82c56dfe539c"
+								"ed1d2d8d-4075-41d8-9dcc-74b2cdd420fc"
 							]
 						}
 					},
@@ -715,20 +605,185 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/functions/78aac8cf-20ba-4c2b-b2a2-8615346a9c74?module=PEC",
+							"raw": "{{host}}/api/functions/675dd985-e9af-4e0b-b9bb-ecb77a79b497?module=PowerBlock",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
 								"functions",
-								"78aac8cf-20ba-4c2b-b2a2-8615346a9c74"
+								"675dd985-e9af-4e0b-b9bb-ecb77a79b497"
 							],
 							"query": [
 								{
 									"key": "module",
-									"value": "PEC"
+									"value": "PowerBlock"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Import Functions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/functions/import/dev?module=powerblock",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions",
+								"import",
+								"dev"
+							],
+							"query": [
+								{
+									"key": "module",
+									"value": "powerblock"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Function From UI",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"moduleTitle\":\"Test\",\"effectiveDate\":\"2020-04-10\",\"calculatedVariable\":{\"inputLabel\":\"Enclosure Type\",\"inputType\":\"Select\",\"input\":true,\"gridRow\":0,\"gridCol\":1,\"calculated\":true,\"fieldGroup\":\"None\",\"inputValue\":\"\",\"standardValue\":\"\",\"options\":[{\"text\":\"--No Selection--\",\"value\":\"\"},{\"text\":\"Standard\",\"value\":\"Standard\"},{\"text\":\"Skid\",\"value\":\"Skid\"}],\"parent\":\"PowerBlock Type\",\"meta\":{\"min\":\"\",\"max\":\"\",\"step\":\"\",\"popupInfo\":\"\",\"popup\":false,\"required\":true},\"variableName\":\"enclosuretype\"},\"instructionSets\":[]}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/functions/ui",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"functions",
+								"ui"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Estimates",
+			"item": [
+				{
+					"name": "Evaluate Estimate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "94786166-ef2d-4bc3-9b97-98d48aed93d8",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n\t\"moduleTitle\" : \"PowerBlock\",\r\n\t\"nodes\":[\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"PowerBlockType\",\r\n\t\t\t\"inputValue\" : \"T4F PowerBlock\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"something\",\r\n\t\t\t\"variableName\" : \"PowerBlockCapacity\",\r\n\t\t\t\"inputValue\" : \"2500\",\r\n\t\t\t\"inputType\" : \"Select\",\r\n\t\t\t\"options\" : { }\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"calculated\" : true,                        \r\n\t\t\t\"parent\" : \"something\",\r\n\t\t\t\"variableName\" : \"EnclosureType\",\r\n\t\t\t\"inputValue\" : \"Standard\",\r\n\t\t\t\"inputType\" : \"Select\",\r\n\t\t\t\"options\" : { }\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"numberofidenticalpowerblocks\",\r\n\t\t\t\"inputValue\" : \"1\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"fueltankupgradetype\",\r\n\t\t\t\"inputValue\" : \"option\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"onsitecontrolwiring\",\r\n\t\t\t\"inputValue\" : true\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"onsiteassembly\",\r\n\t\t\t\"inputValue\" : true\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"SoundAttenuationUpgradeType\",\r\n\t\t\t\"inputValue\" : \"value\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"some\",\r\n\t\t\t\"variableName\" : \"WeatherPackageUpgradeType\",\r\n\t\t\t\"inputValue\" : \"WP3\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : true,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"EngineModifier\",\r\n\t\t\t\"inputValue\" : \"0\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"stairs\",\r\n\t\t\t\"quantity\" : \"1\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"platform\",\r\n\t\t\t\"quantity\" : \"2\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"powerblockcost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"powerblocksell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"DayTankMaterialCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"fueltankupgradetypecost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"fueltankupgradetypesell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"SoundAttenuationUpgradeTypeCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"SoundAttenuationUpgradeTypeSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"weatherpackageupgradetypecost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"weatherpackageupgradetypesell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"EngineModifierCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"EngineModifierSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"StairsCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"StairsSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"StairsMargin\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"PlatformCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"PlatformSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"PlatformMargin\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"OnSiteControlWiringCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"OnSiteControlWiringSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"OnSiteAssemblyCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"OnSiteAssemblySell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"OnSiteInstallCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"OnSiteInstallSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"GroundingCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"GroundingSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"PadsCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"PadsSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"RiggingCost\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"input\" : false,\r\n\t\t\t\"parent\" : \"None\",\r\n\t\t\t\"variableName\" : \"RiggingSell\",\r\n\t\t\t\"inputValue\" : \"\"\r\n\t\t}\r\n\t\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/estimates/evaluate",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"estimates",
+								"evaluate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List US States",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunityLineItems/data/states",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunityLineItems",
+								"data",
+								"states"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Vertical Markets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/businessOpportunityLineItems/data/verticalMarkets",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"businessOpportunityLineItems",
+								"data",
+								"verticalMarkets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Primitives",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/primitives",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"primitives"
 							]
 						}
 					},
