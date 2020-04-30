@@ -11,7 +11,7 @@ namespace PowerSecure.Estimator.Services.Models
 {
     public class InstructionSet : IInstructionSet
     {
-        public InstructionSet(string id, string module, string name, string instructions, DateTime startDate, DateTime creationDate, string uiJson)
+        public InstructionSet(string id, string module, string name, string instructions, DateTime startDate, DateTime creationDate, JObject uiJson)
         {
             Id = id;
             Module = module;
@@ -41,6 +41,6 @@ namespace PowerSecure.Estimator.Services.Models
         public DateTime CreationDate { get; private set; }
 
         [JsonProperty("uijson")]
-        public string UiJson { get; private set; }
+        public JObject UiJson { get; private set; }
     }
 }
