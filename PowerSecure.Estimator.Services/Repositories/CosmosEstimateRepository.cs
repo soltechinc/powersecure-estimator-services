@@ -14,8 +14,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
         private readonly string _collectionId;
-        private readonly string _childCollectionId;
-
+ 
         public CosmosEstimateRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
@@ -43,11 +42,10 @@ namespace PowerSecure.Estimator.Services.Repositories {
         }
 
         public async Task<object> Upsert(JObject document) {
-            //if (document.ContainsKey("id")) {
-                document = await UpdateNumber(document);
-              //return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
-            //}
-
+            if (document.ContainsKey("id")) {
+              return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
+            }
+            document = await UpdateNumber(document);
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
