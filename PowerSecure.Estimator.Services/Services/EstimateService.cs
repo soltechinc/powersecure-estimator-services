@@ -160,11 +160,6 @@ namespace PowerSecure.Estimator.Services.Services
                                                 jObject[jObjKey] = UnwrapString(valueJToken.ToObject<string>());
                                             }
                                             break;
-                                        case JTokenType.Float:
-                                            {
-                                                jObject[jObjKey] = Math.Round(valueJToken.ToObject<decimal>()-0.004m, 2);
-                                            }
-                                            break;
                                         default:
                                             {
                                                 jObject[jObjKey] = valueJToken;
