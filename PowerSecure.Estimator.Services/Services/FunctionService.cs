@@ -401,21 +401,21 @@ namespace PowerSecure.Estimator.Services.Services
                                     JArray casePairs = (JArray)jObject["cases"];
                                     foreach (var casePairJToken in casePairs)
                                     {
-                                        if (first)
-                                        {
-                                            first = false;
-                                        }
-                                        else
-                                        {
-                                            str.Append(",");
-                                        }
-
                                         JObject casePair = (JObject)casePairJToken;
                                         string matchValue = ResolveParameter(ParseValueFromInstructionParam((JObject)casePair["case"]), primitive, dict);
                                         string returnValue = ResolveParameter(ParseValueFromInstructionParam((JObject)casePair["return"]), primitive, dict) ?? "null";
 
                                         if (matchValue != null)
                                         {
+                                            if (first)
+                                            {
+                                                first = false;
+                                            }
+                                            else
+                                            {
+                                                str.Append(",");
+                                            }
+
                                             str.Append($"[{matchValue},{returnValue}]");
                                         }
                                     }
