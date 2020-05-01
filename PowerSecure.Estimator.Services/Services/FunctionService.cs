@@ -239,36 +239,10 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 if (instructionParamToken is JObject instructionParam)
                 {
-                    if (instructionParam.ContainsKey("value"))
+                    object value = ParseValueFromInstructionParam(instructionParam);
+                    if(value != null)
                     {
-                        JToken valueToken = instructionParam["value"];
-                        switch (valueToken.Type)
-                        {
-                            case JTokenType.Null:
-                                break;
-                            case JTokenType.Object:
-                                {
-                                    JObject valueObj = (JObject)valueToken;
-                                    if(valueObj.ContainsKey("id"))
-                                    {
-                                        instructionParams.Add(new UnresolvedSet() { Id = valueObj["id"].ToObject<int>() });
-                                    }
-                                    else
-                                    {
-                                        instructionParams.Add($"{valueObj["moduleTitle"].ToString().ToLower()}.{valueObj["variableName"].ToString().ToLower()}");
-                                    }
-                                    break;
-                                }
-                            default:
-                                {
-                                    instructionParams.Add(valueToken);
-                                    break;
-                                }
-                        }
-                    }
-                    else
-                    {
-                        instructionParams.Add(instructionParam);
+                        instructionParams.Add(value);
                     }
                 }
             }
@@ -276,91 +250,68 @@ namespace PowerSecure.Estimator.Services.Services
             dict.Add(id, (primitive.ToLower(), instructionParams));
         }
 
+        private object ParseValueFromInstructionParam(JObject instructionParam)
+        {
+            if (instructionParam.ContainsKey("number"))
+            {
+                return instructionParam["number"];
+            }
+            else if (instructionParam.ContainsKey("string"))
+            {
+                return instructionParam["string"];
+            }
+            else if (instructionParam.ContainsKey("boolean"))
+            {
+                return instructionParam["boolean"];
+            }
+            else if (instructionParam.ContainsKey("value"))
+            {
+                JToken valueToken = instructionParam["value"];
+                switch (valueToken.Type)
+                {
+                    case JTokenType.Null:
+                        return null;
+                    case JTokenType.Object:
+                        {
+                            JObject valueObj = (JObject)valueToken;
+                            if (valueObj.ContainsKey("id"))
+                            {
+                                return new UnresolvedSet() { Id = valueObj["id"].ToObject<int>() };
+                            }
+                            else
+                            {
+                                return $"{valueObj["moduleTitle"].ToString().ToLower()}.{valueObj["variableName"].ToString().ToLower()}";
+                            }
+                        }
+                    default:
+                        return valueToken;
+                }
+            }
+            else
+            {
+                return instructionParam;
+            }
+        }
+
         private void ResolveInstructionSetsFromDictionary(int currentId, Dictionary<int, (string, List<object>)> dict)
         {
             (string primitive, List<object> parameters) = dict[currentId];
             for(int i = 0; i < parameters.Count; ++i)
             {
-                switch(parameters[i])
+                string resolvedParameter = ResolveParameter(parameters[i], primitive, dict);
+                if(resolvedParameter != null)
                 {
-                    case UnresolvedSet unresolvedSet:
-                        {
-                            parameters[i] = dict[unresolvedSet.Id].Item1;
-                            break;
-                        }
-                    case JObject jObject:
-                        {
-                            if(primitive != "find")
-                            {
-                                break;
-                            }
-
-                            StringBuilder str = new StringBuilder();
-                            str.Append("\"$Factor\",[");
-                            bool first = true;
-                            string moduleName = jObject["module"].ToString();
-                            foreach(var pair in jObject)
-                            {
-                                if(pair.Key == "returnattribute" ||
-                                   pair.Key == "returnvalue" ||
-                                   string.IsNullOrWhiteSpace(pair.Value.ToString()))
-                                {
-                                    continue;
-                                }
-                                if(first)
-                                {
-                                    first = false;
-                                }
-                                else
-                                {
-                                    str.Append(",");
-                                }
-
-                                if(pair.Value is JObject variableInput)
-                                {
-                                    str.Append($"[\"${pair.Key.ToLower()}\",\"{variableInput["moduleTitle"].ToString().ToLower()}.{variableInput["variableName"].ToString().ToLower()}\"]");
-                                }
-                                else
-                                {
-                                    str.Append($"[\"${pair.Key.ToLower()}\",\"${pair.Value.ToString().ToLower()}\"]");
-                                }
-                            }
-                            str.Append("],\"All.EffectiveDate\",");
-
-                            JToken returnAttribute = jObject["returnattribute"];
-                            if (returnAttribute is JObject returnAttributeInput)
-                            {
-                                str.Append($"\"{returnAttributeInput["moduleTitle"].ToString().ToLower()}.{returnAttributeInput["variableName"].ToString().ToLower()}\"");
-                            }
-                            else
-                            {
-                                str.Append($"\"${returnAttribute.ToString().ToLower()}\"");
-                            }
-
-                            parameters[i] = str.ToString();
-
-                            break;
-                        }
-                    case JToken jToken:
-                        {
-                            parameters[i] = jToken.ToString();
-                            break;
-                        }
+                    parameters[i] = resolvedParameter;
                 }
             }
 
-            if(primitive == "#")
-            {
-                dict[currentId] = (parameters[0].ToString(), null);
-            }
-            else
             {
                 StringBuilder str = new StringBuilder();
                 str.Append($"{{\"{primitive}\":[");
                 bool first = true;
-                foreach(object parameter in parameters)
+                foreach (object parameter in parameters)
                 {
-                    if(first)
+                    if (first)
                     {
                         first = false;
                     }
@@ -375,16 +326,130 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
+        private string ResolveParameter(object parameter, string primitive, Dictionary<int, (string, List<object>)> dict)
+        {
+            switch (parameter)
+            {
+                case UnresolvedSet unresolvedSet:
+                    {
+                        return dict[unresolvedSet.Id].Item1;
+                    }
+                case JObject jObject:
+                    {
+                        switch (primitive)
+                        {
+                            case "find":
+                                {
+                                    StringBuilder str = new StringBuilder();
+                                    str.Append("\"$Factor\",[");
+                                    bool first = true;
+                                    string moduleName = jObject["module"].ToString();
+                                    foreach (var pair in jObject)
+                                    {
+                                        if (pair.Key == "returnattribute" ||
+                                           pair.Key == "returnvalue" ||
+                                           string.IsNullOrWhiteSpace(pair.Value.ToString()))
+                                        {
+                                            continue;
+                                        }
+                                        if (first)
+                                        {
+                                            first = false;
+                                        }
+                                        else
+                                        {
+                                            str.Append(",");
+                                        }
+
+                                        if (pair.Value is JObject variableInput)
+                                        {
+                                            str.Append($"[\"${pair.Key.ToLower()}\",\"{variableInput["moduleTitle"].ToString().ToLower()}.{variableInput["variableName"].ToString().ToLower()}\"]");
+                                        }
+                                        else
+                                        {
+                                            str.Append($"[\"${pair.Key.ToLower()}\",\"${pair.Value.ToString().ToLower()}\"]");
+                                        }
+                                    }
+                                    str.Append("],\"All.EffectiveDate\",");
+
+                                    JToken returnAttribute = jObject["returnattribute"];
+                                    if (returnAttribute is JObject returnAttributeInput)
+                                    {
+                                        str.Append($"\"{returnAttributeInput["moduleTitle"].ToString().ToLower()}.{returnAttributeInput["variableName"].ToString().ToLower()}\"");
+                                    }
+                                    else
+                                    {
+                                        str.Append($"\"${returnAttribute.ToString().ToLower()}\"");
+                                    }
+
+                                    return str.ToString();
+                                }
+                            case "switch":
+                                {
+                                    StringBuilder str = new StringBuilder();
+                                    string truthValue = ResolveParameter(ParseValueFromInstructionParam((JObject)jObject["switchOn"]), primitive, dict) ?? "null";
+                                    str.Append($"{truthValue},[");
+                                    bool first = true;
+                                    JArray casePairs = (JArray)jObject["cases"];
+                                    foreach (var casePairJToken in casePairs)
+                                    {
+                                        if (first)
+                                        {
+                                            first = false;
+                                        }
+                                        else
+                                        {
+                                            str.Append(",");
+                                        }
+
+                                        JObject casePair = (JObject)casePairJToken;
+                                        string matchValue = ResolveParameter(ParseValueFromInstructionParam((JObject)casePair["case"]), primitive, dict);
+                                        string returnValue = ResolveParameter(ParseValueFromInstructionParam((JObject)casePair["return"]), primitive, dict) ?? "null";
+
+                                        if (matchValue != null)
+                                        {
+                                            str.Append($"[{matchValue},{returnValue}]");
+                                        }
+                                    }
+                                    
+                                    string defaultValue = ResolveParameter(ParseValueFromInstructionParam((JObject)jObject["defaultCase"]), primitive, dict) ?? "null";
+
+                                    str.Append($"],{defaultValue}");
+
+                                    return str.ToString();
+                                }
+                        }
+
+                        break;
+                    }
+                case JToken jToken:
+                    {
+                        if (jToken.Type == JTokenType.String)
+                        {
+                            return $"\"${jToken.ToString()}\"";
+                        }
+                        else
+                        {
+                            return jToken.ToString();
+                        }
+                    }
+                case string str:
+                    {
+                        return $"\"{str}\"";
+                    }
+            }
+
+            return null;
+        }
+
         private class UnresolvedSet { public int Id { get; set; } }
         
         public async Task<(object, string)> GetFromUi(string id)
         {
             return await Get(id, new Dictionary<string,string>());
         }
-
-        public async Task<(object, string)> ListPrimitives()
-        {
-            return (new List<Dictionary<string, string>>()
+        
+        private List<Dictionary<string, string>> primitives = new List<Dictionary<string, string>>()
             {
                 new Dictionary<string,string>(){ ["label"] = "Add", ["value"] = "+", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "And", ["value"] = "and", ["maxParams"] = "none", ["minParams"] = "1" },
@@ -417,7 +482,11 @@ namespace PowerSecure.Estimator.Services.Services
                 new Dictionary<string,string>(){ ["label"] = "Switch", ["value"] = "switch", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "Threshold", ["value"] = "threshold", ["maxParams"] = "4", ["minParams"] = "4" },
                 new Dictionary<string,string>(){ ["label"] = "Zero", ["value"] = "zero", ["maxParams"] = "1", ["minParams"] = "1" }
-            }, "OK");
+            };
+
+        public async Task<(object, string)> ListPrimitives()
+        {
+            return (primitives, "OK");
         }
     }
 }
