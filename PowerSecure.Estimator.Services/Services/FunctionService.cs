@@ -287,6 +287,14 @@ namespace PowerSecure.Estimator.Services.Services
                         return valueToken;
                 }
             }
+            else if (instructionParam.ContainsKey("id"))
+            {
+                return new UnresolvedSet() { Id = instructionParam["id"].ToObject<int>() };
+            }
+            else if (instructionParam.ContainsKey("moduleTitle") && instructionParam.ContainsKey("variableName"))
+            {
+                return $"{instructionParam["moduleTitle"].ToString().ToLower()}.{instructionParam["variableName"].ToString().ToLower()}";
+            }
             else
             {
                 return instructionParam;
