@@ -70,6 +70,10 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 query = query.Where(f => f.Module == queryParams["module"].ToLower());
             }
+            if (queryParams.ContainsKey("name"))
+            {
+                query = query.Where(f => f.Name == queryParams["name"].ToLower());
+            }
 
             var functions = new List<Function>();
 
