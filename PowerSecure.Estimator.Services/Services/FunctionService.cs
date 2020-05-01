@@ -254,7 +254,7 @@ namespace PowerSecure.Estimator.Services.Services
         {
             if (instructionParam.ContainsKey("number"))
             {
-                return instructionParam["number"];
+                return decimal.Parse(instructionParam["number"].ToString());
             }
             else if (instructionParam.ContainsKey("string"))
             {
@@ -262,7 +262,7 @@ namespace PowerSecure.Estimator.Services.Services
             }
             else if (instructionParam.ContainsKey("boolean"))
             {
-                return instructionParam["boolean"];
+                return bool.Parse(instructionParam["boolean"].ToString());
             }
             else if (instructionParam.ContainsKey("value"))
             {
@@ -444,6 +444,14 @@ namespace PowerSecure.Estimator.Services.Services
                 case string str:
                     {
                         return $"\"{str}\"";
+                    }
+                case decimal d:
+                    {
+                        return d.ToString();
+                    }
+                case bool b:
+                    {
+                        return b.ToString();
                     }
             }
 
