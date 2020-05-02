@@ -44,7 +44,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                 await Upsert((JObject)items[i]);
             }
             WaitHandle.WaitAll(waitHandles);
-            return document;
+            return null;
         }
 
 
