@@ -27,7 +27,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         }
 
         public async Task<object> UpsertList(JObject document) {
-            JArray items = (JArray)document["Item"];
+            JArray items = (JArray)document["Items"];
             int length = items.Count;
             WaitHandle[] waitHandles = new WaitHandle[length];
 
