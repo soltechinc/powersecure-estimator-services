@@ -27,24 +27,27 @@ namespace PowerSecure.Estimator.Services.Repositories
         }
 
         public async Task<object> UpsertList(JObject document) {
-            JArray items = (JArray)document["Items"];
-            int length = items.Count;
-            WaitHandle[] waitHandles = new WaitHandle[length];
+            try {
+                JArray items = (JArray)document["Items"];
+                int length = items.Count;
+                WaitHandle[] waitHandles = new WaitHandle[length];
 
-            for (int i = 0; length > i; i++) {
-                var j = i;
-                var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
-                var thread = new Thread(() =>
-                {
-                    Thread.Sleep(j * 1000);
-                    Console.WriteLine("Thread{0} exits", j);
-                    handle.Set();
-                });
-                waitHandles[j] = handle;
-                thread.Start();
-                await Upsert((JObject)items[i]);
+                for (int i = 0; length > i; i++) {
+                    var j = i;
+                    var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+                    var thread = new Thread(() => {
+                        Thread.Sleep(j * 1000);
+                        Console.WriteLine("Thread{0} exits", j);
+                        handle.Set();
+                    });
+                    waitHandles[j] = handle;
+                    thread.Start();
+                    await Upsert((JObject)items[i]);
+                }
+                WaitHandle.WaitAll(waitHandles);
+            } catch (Exception ex) {
+                Console.WriteLine(ex);
             }
-            WaitHandle.WaitAll(waitHandles);
             return document;
         }
 
