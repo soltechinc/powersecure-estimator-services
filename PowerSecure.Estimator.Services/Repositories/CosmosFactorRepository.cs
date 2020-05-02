@@ -27,10 +27,10 @@ namespace PowerSecure.Estimator.Services.Repositories
         }
 
         public async Task<object> UpsertList(JObject document) {
-            JArray items = (JArray)document["Items"];
+            JArray items = (JArray)document["items"];
             int length = items.Count;
             WaitHandle[] waitHandles = new WaitHandle[length];
-
+            
             for (int i = 0; length > i; i++) {
                 var j = i;
                 var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
@@ -44,7 +44,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                 await Upsert((JObject)items[i]);
             }
             WaitHandle.WaitAll(waitHandles);
-            return null;
+            return document;
         }
 
 
