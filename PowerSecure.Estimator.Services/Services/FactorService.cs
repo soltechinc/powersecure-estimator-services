@@ -29,8 +29,22 @@ namespace PowerSecure.Estimator.Services.Services
             return (await _factorRepository.Get(id, queryParams),"OK");
         }
 
+        public async Task<(object, string)> UpsertList(JObject document) {
+            document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
+            document["hash"] = CreateHash(document.Properties()
+                                .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
+                                .SelectMany(o => new string[] { o.Name, o.Value.ToString() })
+                                .OrderBy(s => s)
+                                .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
+            if (!document.ContainsKey("creationdate")) {
+                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
+            }
+            return (await _factorRepository.UpsertList(document), "OK");
+        }
+
+
         public async Task<(object, string)> Upsert(JObject document)
-        {
+        {   
             document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
             document["hash"] = CreateHash(document.Properties()
                                 .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
