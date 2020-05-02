@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Threading;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
@@ -24,6 +25,29 @@ namespace PowerSecure.Estimator.Services.Repositories
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
             _collectionId = Environment.GetEnvironmentVariable("factorsCollectionId", EnvironmentVariableTarget.Process);
         }
+
+        public async Task<object> UpsertList(JObject document) {
+            JArray items = (JArray)document["item"];
+            int length = items.Count;
+            WaitHandle[] waitHandles = new WaitHandle[length];
+
+            for (int i = 0; length > i; i++) {
+                var j = i;
+                var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+                var thread = new Thread(() =>
+                {
+                    Thread.Sleep(j * 1000);
+                    Console.WriteLine("Thread{0} exits", j);
+                    handle.Set();
+                });
+                waitHandles[j] = handle;
+                thread.Start();
+                await Upsert((JObject)items[i]);
+            }
+            WaitHandle.WaitAll(waitHandles);
+            return document;
+        }
+
 
         public async Task<object> Upsert(JObject document)
         {
