@@ -16,6 +16,25 @@ using PowerSecure.Estimator.Services.ActionResults;
 
 namespace PowerSecure.Estimator.Services.Endpoints {
     public static class SecurityEndpoint {
+        [FunctionName("ListUsers")]
+        public static async Task<IActionResult> ListUser(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/users")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log) {
+            try {
+                log.LogDebug("Function called - ListUsers");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new SecurityService(new CosmosAuthorizedUserRepository(dbClient)).List(queryParams);
+                return returnValue.ToOkObjectResult(message: message);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+
         [FunctionName("GetUser")]
         public static async Task<IActionResult> GetUser(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/users/{id}")] HttpRequest req,
