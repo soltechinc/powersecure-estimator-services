@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
@@ -24,6 +25,25 @@ namespace PowerSecure.Estimator.Services.Repositories
             _dbClient = dbClient;
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
             _collectionId = Environment.GetEnvironmentVariable("factorsCollectionId", EnvironmentVariableTarget.Process);
+        }
+
+        private static string CreateHash(string valueKey) {
+            return MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(valueKey))
+                      .Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2"))).ToString();
+        }
+
+        private async Task<object> CreateKey(JObject document) { 
+        document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
+        document["hash"] = CreateHash(document.Properties()
+                                .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
+                                .SelectMany(o => new string[] { o.Name, o.Value.ToString()
+                                })
+                                .OrderBy(s => s)
+                                .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
+            if (!document.ContainsKey("creationdate")) {
+                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
+            }
+            return document;
         }
 
         public async Task<object> UpsertList(JObject document) {
@@ -41,6 +61,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                 });
                 waitHandles[j] = handle;
                 thread.Start();
+                await CreateKey((JObject)items[i]);
                 await Upsert((JObject)items[i]);
             }
             WaitHandle.WaitAll(waitHandles);
