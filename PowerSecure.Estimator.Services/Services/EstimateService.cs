@@ -60,6 +60,10 @@ namespace PowerSecure.Estimator.Services.Services
                                 string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 object inputValue;
                                 JToken inputValueFromJson = jObject.Properties().Any(prop => prop.Name == "inputValue") ? jObject["inputValue"] : jObject["quantity"];
+                                if(inputValueFromJson.Type == JTokenType.Object)
+                                {
+                                    inputValueFromJson = ((JObject)inputValueFromJson)["value"];
+                                }
                                 switch(inputValueFromJson.Type)
                                 {
                                     case JTokenType.Integer:
@@ -212,10 +216,26 @@ namespace PowerSecure.Estimator.Services.Services
             }
             if (jObject.Properties().Any(prop => prop.Name == "inputValue"))
             {
-                bool isCalculated = string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
-                if (isCalculated)
+                switch(jObject["inputValue"].Type)
                 {
-                    return true;
+                    case JTokenType.String:
+                        {
+                            bool isCalculated = string.IsNullOrEmpty(jObject["inputValue"].ToObject<string>());
+                            if (isCalculated)
+                            {
+                                return true;
+                            }
+                        }
+                        break;
+                    case JTokenType.Object:
+                        {
+                            bool isCalculated = string.IsNullOrEmpty(((JObject)jObject["inputValue"])["value"].ToObject<string>());
+                            if (isCalculated)
+                            {
+                                return true;
+                            }
+                        }
+                        break;
                 }
             }
 
