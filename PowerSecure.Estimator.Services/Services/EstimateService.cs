@@ -39,7 +39,7 @@ namespace PowerSecure.Estimator.Services.Services
         public async Task<(object, string)> Evaluate(JObject uiInputs)
         {
             var dataSheet = new Dictionary<string, object>();
-            string moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
+            string moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim().Replace(" ","");
 
             //Translate into data sheet
             uiInputs.WalkNodes(PreOrder: jToken =>
