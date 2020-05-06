@@ -65,6 +65,24 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
+        [FunctionName("EditFactorList")]
+        public static async Task<IActionResult> UpsertList(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "factorlist")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log) {
+            try {
+                log.LogDebug("Function called - EditFactor");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).UpsertList(JObject.Parse(requestBody.ToLower()));
+                return returnValue.ToOkObjectResult(message: message);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
         [FunctionName("EditFactor")]
         public static async Task<IActionResult> Upsert(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "factors")] HttpRequest req,

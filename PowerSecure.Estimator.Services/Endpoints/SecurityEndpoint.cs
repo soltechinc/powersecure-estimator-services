@@ -16,6 +16,25 @@ using PowerSecure.Estimator.Services.ActionResults;
 
 namespace PowerSecure.Estimator.Services.Endpoints {
     public static class SecurityEndpoint {
+        [FunctionName("ListUsers")]
+        public static async Task<IActionResult> ListUser(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/users")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log) {
+            try {
+                log.LogDebug("Function called - ListUsers");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new SecurityService(new CosmosAuthorizedUserRepository(dbClient)).List(queryParams);
+                return returnValue.ToOkObjectResult(message: message);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+
         [FunctionName("GetUser")]
         public static async Task<IActionResult> GetUser(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/users/{id}")] HttpRequest req,
@@ -102,6 +121,44 @@ namespace PowerSecure.Estimator.Services.Endpoints {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
                 (object returnValue, string message) = await new SecurityService(new CosmosRoleRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                return returnValue.ToOkObjectResult(message: message);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+        [FunctionName("GetPermissions")]
+        public static async Task<IActionResult> GetPermissions(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/permissions/{id}")] HttpRequest req,
+        string id,
+        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+        ILogger log) {
+            try {
+                log.LogDebug($"Function called - GetPermission (Id: {id})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new SecurityService(new CosmosPermissionsRepository(dbClient)).Get(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
+            } catch (Exception ex) {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+    
+
+        [FunctionName("EditPermissions")]
+        public static async Task<IActionResult> UpsertPermissions(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "security/permissions")] HttpRequest req,
+        [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+        ILogger log) {
+            try {
+                log.LogDebug("Function called - EditPermission");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                (object returnValue, string message) = await new SecurityService(new CosmosPermissionsRepository(dbClient)).Upsert(JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
             } catch (Exception ex) {
                 log.LogError(ex, "Caught exception");

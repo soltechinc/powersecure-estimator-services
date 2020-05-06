@@ -63,8 +63,24 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return items;
         }
 
-        public Task<object> List(IDictionary<string, string> queryParams) {
-            throw new NotImplementedException();
+        public async Task<object> List(IDictionary<string, string> queryParams) {
+            var query = _dbClient.CreateDocumentQuery<AuthorizedUser>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+
+            var items = new List<AuthorizedUser>();
+
+            bool reportFullObject = false;
+            if (queryParams.TryGetValue("object", out string value)) {
+                reportFullObject = (value.Trim().ToLower() == "full");
+            }
+            while (query.HasMoreResults) {
+                foreach (AuthorizedUser item in await query.ExecuteNextAsync()) {
+                    if (!reportFullObject) {
+                        //item.Rest = null;
+                    }
+                    items.Add(item);
+                }
+            }
+            return items;
         }
     }
 }

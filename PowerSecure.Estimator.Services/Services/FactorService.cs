@@ -29,8 +29,13 @@ namespace PowerSecure.Estimator.Services.Services
             return (await _factorRepository.Get(id, queryParams),"OK");
         }
 
+        public async Task<(object, string)> UpsertList(JObject document) {
+            return (await _factorRepository.UpsertList(document), "OK");
+        }
+
+
         public async Task<(object, string)> Upsert(JObject document)
-        {
+        {   
             document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
             document["hash"] = CreateHash(document.Properties()
                                 .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
