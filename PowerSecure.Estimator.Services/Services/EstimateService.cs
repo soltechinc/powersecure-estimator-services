@@ -39,7 +39,13 @@ namespace PowerSecure.Estimator.Services.Services
         public async Task<(object, string)> Evaluate(JObject uiInputs)
         {
             var dataSheet = new Dictionary<string, object>();
-            string moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim().Replace(" ", "");
+            string moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
+
+            if (uiInputs["moduleTitle"].ToString() == "Other EG Manufacturer") { // hard coded value will remove later JG 5/7/20
+                moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim().Replace(" ", "");
+            }
+
+
 
             //Translate into data sheet
             uiInputs.WalkNodes(PreOrder: jToken =>
