@@ -41,10 +41,26 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 document["module"] = document["module"].ToString().ToLower();
             }
+            else
+            {
+                return (null, "Function is lacking a module property");
+            }
+
             if (document.ContainsKey("name"))
             {
                 document["name"] = document["name"].ToString().ToLower();
             }
+            else
+            {
+                return (null, "Function is lacking a name property");
+            }
+
+
+            if (!document.ContainsKey("instructions"))
+            {
+                return (null, "Function is lacking an instructions property");
+            }
+
             return (await _functionRepository.Upsert(document),"OK");
         }
 

@@ -77,6 +77,12 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
                 (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

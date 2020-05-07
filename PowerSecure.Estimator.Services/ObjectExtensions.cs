@@ -17,11 +17,11 @@ namespace PowerSecure.Estimator.Services.ActionResults
             switch(obj)
             {
                 case JObject jObj:
-                    return ResultFromStatusCode(new List<object> { obj }, message, HttpStatusCode.OK);
+                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.OK);
                 case IEnumerable e:
-                    return ResultFromStatusCode(obj, message, HttpStatusCode.OK);
+                    return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.OK);
                 default:
-                    return ResultFromStatusCode(new List<object> { obj }, message, HttpStatusCode.OK);
+                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.OK);
             }
         }
         public static IActionResult ToServerErrorObjectResult(this object obj, string message = "Error")
@@ -29,17 +29,27 @@ namespace PowerSecure.Estimator.Services.ActionResults
             switch (obj)
             {
                 case JObject jObj:
-                    return ResultFromStatusCode(new List<object> { obj }, message, HttpStatusCode.InternalServerError);
+                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.InternalServerError);
                 case IEnumerable e:
-                    return ResultFromStatusCode(obj, message, HttpStatusCode.InternalServerError);
+                    return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.InternalServerError);
                 default:
-                    return ResultFromStatusCode(new List<object> { obj }, message, HttpStatusCode.InternalServerError);
+                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.InternalServerError);
             }
         }
 
-        private static IActionResult ResultFromStatusCode(object obj, string message, HttpStatusCode httpStatusCode)
+        private static IActionResult ResultFromStatusCode(object obj, int count, string message, HttpStatusCode httpStatusCode)
         {
-            return new ObjectResult(JsonConvert.SerializeObject(new { Items = obj, Message = message, Status = ((int)httpStatusCode) })) { StatusCode = (int)httpStatusCode };
+            return new ObjectResult(JsonConvert.SerializeObject(new { Items = obj, Count = count, Message = message, Status = ((int)httpStatusCode) })) { StatusCode = (int)httpStatusCode };
+        }
+
+        private static int Count(this IEnumerable e)
+        {
+            int count = 0;
+            foreach(var o in e)
+            {
+                count++;
+            }
+            return count;
         }
     }
 }
