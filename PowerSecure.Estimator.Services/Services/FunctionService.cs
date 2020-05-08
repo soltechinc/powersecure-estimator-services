@@ -106,7 +106,7 @@ namespace PowerSecure.Estimator.Services.Services
             JObject requestBodyJObject = JObject.Parse(requestBody);
             JObject instructionSet = JObject.FromObject(obj);
 
-            if (!requestBodyJObject.ContainsKey("id"))
+            if (!requestBodyJObject.ContainsKey("id") || requestBodyJObject["id"] == null || string.IsNullOrEmpty(requestBodyJObject["id"].ToString()))
             {
                 requestBodyJObject.Add("id", instructionSet["id"].ToString());
             }
@@ -494,6 +494,7 @@ namespace PowerSecure.Estimator.Services.Services
                 new Dictionary<string,string>(){ ["label"] = "Floor", ["value"] = "floor", ["maxParams"] = "2", ["minParams"] = "2" },
                 new Dictionary<string,string>(){ ["label"] = "GreaterThan", ["value"] = ">", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "GreaterThanOrEqual", ["value"] = ">=", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "InstructionSet", ["value"] = "instructionSet", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "IsEmpty", ["value"] = "isempty", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "LessThan", ["value"] = "<", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "LessThanOrEqual", ["value"] = "<=", ["maxParams"] = "none", ["minParams"] = "1" },
