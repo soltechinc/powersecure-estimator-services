@@ -311,6 +311,20 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 return $"{instructionParam["moduleTitle"].ToString().ToLower()}.{instructionParam["variableName"].ToString().ToLower()}";
             }
+            else if (instructionParam.ContainsKey("moduleTitle") && instructionParam.ContainsKey("name"))
+            {
+                string moduleTitle;
+                if(instructionParam["moduleTitle"].Type == JTokenType.Object)
+                {
+                    moduleTitle = ((JObject)instructionParam["moduleTitle"])["moduleTitle"].ToString();
+                }
+                else
+                {
+                    moduleTitle = instructionParam["moduleTitle"].ToString();
+                }
+
+                return $"{moduleTitle.ToLower()}.{instructionParam["name"].ToString().ToLower()}";
+            }
             else
             {
                 return instructionParam;
@@ -331,21 +345,28 @@ namespace PowerSecure.Estimator.Services.Services
 
             {
                 StringBuilder str = new StringBuilder();
-                str.Append($"{{\"{primitive}\":[");
-                bool first = true;
-                foreach (object parameter in parameters)
+                if (primitive == "instructionset")
                 {
-                    if (first)
-                    {
-                        first = false;
-                    }
-                    else
-                    {
-                        str.Append(",");
-                    }
-                    str.Append(parameter.ToString());
+                    str.Append(parameters[0].ToString());
                 }
-                str.Append("]}");
+                else
+                {
+                    str.Append($"{{\"{primitive}\":[");
+                    bool first = true;
+                    foreach (object parameter in parameters)
+                    {
+                        if (first)
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            str.Append(",");
+                        }
+                        str.Append(parameter.ToString());
+                    }
+                    str.Append("]}");
+                }
                 dict[currentId] = (str.ToString(), null);
             }
         }
