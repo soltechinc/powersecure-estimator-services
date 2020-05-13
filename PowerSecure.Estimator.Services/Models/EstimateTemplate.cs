@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace PowerSecure.Estimator.Services.Models {
-    public class EstimateTemplates {
+    public class EstimateTemplate {
         [JsonProperty("id")]
         public string Id { get; set; }
 
