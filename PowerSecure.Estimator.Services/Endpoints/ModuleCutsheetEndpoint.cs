@@ -24,7 +24,7 @@ namespace PowerSecure.Estimator.Services.Endpoints {
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleCutsheetService(new CosmosModuleVendorQuoteRepository(dbClient)).List(queryParams);
+                (object returnValue, string message) = await new ModuleCutsheetService(new CosmosModuleCutsheetRepository(dbClient)).List(queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             } catch (Exception ex) {
                 log.LogError(ex, "Caught exception");
