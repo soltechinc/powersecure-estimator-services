@@ -61,10 +61,16 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         case JObject jObject:
                             {
+                                if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "file input")
+                                {
+                                    break;
+                                }
+
                                 if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
                                     (jObject.Properties().Any(prop => prop.Name == "inputValue") ||
                                     jObject.Properties().Any(prop => prop.Name == "quantity")))
                                 {
+
                                     bool isCalculated = IsCalculated(jObject);
 
                                     string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
