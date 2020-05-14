@@ -22,8 +22,8 @@ namespace PowerSecure.Estimator.Services.Repositories
         public CosmosModuleVendorQuoteRepository(DocumentClient dbClient)
         {
             _dbClient = dbClient;
-            _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("moduleVendorQuotesCollectionId", EnvironmentVariableTarget.Process);
+            _databaseId = Environment.GetEnvironmentVariable("databaseAdminId", EnvironmentVariableTarget.Process);
+            _collectionId = Environment.GetEnvironmentVariable("vendorQuoteCollectionId", EnvironmentVariableTarget.Process);
         }
 
         public async Task<object> Upsert(JObject document)
