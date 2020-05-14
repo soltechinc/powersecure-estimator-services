@@ -14,7 +14,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
         private readonly string _collectionId;
-        
+
         public CosmosModuleDefinitionRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
@@ -25,7 +25,6 @@ namespace PowerSecure.Estimator.Services.Repositories {
            if (document.ContainsKey("id")) {
                 return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["moduleId"].ToString()) });
             }
-
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
