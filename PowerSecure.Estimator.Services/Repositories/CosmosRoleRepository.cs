@@ -17,7 +17,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
         public CosmosRoleRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
-            _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
+            _databaseId = Environment.GetEnvironmentVariable("databaseAdminId", EnvironmentVariableTarget.Process);
             _collectionId = Environment.GetEnvironmentVariable("roleCollectionId", EnvironmentVariableTarget.Process);
         }
 
