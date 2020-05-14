@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
-    public class CosmosModuleVendorQuoteRepository : IModuleRepository
+    public class CosmosModuleVendorQuoteRepository : IModuleVendorQuoteRepository
     {
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
