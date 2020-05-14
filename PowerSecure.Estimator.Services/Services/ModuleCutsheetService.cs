@@ -13,7 +13,7 @@ namespace PowerSecure.Estimator.Services.Services
     {
         private readonly IModuleCutsheetRepository _moduleCutsheetRepository;
 
-        public ModuleCutsheetService(IModuleRepository moduleVendorQuoteRepository)
+        public ModuleCutsheetService(IModuleCutsheetRepository moduleCutsheetRepository)
         {
             _moduleCutsheetRepository = moduleCutsheetRepository;
         }
