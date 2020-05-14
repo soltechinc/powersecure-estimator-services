@@ -60,24 +60,25 @@ namespace PowerSecure.Estimator.Services.Repositories
             return list.Count;
         }
 
-        public async Task<object> List(IDictionary<string, string> queryParams)
-        {
-            var query = _dbClient.CreateDocumentQuery<ModuleCutsheet>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+        public async Task<object> List(IDictionary<string, string> queryParams) {
+            IQueryable<ModuleCutsheet> query = _dbClient.CreateDocumentQuery<ModuleCutsheet>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
+
+            if (queryParams.ContainsKey("moduleTitle")) {
+                query = query.Where(f => f.ModuleTitle == queryParams["moduleTitle"]);
+            }
 
             var items = new List<ModuleCutsheet>();
 
+            var documentQuery = query.AsDocumentQuery();
+
             bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value))
-            {
+            if (queryParams.TryGetValue("object", out string value)) {
                 reportFullObject = (value.Trim().ToLower() == "full");
             }
-            while (query.HasMoreResults)
-            {
-                foreach (ModuleCutsheet item in await query.ExecuteNextAsync())
-                {
-                    if(!reportFullObject)
-                    {
-                         //item.Rest = null;
+            while (documentQuery.HasMoreResults) {
+                foreach (ModuleCutsheet item in await documentQuery.ExecuteNextAsync()) {
+                    if (!reportFullObject) {
+                        //factor.Rest = null;
                     }
                     items.Add(item);
                 }
