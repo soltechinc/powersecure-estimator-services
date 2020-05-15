@@ -107,18 +107,8 @@ namespace PowerSecure.Estimator.Services.Services
                                                 break;
                                             }
                                     }
-                                                                                // Added this to calculate cost - JG
-                                    if (jToken.Path.Contains("moduleInputs") || 
-                                        jToken.Path.Contains("equipmentArray") ||
-                                        jToken.Path.Contains("assemblyArray"))
-                                    {
-                                        if (!name.Contains("."))
-                                        {
-                                            name = $"{moduleName}.{name}";
-                                        }
-                                        dataSheet.Add(name, isCalculated ? null : inputValue);
-                                    }
-                                    else if (jToken.Path.Contains("submoduleData"))
+
+                                    if (jToken.Path.Contains("submoduleData"))
                                     {
                                         List<Dictionary<string, object>> dataSheetList  = (List<Dictionary<string, object>>)dataSheet[fullSubmoduleName];
                                         
@@ -134,6 +124,14 @@ namespace PowerSecure.Estimator.Services.Services
                                         }
 
                                         lastDataSheet.Add(name, isCalculated ? null : inputValue);
+                                    }
+                                    else
+                                    {
+                                        if (!name.Contains("."))
+                                        {
+                                            name = $"{moduleName}.{name}";
+                                        }
+                                        dataSheet.Add(name, isCalculated ? null : inputValue);
                                     }
                                 }
                                 else if (jObject.Properties().Any(prop => prop.Name == "text") &&
