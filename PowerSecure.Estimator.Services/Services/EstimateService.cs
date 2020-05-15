@@ -107,8 +107,8 @@ namespace PowerSecure.Estimator.Services.Services
                                                 break;
                                             }
                                     }
-
-                                    if (jToken.Path.Contains("moduleInputs"))
+                                                                                // Added this to calculate cost - JG
+                                    if (jToken.Path.Contains("moduleInputs") || jToken.Path.Contains("equipmentArray"))
                                     {
                                         if (!name.Contains("."))
                                         {
