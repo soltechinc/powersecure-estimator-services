@@ -41,9 +41,9 @@ namespace PowerSecure.Estimator.Services.Services
             var dataSheet = new Dictionary<string, object>();
             string moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
 
-            //if (uiInputs["moduleTitle"].ToString() == "Other EG Manufacturer") { // hard coded value will remove later JG 5/7/20
-            //    moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim().Replace(" ", "");
-            //}
+            if (uiInputs["moduleTitle"].ToString() == "Other EG Manufacturer") { // hard coded value will remove later JG 5/7/20
+                moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim().Replace(" ", "");
+            }
 
             string submoduleName = string.Empty;
             string fullSubmoduleName = string.Empty;
