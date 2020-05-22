@@ -208,7 +208,7 @@ namespace PowerSecure.Estimator.Services.Services
 
                             if(isCalculated && dataSheet.TryGetValue($"{moduleName}.{name}", out object value) && value != null)
                             {
-                                if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "select" && value is object[])
+                                if (jObject.Properties().Any(prop => prop.Name == "inputType") && (jObject["inputType"].ToObject<string>().ToLower() == "select" || jObject["inputType"].ToObject<string>().ToLower() == "combobox") && value is object[])
                                 {
                                     var options = new List<Dictionary<string, string>>();
                                     foreach(var returnedOption in (object[])value)
