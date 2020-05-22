@@ -86,18 +86,93 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 else //these should be resolved against the parameters
                                 {
                                     string key = str.Trim().ToLower();
+
                                     if (!Parameters.ContainsKey(key))
                                     {
-                                        var instructionSet = InstructionSetRepository.Get(key, EffectiveDate);
-                                        
-                                        if(instructionSet == null)
+                                        if (key.Contains("[]"))
                                         {
-                                            Log?.LogWarning($"Attempted to find instruction set {key} but failed");
+                                            string[] keyParts = key.Split(".");
+                                            if (keyParts.Length > 1 && keyParts[0].EndsWith("[]"))
+                                            {
+                                                //TBD - module array logic
+                                            }
+                                            else if (keyParts.Length == 3 && keyParts[1].EndsWith("[]"))
+                                            {
+                                                //submodule array logic
+                                                string submoduleKey = $"{keyParts[0]}.{keyParts[1].Replace("[]", string.Empty)}";
+                                                if (!Parameters.ContainsKey(submoduleKey))
+                                                {
+                                                    Log?.LogWarning($"Unable to find submodule {submoduleKey}");
 
-                                            return null;
+                                                    return null;
+                                                }
+
+                                                var submodules = (List<Dictionary<string, object>>)Parameters[submoduleKey];
+                                                var baseDataSheet = new Dictionary<string, object>(Parameters);
+                                                baseDataSheet.Remove(submoduleKey);
+                                                string submoduleDataKey = $"{submoduleKey}.{keyParts[2]}";
+                                                var keysToEvaluate = new List<string>() { submoduleDataKey };
+                                                var submoduleDataList = new List<object>();
+
+                                                foreach (var submodule in submodules)
+                                                {
+                                                    if(!submodule.ContainsKey(submoduleDataKey) || submodule[submoduleDataKey] == null)
+                                                    {
+                                                        var submoduleDataSheet = new Dictionary<string, object>(baseDataSheet);
+                                                        foreach (var pair in submodule)
+                                                        {
+                                                            submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                        }
+                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log);
+                                                        foreach (var returnedKey in submodule.Keys)
+                                                        {
+                                                            if (returnedDataSheet[returnedKey] != null)
+                                                            {
+                                                                if (!submodule.ContainsKey(returnedKey))
+                                                                {
+                                                                    submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                }
+                                                                else if (submodule[returnedKey] == null)
+                                                                {
+                                                                    submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if(submodule.ContainsKey(submoduleDataKey) && submodule[submoduleDataKey] != null)
+                                                    {
+                                                        submoduleDataList.Add(submodule[submoduleDataKey]);
+                                                    }
+                                                }
+
+                                                if (submoduleDataList.Count == 0)
+                                                {
+                                                    return null;
+                                                }
+
+                                                Parameters.Add(key, submoduleDataList.ToArray());
+                                            }
+                                            else
+                                            {
+                                                Log?.LogWarning($"Invalid array parsing for {key}");
+
+                                                return null;
+                                            }
                                         }
+                                        else
+                                        {
+                                            var instructionSet = InstructionSetRepository.Get(key, EffectiveDate);
 
-                                        Parameters.Add(key, instructionSet);
+                                            if (instructionSet == null)
+                                            {
+                                                Log?.LogWarning($"Attempted to find instruction set {key} but failed");
+
+                                                return null;
+                                            }
+
+                                            Parameters.Add(key, instructionSet);
+                                        }
                                     }
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
                                     {
