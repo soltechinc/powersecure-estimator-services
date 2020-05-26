@@ -488,7 +488,7 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 case bool b:
                     {
-                        return b.ToString();
+                        return b.ToString().ToLower();
                     }
             }
 
