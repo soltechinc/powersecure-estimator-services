@@ -57,13 +57,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             
             foreach (var parameter in dataSheet)
             {
-                if(parameter.Value != null && !keysToEvaluate.Contains(parameter.Key))
+                if(keysToEvaluate.Contains(parameter.Key) && (parameter.Value == null || parameter.Value is List<Dictionary<string, object>>))
                 {
-                    parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
+                    missingParameters.Add(parameter.Key.Trim().ToLower());
                 }
                 else
                 {
-                    missingParameters.Add(parameter.Key.Trim().ToLower());
+                    parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
                 }
             }
 
