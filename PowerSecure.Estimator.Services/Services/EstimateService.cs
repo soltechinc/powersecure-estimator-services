@@ -183,6 +183,8 @@ namespace PowerSecure.Estimator.Services.Services
             _log.LogInformation("Returned data sheet: " + JToken.FromObject(dataSheet));
 
             //Convert back
+            var submoduleList = new List<(string, int)>();
+            var submoduleCount = new Dictionary<string, int>();
             uiInputs.WalkNodes(PreOrder: jToken =>
             {
                 if (jToken.Path.Contains("moduleInputs") && jToken.Path.Contains("submoduleData"))
@@ -270,6 +272,56 @@ namespace PowerSecure.Estimator.Services.Services
 
                                 submoduleName = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 fullSubmoduleName = $"{moduleName}.{submoduleName}";
+                                if(!submoduleCount.ContainsKey(submoduleName))
+                                {
+                                    submoduleCount.Add(submoduleName, 0);
+                                }
+                                else
+                                {
+                                    submoduleCount[submoduleName]++;
+                                }
+                                submoduleList.Add((submoduleName,submoduleCount[submoduleName]));
+                            }
+                            else if (jObject.Properties().Any(prop => prop.Name == "number") &&
+                                jObject.Properties().Any(prop => prop.Name == "description"))
+                            {
+                                if (!jToken.Path.Contains("submoduleData") || !jToken.Path.Contains("dataSummary"))
+                                {
+                                    break;
+                                }
+
+                                int index = jObject["number"].ToObject<int>() - 1;
+                                (string summarySubmoduleName, int summarySubmoduleIndex) = submoduleList[index];
+                                
+                                var submodules = (List<Dictionary<string, object>>)dataSheet[$"{moduleName}.{summarySubmoduleName}"];
+                                var submodule = submodules[summarySubmoduleIndex];
+
+                                foreach (var property in jObject.Properties())
+                                {
+                                    if(property.Name == "number")
+                                    {
+                                        continue;
+                                    }
+
+                                    string parameterName = $"{moduleName}.{summarySubmoduleName}.{summarySubmoduleName}{property.Name}";
+                                    if(submodule.TryGetValue(parameterName, out object value) && value != null)
+                                    {
+                                        var valueJToken = JToken.FromObject(value);
+                                        switch (valueJToken.Type)
+                                        {
+                                            case JTokenType.String:
+                                                {
+                                                    property.Value = UnwrapString(valueJToken.ToObject<string>());
+                                                }
+                                                break;
+                                            default:
+                                                {
+                                                    property.Value = valueJToken;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                }
                             }
 
 
