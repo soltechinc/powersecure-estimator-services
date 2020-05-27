@@ -149,7 +149,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         IInstructionSet IInstructionSetRepository.Get(string key, DateTime effectiveDate)
         {
             int moduleDelimiter = key.IndexOf(".");
-            return ((IInstructionSetRepository)this).Get(key.Substring(0, moduleDelimiter - 1), key.Substring(moduleDelimiter + 1), effectiveDate);
+            return ((IInstructionSetRepository)this).Get(key.Substring(0, moduleDelimiter), key.Substring(moduleDelimiter + 1), effectiveDate);
         }
 
         public async Task<int> Reset(string module, JToken jToken)
