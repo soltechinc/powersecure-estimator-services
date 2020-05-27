@@ -210,17 +210,21 @@ namespace PowerSecure.Estimator.Services.Services
                                 string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 
                                 string parameterName;
-                                
+                                Dictionary<string, object> dataSheetToUse;
                                 if (jToken.Path.Contains("submoduleData"))
                                 {
                                     parameterName = $"{moduleName}.{submoduleName}.{name}";
+                                    var submodules = (List<Dictionary<string,object>>)dataSheet[$"{moduleName}.{submoduleName}"];
+                                    (_, int submoduleIndex) = submoduleList.Last();
+                                    dataSheetToUse = submodules[submoduleIndex];
                                 }
                                 else
                                 {
                                     parameterName = $"{moduleName}.{name}";
+                                    dataSheetToUse = dataSheet;
                                 }
 
-                                if (isCalculated && dataSheet.TryGetValue(parameterName, out object value) && value != null)
+                                if (isCalculated && dataSheetToUse.TryGetValue(parameterName, out object value) && value != null)
                                 {
                                     if (jObject.Properties().Any(prop => prop.Name == "inputType") && (jObject["inputType"].ToObject<string>().ToLower() == "select" || jObject["inputType"].ToObject<string>().ToLower() == "combobox") && value is object[])
                                     {
