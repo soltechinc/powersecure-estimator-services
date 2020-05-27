@@ -34,7 +34,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                //log.LogInformation($"Request Body: {requestBody}");
+                log.LogInformation($"Request Body: {requestBody}");
 
                 (object returnValue, string message) = await new EstimateService(new CosmosFunctionRepository(dbClient), new CosmosFactorRepository(dbClient), log).Evaluate(JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
