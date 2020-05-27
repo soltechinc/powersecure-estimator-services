@@ -83,7 +83,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                                 submoduleDataSheet.Add(pair.Key, pair.Value);
                             }
                             var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log);
-                            foreach(var submoduleKey in submodule.Keys)
+                            foreach(var submoduleKey in submodule.Keys.ToList())
                             {
                                 submodule[submoduleKey] = returnedDataSheet[submoduleKey];
                             }
