@@ -20,7 +20,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             decimal value = 0;
 
-            for (int i = 0; i < values.Length; ++i)
+            int length = values.Length > factors.Length ? factors.Length : values.Length;
+
+            for (int i = 0; i < length; ++i)
             {
                 value += (values[i] ?? 0) * (factors[i] ?? 0);
             }
@@ -41,12 +43,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             }
 
             var list = new List<JToken>(jToken.Children());
-            if(list[0].Children().Count() != list[1].Children().Count())
-            {
-                return (false, "Expected parameter arrays to be equal in length.");
-            }
-
-            if(list[0].Children().Count() == 0)
+            if(list[0].Children().Count() == 0 || list[1].Children().Count() == 0)
             {
                 return (false, "Expected parameter arrays to have entries.");
             }
