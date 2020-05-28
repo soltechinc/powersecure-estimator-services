@@ -18,6 +18,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new ConcatenatePrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new ContainsPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new DivisionPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new EqualPrimitive();
@@ -31,6 +33,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			function = new GreaterThanPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new IsEmptyPrimitive();
+			dict.Add(function.Name.ToLower(), function);
+			function = new IsFalsePrimitive();
+			dict.Add(function.Name.ToLower(), function);
+			function = new IsTruePrimitive();
+			dict.Add(function.Name.ToLower(), function);
+			function = new ItemPrimitive();
+			dict.Add(function.Name.ToLower(), function);
+			function = new LengthPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new LessThanOrEqualPrimitive();
 			dict.Add(function.Name.ToLower(), function);

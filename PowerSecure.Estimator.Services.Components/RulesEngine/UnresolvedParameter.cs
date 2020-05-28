@@ -61,7 +61,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     return null;
                                 }
 
-                                if(function is IsEmptyPrimitive)
+                                if(function.Name.StartsWith("is"))
                                 {
                                     return retValue;
                                 }
