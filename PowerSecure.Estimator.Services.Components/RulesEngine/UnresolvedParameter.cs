@@ -94,7 +94,81 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                             string[] keyParts = key.Split(".");
                                             if (keyParts.Length > 1 && keyParts[0].EndsWith("[]"))
                                             {
-                                                //TBD - module array logic
+                                                //module array logic
+                                                string moduleKey = $"{keyParts[0].Replace("[]", string.Empty)}";
+                                                if (!Parameters.ContainsKey(moduleKey))
+                                                {
+                                                    Log?.LogWarning($"Unable to find module {moduleKey}");
+
+                                                    return null;
+                                                }
+
+                                                var modules = (List<Dictionary<string, object>>)Parameters[moduleKey];
+                                                string moduleDataKey = $"{moduleKey}.{keyParts[1]}";
+                                                if(keyParts.Length == 3)
+                                                {
+                                                    moduleDataKey = moduleDataKey + $".{keyParts[2]}";
+                                                }
+                                                var keysToEvaluate = new List<string>() { moduleDataKey };
+                                                var moduleDataList = new List<object>();
+
+                                                foreach (var module in modules.ToList())
+                                                {
+                                                    if (!module.ContainsKey(moduleDataKey) || module[moduleDataKey] == null)
+                                                    {
+                                                        foreach (var k in Parameters.Keys)
+                                                        {
+                                                            if (!k.Contains(".") && !module.ContainsKey(k))
+                                                            {
+                                                                module.Add(k, Parameters[k]);
+                                                            }
+                                                            else if (k == "all.projecttype" && !module.ContainsKey(k))
+                                                            {
+                                                                module.Add(k, Parameters[k]);
+                                                            }
+                                                            else if (k == "all.outsideequipmentpercentage" && !module.ContainsKey(k))
+                                                            {
+                                                                module.Add(k, Parameters[k]);
+                                                            }
+                                                            else if (k == "all.desiredinstallrate" && !module.ContainsKey(k))
+                                                            {
+                                                                module.Add(k, Parameters[k]);
+                                                            }
+                                                        }
+
+                                                        if(!module.ContainsKey(moduleDataKey))
+                                                        {
+                                                            module.Add(moduleDataKey, null);
+                                                        }
+                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(module, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log);
+                                                        foreach (var returnedKey in module.Keys)
+                                                        {
+                                                            if (returnedDataSheet[returnedKey] != null)
+                                                            {
+                                                                if (!module.ContainsKey(returnedKey))
+                                                                {
+                                                                    module.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                }
+                                                                else if (module[returnedKey] == null)
+                                                                {
+                                                                    module[returnedKey] = returnedDataSheet[returnedKey];
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (module.ContainsKey(moduleDataKey) && module[moduleDataKey] != null)
+                                                    {
+                                                        moduleDataList.Add(module[moduleDataKey]);
+                                                    }
+                                                }
+
+                                                if (moduleDataList.Count == 0)
+                                                {
+                                                    return null;
+                                                }
+
+                                                Parameters.Add(key, moduleDataList.ToArray());
                                             }
                                             else if (keyParts.Length == 3 && keyParts[1].EndsWith("[]"))
                                             {
@@ -122,6 +196,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         foreach (var pair in submodule)
                                                         {
                                                             submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                        }
+                                                        if(!submodule.ContainsKey(submoduleDataKey))
+                                                        {
+                                                            submoduleDataSheet.Add(submoduleDataKey, null);
                                                         }
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log);
                                                         foreach (var returnedKey in submodule.Keys)

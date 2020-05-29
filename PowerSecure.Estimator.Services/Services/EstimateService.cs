@@ -13,6 +13,7 @@ using System.Net.Http;
 using PowerSecure.Estimator.Services.Endpoints;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using PowerSecure.Estimator.Services.Models;
 
 namespace PowerSecure.Estimator.Services.Services
 {
@@ -24,10 +25,11 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly ILogger _log;
         private readonly IEstimateRepository _estimateRepository;
 
-        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log)
+        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, ILogger log)
         {
             _instructionSetRepository = instructionSetRepository;
             _referenceDataRepository = referenceDataRepository;
+            _estimateRepository = estimateRepository;
             _functions = Primitive.Load();
             _log = log;
         }
@@ -41,200 +43,41 @@ namespace PowerSecure.Estimator.Services.Services
             var dataSheet = new Dictionary<string, object>();
             string moduleName = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
 
-            string submoduleName = string.Empty;
-            string fullSubmoduleName = string.Empty;
+
+            string estimateId = uiInputs.Properties().Where(prop => prop.Name == "estimateId").First()?.Value?.ToObject<string>()?.ToLower()?.Trim();
+            string boliNumber = uiInputs.Properties().Where(prop => prop.Name == "boliNumber").First()?.Value?.ToObject<string>()?.ToLower()?.Trim();
+
+            if(estimateId != null && boliNumber != null)
+            {
+                var estimate = (Estimate)await _estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId });
+                if(!string.IsNullOrEmpty(estimate.ProjectType))
+                {
+                    dataSheet.Add("all.projecttype", $"${estimate.ProjectType}");
+                }
+                if(!string.IsNullOrEmpty(estimate.OutsideEquipmentPercent))
+                {
+                    dataSheet.Add("all.outsideequipmentpercentage", (decimal.Parse(estimate.OutsideEquipmentPercent) / 100m));
+                }
+                if (!string.IsNullOrEmpty(estimate.DesiredRateForInstall))
+                {
+                    dataSheet.Add("all.desiredinstallrate", (decimal.Parse(estimate.DesiredRateForInstall) / 100m));
+                }
+                foreach(var module in estimate.Modules)
+                {
+                    string moduleTitle = module.ModuleTitle.ToLower();
+                    if(!dataSheet.ContainsKey(moduleTitle))
+                    {
+                        dataSheet.Add(moduleTitle, new List<Dictionary<string, object>>());
+                    }
+
+                    var moduleDataSheet = new Dictionary<string, object>();
+                    ParseFromJson(JObject.FromObject(module), moduleDataSheet, moduleTitle);
+                    ((List<Dictionary<string, object>>)dataSheet[moduleTitle]).Add(moduleDataSheet);
+                }
+            }
 
             //Translate into data sheet
-            {
-                var submoduleList = new List<(string, int)>();
-                var submoduleCount = new Dictionary<string, int>();
-                uiInputs.WalkNodes(PreOrder: jToken =>
-                    {
-                        if (jToken.Path.Contains("moduleInputs") && jToken.Path.Contains("submoduleData"))
-                        {
-                            return;
-                        }
-
-                        switch (jToken)
-                        {
-                            case JObject jObject:
-                                {
-                                    if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "file input")
-                                    {
-                                        break;
-                                    }
-
-                                    if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
-                                        (jObject.Properties().Any(prop => prop.Name == "inputValue") ||
-                                        jObject.Properties().Any(prop => prop.Name == "quantity")))
-                                    {
-
-                                        bool isCalculated = IsCalculated(jObject);
-
-                                        string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
-                                        object inputValue;
-                                        JToken inputValueFromJson = jObject.Properties().Any(prop => prop.Name == "inputValue") ? jObject["inputValue"] : jObject["quantity"];
-                                        if (inputValueFromJson.Type == JTokenType.Object)
-                                        {
-                                            inputValueFromJson = ((JObject)inputValueFromJson)["value"];
-                                        }
-                                        switch (inputValueFromJson.Type)
-                                        {
-                                            case JTokenType.Integer:
-                                                {
-                                                    decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
-                                                    inputValue = value;
-                                                    break;
-                                                }
-                                            case JTokenType.Float:
-                                                {
-                                                    decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
-                                                    inputValue = value;
-                                                    break;
-                                                }
-                                            case JTokenType.Boolean:
-                                                {
-                                                    bool? value = inputValueFromJson.ToObject<bool>();
-                                                    inputValue = value;
-                                                    break;
-                                                }
-                                            default:
-                                                {
-                                                    string value = inputValueFromJson.ToObject<string>();
-                                                    inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
-                                                    break;
-                                                }
-                                        }
-
-                                        if (jToken.Path.Contains("submoduleData"))
-                                        {
-                                            List<Dictionary<string, object>> dataSheetList = (List<Dictionary<string, object>>)dataSheet[fullSubmoduleName];
-
-                                            if (!name.Contains("."))
-                                            {
-                                                name = $"{moduleName}.{submoduleName}.{name}";
-                                            }
-                                            var lastDataSheet = dataSheetList[dataSheetList.Count - 1];
-                                            if (lastDataSheet.ContainsKey(name))
-                                            {
-                                                lastDataSheet = new Dictionary<string, object>();
-                                                dataSheetList.Add(lastDataSheet);
-                                            }
-
-                                            lastDataSheet.Add(name, isCalculated ? null : inputValue);
-                                        }
-                                        else
-                                        {
-                                            if (!name.Contains("."))
-                                            {
-                                                name = $"{moduleName}.{name}";
-                                            }
-                                            dataSheet.Add(name, isCalculated ? null : inputValue);
-                                        }
-                                    }
-                                    else if (jObject.Properties().Any(prop => prop.Name == "text") &&
-                                        jObject.Properties().Any(prop => prop.Name == "align") ||
-                                        jObject.Properties().Any(prop => prop.Name == "value"))
-                                    {
-                                        if (jToken.Path.Contains("submoduleData") && jToken.Path.Contains("summaryHeader"))
-                                        {
-                                            List<Dictionary<string, object>> dataSheetList = (List<Dictionary<string, object>>)dataSheet[fullSubmoduleName];
-
-                                            string calculationType = jObject["value"].ToObject<string>().ToLower().Trim();
-                                            string name = $"{moduleName}.{submoduleName}.{submoduleName}{calculationType}";
-
-                                            var lastDataSheet = dataSheetList[dataSheetList.Count - 1];
-                                            if (lastDataSheet.ContainsKey(name))
-                                            {
-                                                lastDataSheet = new Dictionary<string, object>();
-                                                dataSheetList.Add(lastDataSheet);
-                                            }
-
-                                            lastDataSheet.Add(name, null);
-                                        }
-                                    }
-                                    else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
-                                        jObject.Properties().Any(prop => prop.Name == "tableTitle"))
-                                    {
-                                        if (!jToken.Path.Contains("submoduleData"))
-                                        {
-                                            break;
-                                        }
-
-                                        submoduleName = jObject["variableName"].ToObject<string>().ToLower().Trim();
-                                        fullSubmoduleName = $"{moduleName}.{submoduleName}";
-
-                                        if (!dataSheet.ContainsKey(fullSubmoduleName))
-                                        {
-                                            var dataSheetList = new List<Dictionary<string, object>>() { new Dictionary<string, object>() };
-                                            dataSheet.Add(fullSubmoduleName, dataSheetList);
-                                        }
-
-                                        if (!submoduleCount.ContainsKey(submoduleName))
-                                        {
-                                            submoduleCount.Add(submoduleName, 0);
-                                        }
-                                        else
-                                        {
-                                            submoduleCount[submoduleName]++;
-                                        }
-                                        submoduleList.Add((submoduleName, submoduleCount[submoduleName]));
-                                    }
-                                    else if (jObject.Properties().Any(prop => prop.Name == "number") &&
-                                        jObject.Properties().Any(prop => prop.Name == "description"))
-                                    {
-                                        if (!jToken.Path.Contains("submoduleData") || !jToken.Path.Contains("dataSummary"))
-                                        {
-                                            break;
-                                        }
-
-                                        int index = jObject["number"].ToObject<int>() - 1;
-                                        (string summarySubmoduleName, int summarySubmoduleIndex) = submoduleList[index];
-                                        
-                                        var submodules = (List<Dictionary<string, object>>)dataSheet[$"{moduleName}.{summarySubmoduleName}"];
-                                        var submodule = submodules[summarySubmoduleIndex];
-
-                                        foreach (var property in jObject.Properties())
-                                        {
-                                            string parameterName = $"{moduleName}.{summarySubmoduleName}.{summarySubmoduleName}{property.Name}";
-
-                                            object inputValue;
-                                            switch (property.Type)
-                                            {
-                                                case JTokenType.Integer:
-                                                    {
-                                                        decimal? value = Convert.ToDecimal(property.ToObject<int>());
-                                                        inputValue = value;
-                                                        break;
-                                                    }
-                                                case JTokenType.Float:
-                                                    {
-                                                        decimal? value = Convert.ToDecimal(property.ToObject<float>());
-                                                        inputValue = value;
-                                                        break;
-                                                    }
-                                                case JTokenType.Boolean:
-                                                    {
-                                                        bool? value = property.ToObject<bool>();
-                                                        inputValue = value;
-                                                        break;
-                                                    }
-                                                default:
-                                                    {
-                                                        string value = property.ToObject<string>();
-                                                        inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
-                                                        break;
-                                                    }
-                                            }
-
-                                            submodule[parameterName] = inputValue;
-                                        }
-                                    }
-                                }
-                                break;
-                        }
-                    });
-            }
+            ParseFromJson(uiInputs, dataSheet, moduleName);
 
             var rulesEngine = new RulesEngine();
             if(!dataSheet.ContainsKey("all.effectivedate"))
@@ -248,6 +91,9 @@ namespace PowerSecure.Estimator.Services.Services
 
             //Convert back
             {
+                string submoduleName = string.Empty;
+                string fullSubmoduleName = string.Empty;
+
                 var submoduleList = new List<(string, int)>();
                 var submoduleCount = new Dictionary<string, int>();
                 uiInputs.WalkNodes(PreOrder: jToken =>
@@ -401,6 +247,201 @@ namespace PowerSecure.Estimator.Services.Services
             }
 
             return (uiInputs, "");
+        }
+
+        private void ParseFromJson(JObject uiInputs, Dictionary<string,object> dataSheet, string moduleName)
+        {
+            string submoduleName = string.Empty;
+            string fullSubmoduleName = string.Empty;
+
+            var submoduleList = new List<(string, int)>();
+            var submoduleCount = new Dictionary<string, int>();
+            uiInputs.WalkNodes(PreOrder: jToken =>
+                {
+                    if (jToken.Path.Contains("moduleInputs") && jToken.Path.Contains("submoduleData"))
+                    {
+                        return;
+                    }
+
+                    switch (jToken)
+                    {
+                        case JObject jObject:
+                            {
+                                if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "file input")
+                                {
+                                    break;
+                                }
+
+                                if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                    (jObject.Properties().Any(prop => prop.Name == "inputValue") ||
+                                    jObject.Properties().Any(prop => prop.Name == "quantity")))
+                                {
+
+                                    bool isCalculated = IsCalculated(jObject);
+
+                                    string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
+                                    object inputValue;
+                                    JToken inputValueFromJson = jObject.Properties().Any(prop => prop.Name == "inputValue") ? jObject["inputValue"] : jObject["quantity"];
+                                    if (inputValueFromJson.Type == JTokenType.Object)
+                                    {
+                                        inputValueFromJson = ((JObject)inputValueFromJson)["value"];
+                                    }
+                                    switch (inputValueFromJson.Type)
+                                    {
+                                        case JTokenType.Integer:
+                                            {
+                                                decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
+                                                inputValue = value;
+                                                break;
+                                            }
+                                        case JTokenType.Float:
+                                            {
+                                                decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
+                                                inputValue = value;
+                                                break;
+                                            }
+                                        case JTokenType.Boolean:
+                                            {
+                                                bool? value = inputValueFromJson.ToObject<bool>();
+                                                inputValue = value;
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                string value = inputValueFromJson.ToObject<string>();
+                                                inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
+                                                break;
+                                            }
+                                    }
+
+                                    if (jToken.Path.Contains("submoduleData"))
+                                    {
+                                        List<Dictionary<string, object>> dataSheetList = (List<Dictionary<string, object>>)dataSheet[fullSubmoduleName];
+
+                                        if (!name.Contains("."))
+                                        {
+                                            name = $"{moduleName}.{submoduleName}.{name}";
+                                        }
+                                        var lastDataSheet = dataSheetList[dataSheetList.Count - 1];
+                                        if (lastDataSheet.ContainsKey(name))
+                                        {
+                                            lastDataSheet = new Dictionary<string, object>();
+                                            dataSheetList.Add(lastDataSheet);
+                                        }
+
+                                        lastDataSheet.Add(name, isCalculated ? null : inputValue);
+                                    }
+                                    else
+                                    {
+                                        if (!name.Contains("."))
+                                        {
+                                            name = $"{moduleName}.{name}";
+                                        }
+                                        dataSheet.Add(name, isCalculated ? null : inputValue);
+                                    }
+                                }
+                                else if (jObject.Properties().Any(prop => prop.Name == "text") &&
+                                    jObject.Properties().Any(prop => prop.Name == "align") ||
+                                    jObject.Properties().Any(prop => prop.Name == "value"))
+                                {
+                                    if (jToken.Path.Contains("submoduleData") && jToken.Path.Contains("summaryHeader"))
+                                    {
+                                        List<Dictionary<string, object>> dataSheetList = (List<Dictionary<string, object>>)dataSheet[fullSubmoduleName];
+
+                                        string calculationType = jObject["value"].ToObject<string>().ToLower().Trim();
+                                        string name = $"{moduleName}.{submoduleName}.{submoduleName}{calculationType}";
+
+                                        var lastDataSheet = dataSheetList[dataSheetList.Count - 1];
+                                        if (lastDataSheet.ContainsKey(name))
+                                        {
+                                            lastDataSheet = new Dictionary<string, object>();
+                                            dataSheetList.Add(lastDataSheet);
+                                        }
+
+                                        lastDataSheet.Add(name, null);
+                                    }
+                                }
+                                else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                    jObject.Properties().Any(prop => prop.Name == "tableTitle"))
+                                {
+                                    if (!jToken.Path.Contains("submoduleData"))
+                                    {
+                                        break;
+                                    }
+
+                                    submoduleName = jObject["variableName"].ToObject<string>().ToLower().Trim();
+                                    fullSubmoduleName = $"{moduleName}.{submoduleName}";
+
+                                    if (!dataSheet.ContainsKey(fullSubmoduleName))
+                                    {
+                                        var dataSheetList = new List<Dictionary<string, object>>() { new Dictionary<string, object>() };
+                                        dataSheet.Add(fullSubmoduleName, dataSheetList);
+                                    }
+
+                                    if (!submoduleCount.ContainsKey(submoduleName))
+                                    {
+                                        submoduleCount.Add(submoduleName, 0);
+                                    }
+                                    else
+                                    {
+                                        submoduleCount[submoduleName]++;
+                                    }
+                                    submoduleList.Add((submoduleName, submoduleCount[submoduleName]));
+                                }
+                                else if (jObject.Properties().Any(prop => prop.Name == "number") &&
+                                    jObject.Properties().Any(prop => prop.Name == "description"))
+                                {
+                                    if (!jToken.Path.Contains("submoduleData") || !jToken.Path.Contains("dataSummary"))
+                                    {
+                                        break;
+                                    }
+
+                                    int index = jObject["number"].ToObject<int>() - 1;
+                                    (string summarySubmoduleName, int summarySubmoduleIndex) = submoduleList[index];
+                                        
+                                    var submodules = (List<Dictionary<string, object>>)dataSheet[$"{moduleName}.{summarySubmoduleName}"];
+                                    var submodule = submodules[summarySubmoduleIndex];
+
+                                    foreach (var property in jObject.Properties())
+                                    {
+                                        string parameterName = $"{moduleName}.{summarySubmoduleName}.{summarySubmoduleName}{property.Name}";
+
+                                        object inputValue;
+                                        switch (property.Type)
+                                        {
+                                            case JTokenType.Integer:
+                                                {
+                                                    decimal? value = Convert.ToDecimal(property.ToObject<int>());
+                                                    inputValue = value;
+                                                    break;
+                                                }
+                                            case JTokenType.Float:
+                                                {
+                                                    decimal? value = Convert.ToDecimal(property.ToObject<float>());
+                                                    inputValue = value;
+                                                    break;
+                                                }
+                                            case JTokenType.Boolean:
+                                                {
+                                                    bool? value = property.ToObject<bool>();
+                                                    inputValue = value;
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    string value = property.ToObject<string>();
+                                                    inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
+                                                    break;
+                                                }
+                                        }
+
+                                        submodule[parameterName] = inputValue;
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                });
         }
 
         private static string UnwrapString(string str)
