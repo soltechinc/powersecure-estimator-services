@@ -19,11 +19,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             {
                 case object[] objs:
                     {
-                        return objs.Length;
+                        return (decimal)objs.Length;
                     }
                 default:
                     {
-                        return p.ToRawString().Length;
+                        return (decimal)p.ToRawString().Length;
                     }
             }
         }
