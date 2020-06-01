@@ -163,11 +163,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                     }
                                                 }
 
-                                                if (moduleDataList.Count == 0)
-                                                {
-                                                    return null;
-                                                }
-
                                                 Parameters.Add(key, moduleDataList.ToArray());
                                             }
                                             else if (keyParts.Length == 3 && keyParts[1].EndsWith("[]"))
@@ -222,11 +217,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                     {
                                                         submoduleDataList.Add(submodule[submoduleDataKey]);
                                                     }
-                                                }
-
-                                                if (submoduleDataList.Count == 0)
-                                                {
-                                                    return null;
                                                 }
 
                                                 Parameters.Add(key, submoduleDataList.ToArray());
