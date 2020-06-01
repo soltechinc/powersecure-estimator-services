@@ -95,12 +95,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                             if (keyParts.Length > 1 && keyParts[0].EndsWith("[]"))
                                             {
                                                 //module array logic
+                                                var moduleDataList = new List<object>();
+
                                                 string moduleKey = $"{keyParts[0].Replace("[]", string.Empty)}";
                                                 if (!Parameters.ContainsKey(moduleKey))
                                                 {
                                                     Log?.LogWarning($"Unable to find module {moduleKey}");
 
-                                                    return null;
+                                                    return moduleDataList.ToArray();
                                                 }
 
                                                 var modules = (List<Dictionary<string, object>>)Parameters[moduleKey];
@@ -110,7 +112,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                     moduleDataKey = moduleDataKey + $".{keyParts[2]}";
                                                 }
                                                 var keysToEvaluate = new List<string>() { moduleDataKey };
-                                                var moduleDataList = new List<object>();
 
                                                 foreach (var module in modules.ToList())
                                                 {
@@ -168,12 +169,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                             else if (keyParts.Length == 3 && keyParts[1].EndsWith("[]"))
                                             {
                                                 //submodule array logic
+                                                var submoduleDataList = new List<object>();
+
                                                 string submoduleKey = $"{keyParts[0]}.{keyParts[1].Replace("[]", string.Empty)}";
                                                 if (!Parameters.ContainsKey(submoduleKey))
                                                 {
                                                     Log?.LogWarning($"Unable to find submodule {submoduleKey}");
 
-                                                    return null;
+                                                    return submoduleDataList.ToArray();
                                                 }
 
                                                 var submodules = (List<Dictionary<string, object>>)Parameters[submoduleKey];
@@ -181,7 +184,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                 baseDataSheet.Remove(submoduleKey);
                                                 string submoduleDataKey = $"{submoduleKey}.{keyParts[2]}";
                                                 var keysToEvaluate = new List<string>() { submoduleDataKey };
-                                                var submoduleDataList = new List<object>();
 
                                                 foreach (var submodule in submodules)
                                                 {
