@@ -22,8 +22,8 @@ namespace PowerSecure.Estimator.Services.Repositories {
         }
 
         public async Task<object> Upsert(JObject document) {
-           if (document.ContainsKey("moduleid")) {
-                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["moduleId"].ToString()) });
+           if (document.ContainsKey("id")) {
+                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["moduleid"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["moduleId"].ToString()) });
             }
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
