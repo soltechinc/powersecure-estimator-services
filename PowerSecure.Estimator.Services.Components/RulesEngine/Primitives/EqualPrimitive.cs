@@ -29,6 +29,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                             return objects.Select(o => (object)(first.CompareTo(o.ToComparable()) == 0)).ToArray();
                         }
 
+                        if(first == null || second == null)
+                        {
+                            return null;
+                        }
+
                         return first.CompareTo(second.ToComparable()) == 0;
                     }
                 default:
