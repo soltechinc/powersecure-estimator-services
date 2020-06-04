@@ -30,7 +30,7 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Upsert(JObject document)
         {
-            if(document["moduleId"] == null) {
+            if(document["moduleId"].ToString() == "") {
                 string moduleId = JTokenExtension.CreateGUID(document);
                 document = JTokenExtension.SetGUID(document, moduleId);
             }
