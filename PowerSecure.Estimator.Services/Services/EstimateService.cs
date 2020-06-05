@@ -231,7 +231,14 @@ namespace PowerSecure.Estimator.Services.Services
                                             dataSheetList.Add(lastDataSheet);
                                         }
 
-                                        lastDataSheet.Add(name, isCalculated ? null : inputValue);
+                                        if (!lastDataSheet.ContainsKey(name))
+                                        {
+                                            lastDataSheet.Add(name, isCalculated ? null : inputValue);
+                                        }
+                                        else if (lastDataSheet[name] == null)
+                                        {
+                                            lastDataSheet[name] = isCalculated ? null : inputValue;
+                                        }
                                     }
                                     else
                                     {
@@ -239,7 +246,14 @@ namespace PowerSecure.Estimator.Services.Services
                                         {
                                             name = $"{moduleName}.{name}";
                                         }
-                                        dataSheet.Add(name, isCalculated ? null : inputValue);
+                                        if (!dataSheet.ContainsKey(name))
+                                        {
+                                            dataSheet.Add(name, isCalculated ? null : inputValue);
+                                        }
+                                        else if(dataSheet[name] == null)
+                                        {
+                                            dataSheet[name] = isCalculated ? null : inputValue;
+                                        }
                                     }
                                 }
                                 else if (jObject.Properties().Any(prop => prop.Name == "text") &&
@@ -260,7 +274,10 @@ namespace PowerSecure.Estimator.Services.Services
                                             dataSheetList.Add(lastDataSheet);
                                         }
 
-                                        lastDataSheet.Add(name, null);
+                                        if (!lastDataSheet.ContainsKey(name))
+                                        {
+                                            lastDataSheet.Add(name, null);
+                                        }
                                     }
                                 }
                                 else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
