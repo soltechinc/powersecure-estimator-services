@@ -99,7 +99,7 @@ namespace PowerSecure.Estimator.Services.Services
                         var dict = new Dictionary<string, object>();
                         foreach (var prop in ((JObject)jToken).Properties())
                         {
-                            dict.Add(prop.Name, DataSheetFromJToken(prop.Value));
+                            dict.Add(prop.Name.ToLower(), DataSheetFromJToken(prop.Value));
                         }
                         return dict;
                     }
