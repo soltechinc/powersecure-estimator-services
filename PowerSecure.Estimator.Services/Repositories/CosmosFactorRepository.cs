@@ -169,6 +169,10 @@ namespace PowerSecure.Estimator.Services.Repositories
             var str = new StringBuilder("select * from f where f.returnattribute = \"" + returnFieldName.ToLower() + "\"");
             foreach((string searchParam, string value) in criteria)
             {
+                if(searchParam == null || value == null)
+                {
+                    return null;
+                }
                 str.Append(" and f[\"" + searchParam.ToLower().Trim() + "\"] = \"" + value.ToLower().Trim() + "\"");
             }
 
