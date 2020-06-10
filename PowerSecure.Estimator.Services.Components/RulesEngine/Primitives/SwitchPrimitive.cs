@@ -15,12 +15,26 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
+            if(parameters[0] == null || parameters[2] == null)
+            {
+                return null;
+            }
             var value = parameters[0].ToComparable();
             var cases = parameters[1].ToObjectArray();
+
+            if(value == null)
+            {
+                return null;
+            }
 
             foreach(object obj in cases)
             {
                 var pair = obj.ToObjectArray();
+                if(pair[0] == null || pair[1] == null)
+                {
+                    return null;
+                }
+
                 if(value.CompareTo(pair[0].ToComparable()) == 0)
                 {
                     return pair[1].ToResolvedParameter();

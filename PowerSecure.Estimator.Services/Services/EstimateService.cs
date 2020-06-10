@@ -370,6 +370,7 @@ namespace PowerSecure.Estimator.Services.Services
 
             var submoduleList = new List<(string, int)>();
             var submoduleCount = new Dictionary<string, int>();
+            int previousIndex = 0;
             uiInputs.WalkNodes(PreOrder: jToken =>
             {
                 if (jToken.Path.Contains("moduleInputs") && jToken.Path.Contains("submoduleData"))
@@ -384,6 +385,11 @@ namespace PowerSecure.Estimator.Services.Services
                             if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "file input")
                             {
                                 break;
+                            }
+
+                            if(jObject.Path.EndsWith("currentSubmodule"))
+                            {
+                                previousIndex++;
                             }
 
                             if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
@@ -479,7 +485,7 @@ namespace PowerSecure.Estimator.Services.Services
                                     break;
                                 }
 
-                                int index = jObject["number"].ToObject<int>() - 1;
+                                int index = previousIndex;
                                 (string summarySubmoduleName, int summarySubmoduleIndex) = submoduleList[index];
 
                                 var submodules = (List<Dictionary<string, object>>)dataSheet[$"{moduleName}.{summarySubmoduleName}"];
@@ -511,6 +517,7 @@ namespace PowerSecure.Estimator.Services.Services
                                         }
                                     }
                                 }
+                                previousIndex++;
                             }
 
 
