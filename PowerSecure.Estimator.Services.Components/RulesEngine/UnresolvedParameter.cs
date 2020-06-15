@@ -142,7 +142,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             module.Add(moduleDataKey, null);
                                                         }
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(module, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log);
-                                                        foreach (var returnedKey in module.Keys)
+                                                        foreach (var returnedKey in module.Keys.ToList())
                                                         {
                                                             if (returnedDataSheet[returnedKey] != null)
                                                             {
@@ -180,8 +180,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                 }
 
                                                 var submodules = (List<Dictionary<string, object>>)Parameters[submoduleKey];
-                                                var baseDataSheet = new Dictionary<string, object>(Parameters);
-                                                baseDataSheet.Remove(submoduleKey);
                                                 string submoduleDataKey = $"{submoduleKey}.{keyParts[2]}";
                                                 var keysToEvaluate = new List<string>() { submoduleDataKey };
 
@@ -189,7 +187,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                 {
                                                     if(!submodule.ContainsKey(submoduleDataKey) || submodule[submoduleDataKey] == null)
                                                     {
-                                                        var submoduleDataSheet = new Dictionary<string, object>(baseDataSheet);
+                                                        var submoduleDataSheet = new Dictionary<string, object>(Parameters);
+                                                        submoduleDataSheet.Remove(submoduleKey);
+
                                                         foreach (var pair in submodule)
                                                         {
                                                             submoduleDataSheet.Add(pair.Key, pair.Value);
@@ -211,6 +211,20 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                 else if (submodule[returnedKey] == null)
                                                                 {
                                                                     submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                                                }
+                                                            }
+                                                        }
+                                                        foreach(var returnedKey in returnedDataSheet.Keys)
+                                                        {
+                                                            if (returnedDataSheet[returnedKey] != null && !submodule.Keys.Contains(returnedKey))
+                                                            {
+                                                                if (!Parameters.ContainsKey(returnedKey))
+                                                                {
+                                                                    Parameters.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                }
+                                                                else if (Parameters[returnedKey] == null)
+                                                                {
+                                                                    Parameters[returnedKey] = returnedDataSheet[returnedKey];
                                                                 }
                                                             }
                                                         }
