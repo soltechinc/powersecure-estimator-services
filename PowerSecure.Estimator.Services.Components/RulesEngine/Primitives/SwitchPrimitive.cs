@@ -15,7 +15,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            if(parameters[0] == null || parameters[2] == null)
+            if(parameters == null || parameters[0] == null || parameters[2] == null)
             {
                 return null;
             }
