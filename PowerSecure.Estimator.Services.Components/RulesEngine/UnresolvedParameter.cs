@@ -200,7 +200,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             submodule.Add(submoduleDataKey, null);
                                                         }
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log);
-                                                        foreach (var returnedKey in submodule.Keys)
+                                                        foreach (var returnedKey in submodule.Keys.ToList())
                                                         {
                                                             if (returnedDataSheet[returnedKey] != null)
                                                             {
