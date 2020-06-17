@@ -198,6 +198,23 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
             }
         }
 
+        public static object ToInstructionSet(this object obj, object p)
+        {
+            switch(obj)
+            {
+                case null:
+                    {
+                        return null;
+                    }
+                case UnresolvedParameter parameter:
+                    {
+                        return parameter.ToInstructionSet(p);
+                    }
+                default:
+                    return obj;
+            }
+        }
+
         public static IEnumerable<decimal?> ToDecimal(this IEnumerable<object> objects)
         {
             foreach (var obj in objects)

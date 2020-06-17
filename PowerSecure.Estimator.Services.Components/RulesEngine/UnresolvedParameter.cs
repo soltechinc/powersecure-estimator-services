@@ -33,6 +33,28 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             Log = parentParameter.Log;
         }
 
+        public object ToInstructionSet(object parameter)
+        {
+            string value;
+            switch(parameter)
+            {
+                case string s:
+                    {
+                        value = $"\"{s}\"";
+                        break;
+                    }
+                default:
+                    {
+                        value = parameter.ToString();
+                        break;
+                    }
+            }
+
+            string json = Token.ToString(Newtonsoft.Json.Formatting.None).Replace("\"$$\"",value);
+            
+            return new UnresolvedParameter(JToken.Parse(json), this).Resolve();
+        }
+
         public object Resolve()
         {
             if(IsNullValue)
