@@ -33,7 +33,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             Log = parentParameter.Log;
         }
 
-        public object ToInstructionSet(object parameter)
+        public object ToInstructionSet(object parameter, string searchString)
         {
             string value;
             switch(parameter)
@@ -50,7 +50,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     }
             }
 
-            string json = Token.ToString(Newtonsoft.Json.Formatting.None).Replace("\"$$\"",value);
+            string json = Token.ToString(Newtonsoft.Json.Formatting.None).Replace(searchString,value);
             
             return new UnresolvedParameter(JToken.Parse(json), this).Resolve();
         }

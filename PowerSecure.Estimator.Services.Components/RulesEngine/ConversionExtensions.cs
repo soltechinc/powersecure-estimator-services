@@ -198,7 +198,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
             }
         }
 
-        public static object ToInstructionSet(this object obj, object p)
+        public static object ToInstructionSet(this object obj, object p, string searchString)
         {
             switch(obj)
             {
@@ -208,7 +208,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                     }
                 case UnresolvedParameter parameter:
                     {
-                        return parameter.ToInstructionSet(p);
+                        return parameter.ToInstructionSet(p, searchString);
                     }
                 default:
                     return obj;
