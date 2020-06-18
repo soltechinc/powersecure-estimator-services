@@ -1,4 +1,4 @@
-﻿// 2, 3, or 4 parameters. Parameter 1 is cost, parameter 2 is tax, parameter 3 is margin, parameter 4 is a boolean specifying whether to apply the margin
+﻿// 2 or 3 parameters. Parameter 1 is cost, parameter 2 is margin, parameter 3 is tax
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,16 +18,15 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             var decimals = parameters.ToDecimal().ToArray();
 
             var cost = decimals[0];
-            var tax = decimals[1];
-            var margin = decimals.Length >= 3 ? decimals[2] : 0;
-            var applyMargin = decimals.Length == 4 ? decimals[3] : 1;
+            var margin = decimals[1];
+            var tax = decimals.Length >= 3 ? decimals[2] : 0;
 
             if (cost <= 0)
             {
                 return 0;
             }
 
-            return (cost/(1-(margin * applyMargin)))+tax;
+            return (cost/(1-margin))+tax;
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

@@ -15,12 +15,26 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
         
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            if (parameters.Length > 1)
+            object[] resolvedParameters = parameters.Select(o => o.ToResolvedParameter()).ToArray();
+
+            if (resolvedParameters.Length > 1)
             {
-                return parameters.ToDecimal().Sum();
+                if (resolvedParameters.All(o => o is object[]))
+                {
+                    var list = new List<object>();
+                    foreach(object o in resolvedParameters)
+                    {
+                        list.AddRange((object[])o);
+                    }
+                    return list.ToArray();
+                }
+                else
+                {
+                    return resolvedParameters.ToDecimal().Sum();
+                }
             }
 
-            switch (parameters[0].ToResolvedParameter())
+            switch (resolvedParameters[0])
             {
                 case object[] objs:
                     {
@@ -28,7 +42,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                     }
                 default:
                     {
-                        return parameters[0].ToDecimal();
+                        return resolvedParameters[0].ToDecimal();
                     }
             }
         }

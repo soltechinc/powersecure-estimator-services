@@ -48,6 +48,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new ListPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new MapPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new MarginPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new MaxPrimitive();
