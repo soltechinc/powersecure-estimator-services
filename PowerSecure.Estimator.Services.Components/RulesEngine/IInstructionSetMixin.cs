@@ -11,9 +11,17 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public static class IInstructionSetMixin
     {
-        public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, object> parameters, IDictionary<string, IFunction> functions, IReferenceDataRepository referenceDataRepository, IInstructionSetRepository instructionSetRepository, DateTime effectiveDate, ILogger log)
+        public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, object> parameters, IDictionary<string, IFunction> functions, IReferenceDataRepository referenceDataRepository, IInstructionSetRepository instructionSetRepository, DateTime effectiveDate, ILogger log, ISet<string> callStack)
         {
-            return new UnresolvedParameter() { Token = JObject.Parse(instructionSet.Instructions), Parameters = parameters, Functions = functions, ReferenceDataRepository = referenceDataRepository, InstructionSetRepository = instructionSetRepository, EffectiveDate = effectiveDate, Log = log }.Resolve();
+            if(callStack.Contains(instructionSet.Name))
+            {
+                return null;
+            }
+
+            callStack.Add(instructionSet.Name);
+            var obj = new UnresolvedParameter() { Token = JObject.Parse(instructionSet.Instructions), Parameters = parameters, Functions = functions, ReferenceDataRepository = referenceDataRepository, InstructionSetRepository = instructionSetRepository, EffectiveDate = effectiveDate, Log = log, CallStack = callStack }.Resolve();
+            callStack.Remove(instructionSet.Name);
+            return obj;
         }
     }
 }

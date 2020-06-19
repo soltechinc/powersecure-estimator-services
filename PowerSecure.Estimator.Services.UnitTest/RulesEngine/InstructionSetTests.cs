@@ -170,7 +170,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var instructionSet = new TestInstructionSet(Guid.NewGuid().ToString(), "All", "test", "{ '*': [ 2, 3 ]}", DateTime.MinValue, DateTime.Now);
             var primitives = Primitive.Load();
 
-            var value = (decimal)instructionSet.Evaluate(null, primitives, null, null, DateTime.Now, null);
+            var value = (decimal)instructionSet.Evaluate(null, primitives, null, null, DateTime.Now, null, new HashSet<string>());
 
             Assert.AreEqual(6, value, "Calculation failed");
         }
@@ -182,7 +182,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
-            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null, new HashSet<string>());
 
             Assert.AreEqual(6, value, "Calculation failed");
         }
@@ -194,7 +194,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
-            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null, new HashSet<string>());
 
             Assert.AreEqual(10, value, "Calculation failed");
         }
@@ -206,7 +206,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2", ["b"] = "6" };
 
-            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null);
+            var value = (decimal)instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null, new HashSet<string>());
 
             Assert.AreEqual(18, value, "Calculation failed");
         }
@@ -218,7 +218,7 @@ namespace PowerSecure.Estimator.Services.UnitTest.RulesEngine
             var primitives = Primitive.Load();
             var dataTable = new Dictionary<string, object> { ["a"] = "2" };
 
-            var value = instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null);
+            var value = instructionSet.Evaluate(dataTable, primitives, null, null, DateTime.Now, null, new HashSet<string>());
             Assert.IsNull(value, "Instruction set evaluated to a non-null value with a missing parameter.");
         }
 

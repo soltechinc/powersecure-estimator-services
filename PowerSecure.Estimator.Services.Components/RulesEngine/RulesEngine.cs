@@ -47,10 +47,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
             }
             
-            return EvaluateDataSheet(dataSheet, missingParameters, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log);
+            return EvaluateDataSheet(dataSheet, missingParameters, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, new HashSet<string>());
         }
 
-        public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, IEnumerable<string> keysToEvaluate, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log)
+        public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, IEnumerable<string> keysToEvaluate, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log, ISet<string> callStack)
         {
             var missingParameters = new HashSet<string>();
             var parameters = new Dictionary<string, object>();
@@ -82,7 +82,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                             {
                                 submoduleDataSheet.Add(pair.Key, pair.Value);
                             }
-                            var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log);
+                            var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, callStack);
                             foreach(var submoduleKey in submodule.Keys.ToList())
                             {
                                 submodule[submoduleKey] = returnedDataSheet[submoduleKey];
@@ -99,7 +99,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                             log?.LogWarning($"Unable to find instruction set {key}");
                         }
 
-                        parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log));
+                        parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
                     }
                 }
 

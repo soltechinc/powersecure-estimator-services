@@ -21,6 +21,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public DateTime EffectiveDate { get; set; }
         public bool IsNullValue { get; private set; } = false;
         public ILogger Log { get; set; }
+        public ISet<string> CallStack { get; set; } = new HashSet<string>();
 
         private UnresolvedParameter(JToken jToken, UnresolvedParameter parentParameter)
         {
@@ -31,6 +32,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             InstructionSetRepository = parentParameter.InstructionSetRepository;
             EffectiveDate = parentParameter.EffectiveDate;
             Log = parentParameter.Log;
+            CallStack = parentParameter.CallStack;
         }
 
         public object ToInstructionSet(object parameter, string searchString)
@@ -163,7 +165,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         {
                                                             module.Add(moduleDataKey, null);
                                                         }
-                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(module, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log);
+                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(module, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
                                                         foreach (var returnedKey in module.Keys.ToList())
                                                         {
                                                             if (returnedDataSheet[returnedKey] != null)
@@ -221,7 +223,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             submoduleDataSheet.Add(submoduleDataKey, null);
                                                             submodule.Add(submoduleDataKey, null);
                                                         }
-                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log);
+                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
                                                         foreach (var returnedKey in submodule.Keys.ToList())
                                                         {
                                                             if (returnedDataSheet[returnedKey] != null)
@@ -285,7 +287,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     {
                                         Log?.LogInformation($"Running instruction set {key}");
 
-                                        Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log);
+                                        Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log, CallStack);
                                     }
                                     if(Parameters[key] is object[] o && o.Length == 1 && o[0] is object[] o2 && o2.Length == 2)
                                     {
