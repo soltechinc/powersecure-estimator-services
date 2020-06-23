@@ -357,6 +357,21 @@ namespace PowerSecure.Estimator.Services.Services
                                         submodule[parameterName] = inputValue;
                                     }
                                 }
+                                else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                    jObject.Properties().Any(prop => prop.Name == "tableItems"))
+                                {
+                                    string tableName = jObject["variableName"].ToObject<string>().ToLower();
+                                    var tableItems = (JArray)jObject["tableItems"];
+                                    foreach(var tableJToken in tableItems)
+                                    {
+                                        var tableJObject = (JObject)tableJToken;
+                                        foreach(var prop in tableJObject.Properties())
+                                        {
+                                            dataSheet.Add($"{moduleName}.{tableName}{prop.Name.ToLower()}", null);
+                                        }
+                                        break;
+                                    }
+                                }
                             }
                             break;
                     }
@@ -518,6 +533,81 @@ namespace PowerSecure.Estimator.Services.Services
                                     }
                                 }
                                 previousIndex++;
+                            }
+                            else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                jObject.Properties().Any(prop => prop.Name == "tableItems"))
+                            {
+                                string tableName = jObject["variableName"].ToObject<string>().ToLower();
+                                JArray tableItems = (JArray)jObject["tableItems"];
+                                var itemNames = new List<string>();
+                                foreach (var tableJToken in tableItems)
+                                {
+                                    var tableJObject = (JObject)tableJToken;
+                                    foreach (var prop in tableJObject.Properties())
+                                    {
+                                        itemNames.Add(prop.Name.ToLower());
+                                    }
+                                    break;
+                                }
+                                tableItems.Clear();
+                                var items = new List<JObject>();
+                                bool first = true;
+                                foreach(var itemName in itemNames)
+                                {
+                                    var dataSheetItems = (List<object>)dataSheet[$"{moduleName}.{tableName}{itemName}"];
+                                    if(dataSheetItems == null)
+                                    {
+                                        continue;
+                                    }
+                                    if(first)
+                                    {
+                                        foreach(var dataSheetItem in dataSheetItems)
+                                        {
+                                            var obj = new JObject();
+                                            var valueJToken = JToken.FromObject(dataSheetItem);
+                                            switch (valueJToken.Type)
+                                            {
+                                                case JTokenType.String:
+                                                    {
+                                                        obj.Add(itemName, UnwrapString(valueJToken.ToObject<string>()));
+                                                    }
+                                                    break;
+                                                default:
+                                                    {
+                                                        obj.Add(itemName, valueJToken);
+                                                    }
+                                                    break;
+                                            }
+                                            items.Add(obj);
+                                        }
+                                        first = false;
+                                    }
+                                    else
+                                    {
+                                        for(int i = 0; i < dataSheetItems.Count; ++i)
+                                        {
+                                            var valueJToken = JToken.FromObject(dataSheetItems[i]);
+                                            switch (valueJToken.Type)
+                                            {
+                                                case JTokenType.String:
+                                                    {
+                                                        items[i].Add(itemName, UnwrapString(valueJToken.ToObject<string>()));
+                                                    }
+                                                    break;
+                                                default:
+                                                    {
+                                                        items[i].Add(itemName, valueJToken);
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                foreach(var tableItem in items)
+                                {
+                                    tableItems.Add(tableItem);
+                                }
                             }
 
 
