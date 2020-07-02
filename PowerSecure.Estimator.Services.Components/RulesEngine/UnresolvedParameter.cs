@@ -52,6 +52,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     }
             }
 
+            searchString = $"\"{searchString}\"";
+
             string json = Token.ToString(Newtonsoft.Json.Formatting.None).Replace(searchString,value);
             
             return new UnresolvedParameter(JToken.Parse(json), this).Resolve();
