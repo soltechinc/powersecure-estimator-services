@@ -145,7 +145,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                     {
                                                         foreach (var k in Parameters.Keys)
                                                         {
-                                                            if (!k.Contains(".") && !module.ContainsKey(k))
+                                                            if (!k.Contains(".") && !module.ContainsKey(k) && k != moduleKey)
                                                             {
                                                                 module.Add(k, Parameters[k]);
                                                             }
@@ -170,16 +170,23 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(module, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
                                                         foreach (var returnedKey in module.Keys.ToList())
                                                         {
-                                                            if (returnedDataSheet[returnedKey] != null)
+                                                            if (returnedKey.Contains("."))
                                                             {
-                                                                if (!module.ContainsKey(returnedKey))
+                                                                if (returnedDataSheet[returnedKey] != null)
                                                                 {
-                                                                    module.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                    if (!module.ContainsKey(returnedKey))
+                                                                    {
+                                                                        module.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                    }
+                                                                    else if (module[returnedKey] == null)
+                                                                    {
+                                                                        module[returnedKey] = returnedDataSheet[returnedKey];
+                                                                    }
                                                                 }
-                                                                else if (module[returnedKey] == null)
-                                                                {
-                                                                    module[returnedKey] = returnedDataSheet[returnedKey];
-                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                module.Remove(returnedKey);
                                                             }
                                                         }
                                                     }

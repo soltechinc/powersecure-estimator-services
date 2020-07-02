@@ -119,6 +119,7 @@ namespace PowerSecure.Estimator.Services.Services
 
         private void IncludeEstimateData(JObject uiInputs, Dictionary<string, object> dataSheet)
         {
+            string currentModuleTitle = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
             string estimateId = uiInputs.Properties().Where(prop => prop.Name == "estimateId").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
             string boliNumber = uiInputs.Properties().Where(prop => prop.Name == "boLiId").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
 
@@ -140,6 +141,12 @@ namespace PowerSecure.Estimator.Services.Services
                 foreach (var module in estimate.Modules)
                 {
                     string moduleTitle = module.ModuleTitle.ToLower();
+
+                    if(moduleTitle == currentModuleTitle)
+                    {
+                        continue;
+                    }
+
                     if (!dataSheet.ContainsKey(moduleTitle))
                     {
                         dataSheet.Add(moduleTitle, new List<Dictionary<string, object>>());
