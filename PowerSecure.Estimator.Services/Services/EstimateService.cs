@@ -14,6 +14,7 @@ using PowerSecure.Estimator.Services.Endpoints;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using PowerSecure.Estimator.Services.Models;
+using Microsoft.Azure.Documents;
 
 namespace PowerSecure.Estimator.Services.Services
 {
@@ -123,7 +124,7 @@ namespace PowerSecure.Estimator.Services.Services
 
             if (estimateId != null && boliNumber != null)
             {
-                Estimate estimate = (Estimate)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult();
+                Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
                 if (!string.IsNullOrEmpty(estimate.ProjectType))
                 {
                     dataSheet.Add("all.projecttype", $"${estimate.ProjectType}");
