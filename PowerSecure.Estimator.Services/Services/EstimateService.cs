@@ -119,7 +119,7 @@ namespace PowerSecure.Estimator.Services.Services
         private void IncludeEstimateData(JObject uiInputs, Dictionary<string, object> dataSheet)
         {
             string estimateId = uiInputs.Properties().Where(prop => prop.Name == "estimateId").FirstOrDefault()?.Value?.ToObject<string>()?.ToLower()?.Trim();
-            string boliNumber = uiInputs.Properties().Where(prop => prop.Name == "boliNumber").FirstOrDefault()?.Value?.ToObject<string>()?.ToLower()?.Trim();
+            string boliNumber = uiInputs.Properties().Where(prop => prop.Name == "boLiId").FirstOrDefault()?.Value?.ToObject<string>()?.ToLower()?.Trim();
 
             if (estimateId != null && boliNumber != null)
             {
