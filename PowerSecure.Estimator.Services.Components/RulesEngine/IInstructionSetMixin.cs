@@ -18,8 +18,19 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 return null;
             }
 
+            JToken token = null;
+            try
+            {
+                token = JObject.Parse(instructionSet.Instructions);
+            }
+            catch(Exception ex)
+            {
+                log.LogError($"Error while parsing instruction set {instructionSet.Name}", ex);
+                throw;
+            }
+
             callStack.Add(instructionSet.Name);
-            var obj = new UnresolvedParameter() { Token = JObject.Parse(instructionSet.Instructions), Parameters = parameters, Functions = functions, ReferenceDataRepository = referenceDataRepository, InstructionSetRepository = instructionSetRepository, EffectiveDate = effectiveDate, Log = log, CallStack = callStack }.Resolve();
+            var obj = new UnresolvedParameter() { Token = token, Parameters = parameters, Functions = functions, ReferenceDataRepository = referenceDataRepository, InstructionSetRepository = instructionSetRepository, EffectiveDate = effectiveDate, Log = log, CallStack = callStack }.Resolve();
             callStack.Remove(instructionSet.Name);
             return obj;
         }
