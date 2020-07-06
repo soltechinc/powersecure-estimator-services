@@ -26,7 +26,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             catch(Exception ex)
             {
                 log.LogError($"Error while parsing instruction set {instructionSet.Name}", ex);
-                throw;
+                return null;
             }
 
             callStack.Add(instructionSet.Name);
