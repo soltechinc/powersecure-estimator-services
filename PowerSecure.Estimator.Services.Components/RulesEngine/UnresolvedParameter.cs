@@ -218,6 +218,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                 foreach (var submodule in submodules)
                                                 {
+                                                    if(submodule.ContainsKey("currentSubmodule") && ((bool)submodule["currentSubmodule"]))
+                                                    {
+                                                        continue;
+                                                    }
+
                                                     if(!submodule.ContainsKey(submoduleDataKey) || submodule[submoduleDataKey] == null)
                                                     {
                                                         var submoduleDataSheet = new Dictionary<string, object>(Parameters);

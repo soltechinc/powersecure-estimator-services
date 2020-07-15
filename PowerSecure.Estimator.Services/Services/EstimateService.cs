@@ -237,6 +237,14 @@ namespace PowerSecure.Estimator.Services.Services
                                         {
                                             lastDataSheet = new Dictionary<string, object>();
                                             dataSheetList.Add(lastDataSheet);
+                                            if(jToken.Path.Contains("currentSubmodule"))
+                                            {
+                                                lastDataSheet.Add("currentSubmodule", true);
+                                            }
+                                            else
+                                            {
+                                                lastDataSheet.Add("currentSubmodule", false);
+                                            }
                                         }
 
                                         if (!lastDataSheet.ContainsKey(name))
