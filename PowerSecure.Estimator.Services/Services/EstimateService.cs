@@ -490,7 +490,8 @@ namespace PowerSecure.Estimator.Services.Services
                                 }
                             }
                             else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
-                                jObject.Properties().Any(prop => prop.Name == "tableTitle"))
+                                    jObject.Properties().Any(prop => prop.Name == "title") &&
+                                    jObject.Properties().Any(prop => prop.Name == "inputs"))
                             {
                                 if (!jToken.Path.Contains("submoduleData"))
                                 {
