@@ -572,7 +572,13 @@ namespace PowerSecure.Estimator.Services.Services
                                 bool first = true;
                                 foreach(var itemName in itemNames)
                                 {
-                                    var dataSheetItems = new List<object>((IEnumerable<object>)dataSheet[$"{moduleName}.{tableName}{itemName}"]);
+                                    var dsi = dataSheet[$"{moduleName}.{tableName}{itemName}"];
+                                    if(dsi == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    var dataSheetItems = new List<object>((IEnumerable<object>)dsi);
                                     if(dataSheetItems == null)
                                     {
                                         continue;
