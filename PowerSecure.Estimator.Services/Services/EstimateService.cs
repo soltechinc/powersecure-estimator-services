@@ -572,7 +572,7 @@ namespace PowerSecure.Estimator.Services.Services
                                 bool first = true;
                                 foreach(var itemName in itemNames)
                                 {
-                                    var dataSheetItems = (IEnumerable<object>)dataSheet[$"{moduleName}.{tableName}{itemName}"];
+                                    var dataSheetItems = new List<object>((IEnumerable<object>)dataSheet[$"{moduleName}.{tableName}{itemName}"]);
                                     if(dataSheetItems == null)
                                     {
                                         continue;
@@ -602,10 +602,14 @@ namespace PowerSecure.Estimator.Services.Services
                                     }
                                     else
                                     {
-                                        var dataSheetItemList = new List<object>(dataSheetItems);
-                                        for(int i = 0; i < dataSheetItems.Count(); ++i)
+                                        for(int i = 0; i < dataSheetItems.Count; ++i)
                                         {
-                                            var valueJToken = JToken.FromObject(dataSheetItemList[i]);
+                                            if(i >= items.Count)
+                                            {
+                                                items.Add(new JObject());
+                                            }
+
+                                            var valueJToken = JToken.FromObject(dataSheetItems[i]);
                                             switch (valueJToken.Type)
                                             {
                                                 case JTokenType.String:
