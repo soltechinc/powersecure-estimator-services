@@ -99,7 +99,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                             log?.LogWarning($"Unable to find instruction set {key}");
                         }
 
-                        parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
+                        parameters.Add(key, instructionSet?.Evaluate(dataSheet, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
                     }
                 }
 
