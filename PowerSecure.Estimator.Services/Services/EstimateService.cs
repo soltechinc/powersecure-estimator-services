@@ -314,15 +314,18 @@ namespace PowerSecure.Estimator.Services.Services
                                         dataSheet.Add(fullSubmoduleName, dataSheetList);
                                     }
 
-                                    if (!submoduleCount.ContainsKey(submoduleName))
+                                    if (!jToken.Path.Contains("currentSubmodule"))
                                     {
-                                        submoduleCount.Add(submoduleName, 0);
+                                        if (!submoduleCount.ContainsKey(submoduleName))
+                                        {
+                                            submoduleCount.Add(submoduleName, 0);
+                                        }
+                                        else
+                                        {
+                                            submoduleCount[submoduleName]++;
+                                        }
+                                        submoduleList.Add((submoduleName, submoduleCount[submoduleName]));
                                     }
-                                    else
-                                    {
-                                        submoduleCount[submoduleName]++;
-                                    }
-                                    submoduleList.Add((submoduleName, submoduleCount[submoduleName]));
                                 }
                                 else if (jObject.Properties().Any(prop => prop.Name == "number") &&
                                     jObject.Properties().Any(prop => prop.Name == "description"))
@@ -402,7 +405,6 @@ namespace PowerSecure.Estimator.Services.Services
 
             var submoduleList = new List<(string, int)>();
             var submoduleCount = new Dictionary<string, int>();
-            int previousIndex = 0;
             uiInputs.WalkNodes(PreOrder: jToken =>
             {
                 if (jToken.Path.Contains("moduleInputs") && jToken.Path.Contains("submoduleData"))
@@ -417,11 +419,6 @@ namespace PowerSecure.Estimator.Services.Services
                             if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "file input")
                             {
                                 break;
-                            }
-
-                            if(jObject.Path.EndsWith("currentSubmodule"))
-                            {
-                                previousIndex++;
                             }
 
                             if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
@@ -500,15 +497,19 @@ namespace PowerSecure.Estimator.Services.Services
 
                                 submoduleName = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                 fullSubmoduleName = $"{moduleName}.{submoduleName}";
-                                if (!submoduleCount.ContainsKey(submoduleName))
+
+                                if (!jToken.Path.Contains("currentSubmodule"))
                                 {
-                                    submoduleCount.Add(submoduleName, 0);
+                                    if (!submoduleCount.ContainsKey(submoduleName))
+                                    {
+                                        submoduleCount.Add(submoduleName, 0);
+                                    }
+                                    else
+                                    {
+                                        submoduleCount[submoduleName]++;
+                                    }
+                                    submoduleList.Add((submoduleName, submoduleCount[submoduleName]));
                                 }
-                                else
-                                {
-                                    submoduleCount[submoduleName]++;
-                                }
-                                submoduleList.Add((submoduleName, submoduleCount[submoduleName]));
                             }
                             else if (jObject.Properties().Any(prop => prop.Name == "number") &&
                                 jObject.Properties().Any(prop => prop.Name == "description"))
@@ -518,7 +519,7 @@ namespace PowerSecure.Estimator.Services.Services
                                     break;
                                 }
 
-                                int index = previousIndex;
+                                int index = jObject["number"].ToObject<int>() - 1;
                                 (string summarySubmoduleName, int summarySubmoduleIndex) = submoduleList[index];
 
                                 var submodules = (List<Dictionary<string, object>>)dataSheet[$"{moduleName}.{summarySubmoduleName}"];
@@ -550,7 +551,6 @@ namespace PowerSecure.Estimator.Services.Services
                                         }
                                     }
                                 }
-                                previousIndex++;
                             }
                             else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
                                 jObject.Properties().Any(prop => prop.Name == "tableItems"))
