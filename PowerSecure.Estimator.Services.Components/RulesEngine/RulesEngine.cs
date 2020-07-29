@@ -57,9 +57,17 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             
             foreach (var parameter in dataSheet)
             {
-                if(keysToEvaluate.Contains(parameter.Key) && (parameter.Value == null || parameter.Value is List<Dictionary<string, object>>))
+                if(keysToEvaluate.Contains(parameter.Key))
                 {
-                    missingParameters.Add(parameter.Key.Trim().ToLower());
+                    if (parameter.Value == null)
+                    {
+                        missingParameters.Add(parameter.Key.Trim().ToLower());
+                    }
+                    if(parameter.Value is List<Dictionary<string, object>>)
+                    {
+                        missingParameters.Add(parameter.Key.Trim().ToLower());
+                        parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
+                    }
                 }
                 else
                 {
@@ -99,7 +107,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                             log?.LogWarning($"Unable to find instruction set {key}");
                         }
 
-                        parameters.Add(key, instructionSet?.Evaluate(dataSheet, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
+                        parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
                     }
                 }
 
