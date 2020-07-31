@@ -115,7 +115,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                         }
                     }
 
-                    parameters.Add(key, dataSheet[key]);
+                    if (parameters.ContainsKey(key))
+                    {
+                        parameters[key] = dataSheet[key];
+                    }
+                    else
+                    {
+                        parameters.Add(key, dataSheet[key]);
+                    }
                 }
                 else if (!parameters.ContainsKey(key))
                 {
