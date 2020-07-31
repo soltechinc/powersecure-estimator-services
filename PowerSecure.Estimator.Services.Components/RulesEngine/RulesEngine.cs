@@ -63,52 +63,69 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     {
                         missingParameters.Add(parameter.Key.Trim().ToLower());
                     }
-                    if(parameter.Value is List<Dictionary<string, object>>)
+                    if(parameter.Value is List<Dictionary<string, object>> listValue)
                     {
                         missingParameters.Add(parameter.Key.Trim().ToLower());
-                        parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
+                        if (parameter.Key.Contains("."))
+                        {   //submodules
+                            var newListValue = new List<Dictionary<string, object>>();
+                            foreach(var dict in listValue)
+                            {
+                                var newDict = new Dictionary<string, object>();
+                                foreach(var pair in dict)
+                                {
+                                    if(pair.Value != null)
+                                    {
+                                        newDict.Add(pair.Key, pair.Value);
+                                    }
+                                }
+                                newListValue.Add(newDict);
+                            }
+                            parameters.Add(parameter.Key.Trim().ToLower(), newListValue);
+                        }
+                        else
+                        {   //modules
+                            parameters.Add(parameter.Key.Trim().ToLower(), parameter.Value);
+                        }
                     }
                 }
                 else
                 {
-                    parameters.Add(parameter.Key?.Trim()?.ToLower(), parameter.Value);
+                    parameters.Add(parameter.Key.Trim().ToLower(), parameter.Value);
                 }
             }
 
             foreach (var key in missingParameters)
             {
-                if(!parameters.ContainsKey(key))
-                {
-                    if (dataSheet[key] is List<Dictionary<string, object>> submodules)
-                    { //submodule evaluation
-                        var baseDataSheet = new Dictionary<string, object>(dataSheet);
-                        baseDataSheet.Remove(key);
-                        foreach(var submodule in submodules)
-                        {
-                            var submoduleDataSheet = new Dictionary<string, object>(baseDataSheet);
-                            foreach(var pair in submodule)
-                            {
-                                submoduleDataSheet.Add(pair.Key, pair.Value);
-                            }
-                            var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, callStack);
-                            foreach(var submoduleKey in submodule.Keys.ToList())
-                            {
-                                submodule[submoduleKey] = returnedDataSheet[submoduleKey];
-                            }
-                        }
-
-                        parameters.Add(key, dataSheet[key]);
-                    }
-                    else
+                if (dataSheet[key] is List<Dictionary<string, object>> submodules)
+                { //submodule evaluation
+                    var baseDataSheet = new Dictionary<string, object>(dataSheet);
+                    baseDataSheet.Remove(key);
+                    foreach(var submodule in submodules)
                     {
-                        IInstructionSet instructionSet = instructionSetRepository.Get(key, effectiveDate);
-                        if (instructionSet == null)
+                        var submoduleDataSheet = new Dictionary<string, object>(baseDataSheet);
+                        foreach(var pair in submodule)
                         {
-                            log?.LogWarning($"Unable to find instruction set {key}");
+                            submoduleDataSheet.Add(pair.Key, pair.Value);
                         }
-
-                        parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
+                        var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, callStack);
+                        foreach(var submoduleKey in submodule.Keys.ToList())
+                        {
+                            submodule[submoduleKey] = returnedDataSheet[submoduleKey];
+                        }
                     }
+
+                    parameters.Add(key, dataSheet[key]);
+                }
+                else if (!parameters.ContainsKey(key))
+                {
+                    IInstructionSet instructionSet = instructionSetRepository.Get(key, effectiveDate);
+                    if (instructionSet == null)
+                    {
+                        log?.LogWarning($"Unable to find instruction set {key}");
+                    }
+
+                    parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
                 }
 
                 dataSheet[key] = parameters[key];
