@@ -63,7 +63,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     {
                         missingParameters.Add(parameter.Key.Trim().ToLower());
                     }
-                    if(parameter.Value is List<Dictionary<string, object>> listValue)
+                    else if(parameter.Value is List<Dictionary<string, object>> listValue)
                     {
                         missingParameters.Add(parameter.Key.Trim().ToLower());
                         if (parameter.Key.Contains("."))
@@ -87,6 +87,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                         {   //modules
                             parameters.Add(parameter.Key.Trim().ToLower(), parameter.Value);
                         }
+                    }
+                    else
+                    {
+                        parameters.Add(parameter.Key.Trim().ToLower(), parameter.Value);
                     }
                 }
                 else
