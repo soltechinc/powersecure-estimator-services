@@ -271,6 +271,73 @@ namespace PowerSecure.Estimator.Services.Services
                                             dataSheet[name] = isCalculated ? null : inputValue;
                                         }
                                     }
+
+                                    if(jObject.Properties().Any(prop => prop.Name == "quantity"))
+                                    {
+                                        string originalVariableName = jObject["variableName"].ToObject<string>().ToLower().Trim();
+                                        foreach (var prop in jObject.Properties())
+                                        {
+                                            if(prop.Name == "quantity")
+                                            {
+                                                continue;
+                                            }
+
+                                            if(prop.Value.Type != JTokenType.String || !string.IsNullOrEmpty(prop.Value.ToObject<string>()))
+                                            {
+                                                continue;
+                                            }
+
+                                            name = $"{originalVariableName}{prop.Name.ToLower().Trim()}";
+                                            
+                                            if (jToken.Path.Contains("submoduleData"))
+                                            {
+                                                List<Dictionary<string, object>> dataSheetList = (List<Dictionary<string, object>>)dataSheet[fullSubmoduleName];
+
+                                                if (!name.Contains("."))
+                                                {
+                                                    name = $"{moduleName}.{submoduleName}.{name}";
+                                                }
+                                                var lastDataSheet = dataSheetList[dataSheetList.Count - 1];
+                                                if (lastDataSheet.ContainsKey(name))
+                                                {
+                                                    lastDataSheet = new Dictionary<string, object>();
+                                                    dataSheetList.Add(lastDataSheet);
+                                                    if (jToken.Path.Contains("currentSubmodule"))
+                                                    {
+                                                        lastDataSheet.Add("currentSubmodule", true);
+                                                    }
+                                                    else
+                                                    {
+                                                        lastDataSheet.Add("currentSubmodule", false);
+                                                    }
+                                                }
+
+                                                if (!lastDataSheet.ContainsKey(name))
+                                                {
+                                                    lastDataSheet.Add(name, null);
+                                                }
+                                                else if (lastDataSheet[name] == null)
+                                                {
+                                                    lastDataSheet[name] = null;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (!name.Contains("."))
+                                                {
+                                                    name = $"{moduleName}.{name}";
+                                                }
+                                                if (!dataSheet.ContainsKey(name))
+                                                {
+                                                    dataSheet.Add(name, null);
+                                                }
+                                                else if (dataSheet[name] == null)
+                                                {
+                                                    dataSheet[name] = null;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 else if (jObject.Properties().Any(prop => prop.Name == "text") &&
                                     jObject.Properties().Any(prop => prop.Name == "align") ||
@@ -486,7 +553,58 @@ namespace PowerSecure.Estimator.Services.Services
                                                 break;
                                         }
                                     }
-                                    break;
+                                }
+
+                                if (jObject.Properties().Any(prop => prop.Name == "quantity"))
+                                {
+                                    string originalVariableName = jObject["variableName"].ToObject<string>().ToLower().Trim();
+                                    foreach (var prop in jObject.Properties())
+                                    {
+                                        if (prop.Name == "quantity")
+                                        {
+                                            continue;
+                                        }
+
+                                        if (prop.Value.Type != JTokenType.String || !string.IsNullOrEmpty(prop.Value.ToObject<string>()))
+                                        {
+                                            continue;
+                                        }
+
+                                        name = $"{originalVariableName}{prop.Name.ToLower().Trim()}";
+
+                                        if (jToken.Path.Contains("submoduleData"))
+                                        {
+                                            parameterName = $"{moduleName}.{submoduleName}.{name}";
+                                            var submodules = (List<Dictionary<string, object>>)dataSheet[$"{moduleName}.{submoduleName}"];
+                                            (_, int submoduleIndex) = submoduleList.Last();
+                                            dataSheetToUse = submodules[submoduleIndex];
+                                        }
+                                        else
+                                        {
+                                            parameterName = $"{moduleName}.{name}";
+                                            dataSheetToUse = dataSheet;
+                                        }
+
+                                        if (dataSheetToUse.TryGetValue(parameterName, out value) && value != null)
+                                        {
+                                            JToken valueJToken = JToken.FromObject(value);
+                                            string jObjKey = prop.Name;
+
+                                            switch (valueJToken.Type)
+                                            {
+                                                case JTokenType.String:
+                                                    {
+                                                        jObject[jObjKey] = UnwrapString(valueJToken.ToObject<string>());
+                                                    }
+                                                    break;
+                                                default:
+                                                    {
+                                                        jObject[jObjKey] = valueJToken;
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
