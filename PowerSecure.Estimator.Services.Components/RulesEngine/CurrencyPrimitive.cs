@@ -15,7 +15,16 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return $"${parameters[0].ToDecimal():C}";
+            var obj = parameters[0].ToResolvedParameter();
+            switch(obj)
+            {
+                case object[] arr:
+                    {
+                        return arr.Select(o => (object)$"${o.ToDecimal():C}").ToArray();
+                    }
+                default:
+                    return $"${obj.ToDecimal():C}";
+            }
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
