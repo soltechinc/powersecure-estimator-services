@@ -510,6 +510,7 @@ namespace PowerSecure.Estimator.Services.Services
                 new Dictionary<string,string>(){ ["label"] = "Check", ["value"] = "if", ["maxParams"] = "3", ["minParams"] = "3" },
                 new Dictionary<string,string>(){ ["label"] = "Concatenate", ["value"] = "str", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "Contains", ["value"] = "contains", ["maxParams"] = "2", ["minParams"] = "2" },
+                new Dictionary<string,string>(){ ["label"] = "Currency", ["value"] = "curr", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "Division", ["value"] = "/", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "Equal", ["value"] = "=", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "Find", ["value"] = "find", ["maxParams"] = "4", ["minParams"] = "4" },
