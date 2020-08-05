@@ -54,7 +54,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
         {
             var missingParameters = new HashSet<string>();
             var parameters = new Dictionary<string, object>();
-            
+
+            log.LogInformation("Keys to evaluate: " + JToken.FromObject(keysToEvaluate));
+
             foreach (var parameter in dataSheet)
             {
                 if(keysToEvaluate.Contains(parameter.Key))
