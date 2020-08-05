@@ -63,10 +63,8 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 dataSheet.Add("all.effectivedate", DateTime.Now.ToString("M/d/yyyy"));
             }
-
-            _log.LogInformation("Data sheet to calculate: " + JToken.FromObject(dataSheet));
+            
             new RulesEngine().EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, _log);
-            _log.LogInformation("Returned data sheet: " + JToken.FromObject(dataSheet));
 
             if (rawDataSheetProcessing)
             {
