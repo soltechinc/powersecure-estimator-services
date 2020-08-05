@@ -161,6 +161,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             {
                                                                 module.Add(k, Parameters[k]);
                                                             }
+                                                            else if (k == "all.effectivedate" && !module.ContainsKey(k))
+                                                            {
+                                                                module.Add(k, Parameters[k]);
+                                                            }
                                                         }
 
                                                         if(!module.ContainsKey(moduleDataKey))

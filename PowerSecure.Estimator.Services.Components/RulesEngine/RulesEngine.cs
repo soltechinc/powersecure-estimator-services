@@ -13,6 +13,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
     {
         public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log)
         {
+            log.LogInformation("Data sheet to calculate: " + JToken.FromObject(dataSheet));
+
             var missingParameters = new HashSet<string>();
 
             foreach (var parameter in dataSheet)
@@ -46,8 +48,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     missingParameters.Add(parameter.Key.Trim().ToLower());
                 }
             }
-            
-            return EvaluateDataSheet(dataSheet, missingParameters, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, new HashSet<string>());
+
+            log.LogInformation("Keys to evaluate: " + JToken.FromObject(missingParameters));
+            dataSheet = EvaluateDataSheet(dataSheet, missingParameters, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, new HashSet<string>());
+
+            log.LogInformation("Returned data sheet: " + JToken.FromObject(dataSheet));
+            return dataSheet;
         }
 
         public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, IEnumerable<string> keysToEvaluate, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log, ISet<string> callStack)
@@ -55,8 +61,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
             var missingParameters = new HashSet<string>();
             var parameters = new Dictionary<string, object>();
 
-            log.LogInformation("Data sheet to calculate: " + JToken.FromObject(dataSheet));
-            log.LogInformation("Keys to evaluate: " + JToken.FromObject(keysToEvaluate));
+            //log.LogInformation("Data sheet to calculate: " + JToken.FromObject(dataSheet));
+            //log.LogInformation("Keys to evaluate: " + JToken.FromObject(keysToEvaluate));
 
             foreach (var parameter in dataSheet)
             {
@@ -145,7 +151,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 dataSheet[key] = parameters[key];
             }
 
-            log.LogInformation("Returned data sheet: " + JToken.FromObject(dataSheet));
+            //log.LogInformation("Returned data sheet: " + JToken.FromObject(dataSheet));
             return dataSheet;
         }
     }
