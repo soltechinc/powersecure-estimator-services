@@ -17,7 +17,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
 
             foreach (var parameter in dataSheet)
             {
-                if (parameter.Value is List<Dictionary<string, object>> submodules)
+                if (parameter.Value is List<Dictionary<string, object>> submodules && parameter.Key.Contains("."))
                 {
                     bool addedMissingParam = false;
                     foreach (var submodule in submodules)
