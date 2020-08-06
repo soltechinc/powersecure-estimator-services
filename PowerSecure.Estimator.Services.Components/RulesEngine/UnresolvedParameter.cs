@@ -169,9 +169,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                         var moduleParameters = new Dictionary<string, object>(module.Where(p => p.Value != null));
 
-                                                        if (!module.ContainsKey(moduleDataKey))
+                                                        if (!moduleParameters.ContainsKey(moduleDataKey))
                                                         {
-                                                            module.Add(moduleDataKey, null);
+                                                            moduleParameters.Add(moduleDataKey, null);
                                                         }
                                                         if (!module.ContainsKey(moduleDataKey))
                                                         {
