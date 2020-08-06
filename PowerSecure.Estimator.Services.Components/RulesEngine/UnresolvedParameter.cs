@@ -183,7 +183,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         {
                                                             if (returnedKey.Contains("."))
                                                             {
-                                                                if (returnedDataSheet[returnedKey] != null)
+                                                                if (returnedDataSheet.ContainsKey(returnedKey) && returnedDataSheet[returnedKey] != null)
                                                                 {
                                                                     if (!module.ContainsKey(returnedKey))
                                                                     {
