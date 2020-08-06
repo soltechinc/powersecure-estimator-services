@@ -167,11 +167,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             }
                                                         }
 
-                                                        if(!module.ContainsKey(moduleDataKey))
+                                                        var moduleParameters = new Dictionary<string, object>(module.Where(p => p.Value != null));
+
+                                                        if (!module.ContainsKey(moduleDataKey))
                                                         {
                                                             module.Add(moduleDataKey, null);
                                                         }
-                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(module, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
+                                                        if (!module.ContainsKey(moduleDataKey))
+                                                        {
+                                                            module.Add(moduleDataKey, null);
+                                                        }
+
+                                                        var returnedDataSheet = new RulesEngine().EvaluateDataSheet(moduleParameters, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
                                                         foreach (var returnedKey in module.Keys.ToList())
                                                         {
                                                             if (returnedKey.Contains("."))
