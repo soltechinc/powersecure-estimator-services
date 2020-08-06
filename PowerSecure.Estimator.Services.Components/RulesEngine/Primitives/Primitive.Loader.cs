@@ -20,6 +20,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new ContainsPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new CurrencyPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new DivisionPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new EqualPrimitive();

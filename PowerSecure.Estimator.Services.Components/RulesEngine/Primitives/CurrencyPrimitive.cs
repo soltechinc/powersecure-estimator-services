@@ -1,13 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PowerSecure.Estimator.Services.Components.RulesEngine
+namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class CurrencyPrimitive : IFunction
     {
