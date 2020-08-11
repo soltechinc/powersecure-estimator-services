@@ -352,6 +352,14 @@ namespace PowerSecure.Estimator.Services.Services
                                         if (lastDataSheet.ContainsKey(name))
                                         {
                                             lastDataSheet = new Dictionary<string, object>();
+                                            if (jToken.Path.Contains("currentSubmodule"))
+                                            {
+                                                lastDataSheet.Add("currentSubmodule", true);
+                                            }
+                                            else
+                                            {
+                                                lastDataSheet.Add("currentSubmodule", false);
+                                            }
                                             dataSheetList.Add(lastDataSheet);
                                         }
 
@@ -376,6 +384,14 @@ namespace PowerSecure.Estimator.Services.Services
                                     if (!dataSheet.ContainsKey(fullSubmoduleName))
                                     {
                                         var dataSheetList = new List<Dictionary<string, object>>() { new Dictionary<string, object>() };
+                                        if (jToken.Path.Contains("currentSubmodule"))
+                                        {
+                                            dataSheetList[0].Add("currentSubmodule", true);
+                                        }
+                                        else
+                                        {
+                                            dataSheetList[0].Add("currentSubmodule", false);
+                                        }
                                         dataSheet.Add(fullSubmoduleName, dataSheetList);
                                     }
 
