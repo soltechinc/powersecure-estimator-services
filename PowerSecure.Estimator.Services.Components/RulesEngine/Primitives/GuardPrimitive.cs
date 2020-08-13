@@ -14,15 +14,20 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            object obj = parameters[0].ToResolvedParameter();
-            return obj ?? 0;
+            decimal? retValue = 0;
+            if(parameters.Length > 1)
+            {
+                retValue = parameters[1].ToDecimal();
+            }
+
+            return parameters[0].ToResolvedParameter() ?? retValue;
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
         {
-            if (jToken.Children().Count() != 1)
+            if (jToken.Children().Count() > 2 || jToken.Children().Count() == 0)
             {
-                return (false, $"Expected a parameter array of length 1, got the following: {jToken.Children().Count()}");
+                return (false, $"Expected a parameter array of length 1 or 2, got the following: {jToken.Children().Count()}");
             }
 
             if (jToken.Children().Any(p => p.Type == JTokenType.Array))
