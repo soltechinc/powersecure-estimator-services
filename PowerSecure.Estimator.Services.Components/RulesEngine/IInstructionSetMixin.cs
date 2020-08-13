@@ -15,6 +15,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         {
             if(callStack.Contains(instructionSet.Name))
             {
+                log.LogWarning($"Circular detection: {instructionSet.Name} already on call stack");
                 return null;
             }
 

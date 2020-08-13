@@ -42,14 +42,13 @@ namespace PowerSecure.Estimator.Services.Services
         public async Task<(object, string)> Evaluate(JObject uiInputs)
         {
             var dataSheet = new Dictionary<string, object>();
-            bool rawDataSheetProcessing = uiInputs.Properties().Any(prop => prop.Name == "dataSheet");
+            bool hasModuleTitle = uiInputs.Properties().Any(prop => prop.Name == "moduleTitle");
 
-            string moduleName = rawDataSheetProcessing ? string.Empty : uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
+            string moduleName = !hasModuleTitle ? string.Empty : uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
 
-            if (rawDataSheetProcessing)
+            if (!hasModuleTitle)
             {
                 dataSheet = (Dictionary<string,object>)DataSheetFromJToken(uiInputs);
-                dataSheet.Remove("dataSheet");
             }
             else
             {
@@ -66,9 +65,8 @@ namespace PowerSecure.Estimator.Services.Services
             
             new RulesEngine().EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, _log);
 
-            if (rawDataSheetProcessing)
+            if (!hasModuleTitle)
             {
-                dataSheet.Add("dataSheet", true);
                 return (JObject.FromObject(dataSheet), "");
             }
             else
