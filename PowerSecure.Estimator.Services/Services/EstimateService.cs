@@ -745,19 +745,22 @@ namespace PowerSecure.Estimator.Services.Services
                                                 items.Add(new JObject());
                                             }
 
-                                            var valueJToken = JToken.FromObject(dataSheetItems[i]);
-                                            switch (valueJToken.Type)
+                                            if (dataSheetItems[i] != null)
                                             {
-                                                case JTokenType.String:
-                                                    {
-                                                        items[i].Add(itemName, UnwrapString(valueJToken.ToObject<string>()));
-                                                    }
-                                                    break;
-                                                default:
-                                                    {
-                                                        items[i].Add(itemName, valueJToken);
-                                                    }
-                                                    break;
+                                                var valueJToken = JToken.FromObject(dataSheetItems[i]);
+                                                switch (valueJToken.Type)
+                                                {
+                                                    case JTokenType.String:
+                                                        {
+                                                            items[i].Add(itemName, UnwrapString(valueJToken.ToObject<string>()));
+                                                        }
+                                                        break;
+                                                    default:
+                                                        {
+                                                            items[i].Add(itemName, valueJToken);
+                                                        }
+                                                        break;
+                                                }
                                             }
                                         }
                                     }
