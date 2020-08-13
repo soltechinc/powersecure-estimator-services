@@ -87,7 +87,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     return null;
                                 }
 
-                                if(function.Name.StartsWith("is"))
+                                if(function.Name.StartsWith("is") || function.Name == "guard")
                                 {
                                     return retValue;
                                 }
