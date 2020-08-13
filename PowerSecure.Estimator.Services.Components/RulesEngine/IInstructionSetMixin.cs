@@ -13,9 +13,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
     {
         public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, object> parameters, IDictionary<string, IFunction> functions, IReferenceDataRepository referenceDataRepository, IInstructionSetRepository instructionSetRepository, DateTime effectiveDate, ILogger log, ISet<string> callStack)
         {
-            if(callStack.Contains(instructionSet.Name))
+            string instructionSetName = $"{instructionSet.Module}.{instructionSet.Name}";
+            if(callStack.Contains(instructionSetName))
             {
-                log.LogWarning($"Circular detection: {instructionSet.Name} already on call stack");
+                log.LogWarning($"Circular detection: {instructionSetName} already on call stack");
                 return null;
             }
 
@@ -26,13 +27,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             }
             catch(Exception ex)
             {
-                log.LogError($"Error while parsing instruction set {instructionSet.Name}", ex);
+                log.LogError($"Error while parsing instruction set {instructionSetName}", ex);
                 return null;
             }
 
-            callStack.Add(instructionSet.Name);
+            callStack.Add(instructionSetName);
             var obj = new UnresolvedParameter() { Token = token, Parameters = parameters, Functions = functions, ReferenceDataRepository = referenceDataRepository, InstructionSetRepository = instructionSetRepository, EffectiveDate = effectiveDate, Log = log, CallStack = callStack }.Resolve();
-            callStack.Remove(instructionSet.Name);
+            callStack.Remove(instructionSetName);
             return obj;
         }
     }
