@@ -25,12 +25,14 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IDictionary<string, IFunction> _functions;
         private readonly ILogger _log;
         private readonly IEstimateRepository _estimateRepository;
+        private readonly IBusinessOpportunityLineItemRepository _businessOpportunityLineItemRepository;
 
-        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, ILogger log)
+        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, IBusinessOpportunityLineItemRepository businessOpportunityLineItemRepository, ILogger log)
         {
             _instructionSetRepository = instructionSetRepository;
             _referenceDataRepository = referenceDataRepository;
             _estimateRepository = estimateRepository;
+            _businessOpportunityLineItemRepository = businessOpportunityLineItemRepository;
             _functions = Primitive.Load();
             _log = log;
         }
@@ -121,36 +123,46 @@ namespace PowerSecure.Estimator.Services.Services
 
             if (estimateId != null && boliNumber != null)
             {
-                Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
-                if (!string.IsNullOrEmpty(estimate.ProjectType))
                 {
-                    dataSheet.Add("all.projecttype", $"${estimate.ProjectType}");
-                }
-                if (!string.IsNullOrEmpty(estimate.OutsideEquipmentPercent))
-                {
-                    dataSheet.Add("all.outsideequipmentpercentage", (decimal.Parse(estimate.OutsideEquipmentPercent) / 100m));
-                }
-                if (!string.IsNullOrEmpty(estimate.DesiredRateForInstall))
-                {
-                    dataSheet.Add("all.desiredinstallrate", decimal.Parse(estimate.DesiredRateForInstall));
-                }
-                foreach (var module in estimate.Modules ?? Enumerable.Empty<ModuleDefinition>())
-                {
-                    string moduleTitle = module.ModuleTitle.ToLower();
-
-                    if(moduleTitle == currentModuleTitle)
+                    Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
+                    if (!string.IsNullOrEmpty(estimate.ProjectType))
                     {
-                        continue;
+                        dataSheet.Add("all.projecttype", $"${estimate.ProjectType}");
+                    }
+                    if (!string.IsNullOrEmpty(estimate.OutsideEquipmentPercent))
+                    {
+                        dataSheet.Add("all.outsideequipmentpercentage", (decimal.Parse(estimate.OutsideEquipmentPercent) / 100m));
+                    }
+                    if (!string.IsNullOrEmpty(estimate.DesiredRateForInstall))
+                    {
+                        dataSheet.Add("all.desiredinstallrate", decimal.Parse(estimate.DesiredRateForInstall));
                     }
 
-                    if (!dataSheet.ContainsKey(moduleTitle))
+                    foreach (var module in estimate.Modules ?? Enumerable.Empty<ModuleDefinition>())
                     {
-                        dataSheet.Add(moduleTitle, new List<Dictionary<string, object>>());
-                    }
+                        string moduleTitle = module.ModuleTitle.ToLower();
 
-                    var moduleDataSheet = new Dictionary<string, object>();
-                    ParseFromJson(JObject.FromObject(module), moduleDataSheet, moduleTitle);
-                    ((List<Dictionary<string, object>>)dataSheet[moduleTitle]).Add(moduleDataSheet);
+                        if (moduleTitle == currentModuleTitle)
+                        {
+                            continue;
+                        }
+
+                        if (!dataSheet.ContainsKey(moduleTitle))
+                        {
+                            dataSheet.Add(moduleTitle, new List<Dictionary<string, object>>());
+                        }
+
+                        var moduleDataSheet = new Dictionary<string, object>();
+                        ParseFromJson(JObject.FromObject(module), moduleDataSheet, moduleTitle);
+                        ((List<Dictionary<string, object>>)dataSheet[moduleTitle]).Add(moduleDataSheet);
+                    }
+                }
+                {
+                    BusinessOpportunityLineItem boli = JObject.Parse(((Document)_businessOpportunityLineItemRepository.Get(boliNumber, new Dictionary<string, string>()).GetAwaiter().GetResult()).ToString()).ToObject<BusinessOpportunityLineItem>();
+                    if (!string.IsNullOrEmpty(boli.State))
+                    {
+                        dataSheet.Add("all.usstate", $"${boli.State.ToLower()}");
+                    }
                 }
             }
         }

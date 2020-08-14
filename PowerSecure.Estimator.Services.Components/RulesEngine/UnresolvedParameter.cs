@@ -165,6 +165,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             {
                                                                 module.Add(k, Parameters[k]);
                                                             }
+                                                            else if (k == "all.usstate" && !module.ContainsKey(k))
+                                                            {
+                                                                module.Add(k, Parameters[k]);
+                                                            }
                                                         }
 
                                                         var moduleParameters = new Dictionary<string, object>(module.Where(p => p.Value != null));
