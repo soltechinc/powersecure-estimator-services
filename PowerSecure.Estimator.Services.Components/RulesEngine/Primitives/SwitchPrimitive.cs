@@ -19,13 +19,15 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             {
                 return null;
             }
-            var value = parameters[0].ToComparable();
+            var resolvedValue = parameters[0].ToResolvedParameter();
             var cases = parameters[1].ToObjectArray();
 
-            if(value == null)
+            if(resolvedValue == null || resolvedValue is object[])
             {
                 return null;
             }
+
+            var comparableValue = resolvedValue.ToComparable();
 
             foreach(object obj in cases)
             {
@@ -35,7 +37,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                     return null;
                 }
 
-                if(value.CompareTo(pair[0].ToComparable()) == 0)
+                if(comparableValue.CompareTo(pair[0].ToComparable()) == 0)
                 {
                     return pair[1].ToResolvedParameter();
                 }

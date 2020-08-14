@@ -132,7 +132,7 @@ namespace PowerSecure.Estimator.Services.Services
                 }
                 if (!string.IsNullOrEmpty(estimate.DesiredRateForInstall))
                 {
-                    dataSheet.Add("all.desiredinstallrate", (decimal.Parse(estimate.DesiredRateForInstall) / 100m));
+                    dataSheet.Add("all.desiredinstallrate", decimal.Parse(estimate.DesiredRateForInstall));
                 }
                 foreach (var module in estimate.Modules ?? Enumerable.Empty<ModuleDefinition>())
                 {
