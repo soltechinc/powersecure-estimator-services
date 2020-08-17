@@ -32,6 +32,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new FloorPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new FormatPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new GreaterThanOrEqualPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new GreaterThanPrimitive();
