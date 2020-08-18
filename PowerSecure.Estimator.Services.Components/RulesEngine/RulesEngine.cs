@@ -60,8 +60,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
         {
             var missingParameters = new HashSet<string>();
             var parameters = new Dictionary<string, object>();
-
-            log.LogInformation("Temp data sheet to calculate: " + JToken.FromObject(dataSheet));
+            
             log.LogInformation("Temp keys to evaluate: " + JToken.FromObject(keysToEvaluate));
 
             foreach (var parameter in dataSheet)
@@ -150,8 +149,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
 
                 dataSheet[key] = parameters[key];
             }
-
-            log.LogInformation("Temp returned data sheet: " + JToken.FromObject(dataSheet));
+            
             return dataSheet;
         }
     }

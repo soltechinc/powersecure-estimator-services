@@ -14,7 +14,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public static object Evaluate(this IInstructionSet instructionSet, IDictionary<string, object> parameters, IDictionary<string, IFunction> functions, IReferenceDataRepository referenceDataRepository, IInstructionSetRepository instructionSetRepository, DateTime effectiveDate, ILogger log, ISet<string> callStack)
         {
             string instructionSetName = $"{instructionSet.Module}.{instructionSet.Name}";
-            if(callStack.Contains(instructionSetName))
+
+            log?.LogInformation($"Running instruction set {instructionSetName}");
+            if (callStack.Contains(instructionSetName))
             {
                 log.LogWarning($"Circular detection: {instructionSetName} already on call stack");
                 return null;
