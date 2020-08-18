@@ -14,6 +14,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
+            if(parameters.Length == 1)
+            {
+                var d = parameters[0].ToDecimal();
+                if(d == null)
+                {
+                    return 0.ToStringLiteral();
+                }
+                else
+                {
+                    return d.Value.ToString("N2").ToStringLiteral();
+                }
+            }
             return parameters.ToDecimal().Select(d => d.HasValue ? d.Value.ToString("N2") : "0").ToStringLiteral().Select(o => (object)o).ToArray();
         }
 

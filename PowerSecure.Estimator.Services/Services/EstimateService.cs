@@ -200,9 +200,20 @@ namespace PowerSecure.Estimator.Services.Services
                                     string name = jObject["variableName"].ToObject<string>().ToLower().Trim();
                                     if (name.StartsWith("**customitem**"))
                                     {
-                                        if(!dataSheet.ContainsKey($"{moduleName}.customitem"))
+                                        string customItemKey;
+                                        
+                                        if (jToken.Path.Contains("submoduleData"))
                                         {
-                                            dataSheet.Add($"{moduleName}.customitem", new List<Dictionary<string, object>>());
+                                            customItemKey = $"{moduleName}.{submoduleName}customitem";
+                                        }
+                                        else
+                                        {
+                                            customItemKey = $"{moduleName}.customitem";
+                                        }
+
+                                        if (!dataSheet.ContainsKey(customItemKey))
+                                        {
+                                            dataSheet.Add(customItemKey, new List<Dictionary<string, object>>());
                                         }
 
                                         var dict = new Dictionary<string, object>();
@@ -243,10 +254,10 @@ namespace PowerSecure.Estimator.Services.Services
                                                     }
                                             }
 
-                                            dict.Add($"{moduleName}.customitem.{prop.Name.ToLower()}", inputValue);
+                                            dict.Add($"{customItemKey}.{prop.Name.ToLower()}", inputValue);
                                         }
 
-                                        ((List<Dictionary<string, object>>)dataSheet[$"{moduleName}.customitem"]).Add(dict);
+                                        ((List<Dictionary<string, object>>)dataSheet[customItemKey]).Add(dict);
                                     }
                                     else
                                     {
