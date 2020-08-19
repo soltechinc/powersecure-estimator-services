@@ -193,7 +193,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                 submoduleDataSheet.Add(instructionSetKey, null);
                                                                 submodule.Add(instructionSetKey, null);
                                                             }
+
+                                                            Log.LogInformation("TMP Data sheet to calculate: " + JToken.FromObject(submoduleDataSheet));
                                                             var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
+                                                            Log.LogInformation("TMP Data sheet returned: " + JToken.FromObject(returnedDataSheet));
+
                                                             foreach (var returnedKey in submodule.Keys.ToList())
                                                             {
                                                                 if (returnedDataSheet[returnedKey] != null)
