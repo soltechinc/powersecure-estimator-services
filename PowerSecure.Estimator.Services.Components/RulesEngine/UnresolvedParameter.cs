@@ -175,53 +175,60 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                     var moduleParameters = new Dictionary<string, object>(module.Where(p => p.Value != null));
                                                     var submoduleDataList = new List<object>();
-                                                    var submodules = (List<Dictionary<string, object>>)moduleParameters[submoduleKey];
-                                                    
-                                                    foreach (var submodule in submodules)
+                                                    if (!moduleParameters.ContainsKey(submoduleKey))
                                                     {
-                                                        if (submodule.ContainsKey("currentSubmodule") && ((bool)submodule["currentSubmodule"]))
-                                                        {
-                                                            continue;
-                                                        }
+                                                        Log?.LogWarning($"Unable to find submodule {submoduleKey}");
+                                                    }
+                                                    else
+                                                    {
+                                                        var submodules = (List<Dictionary<string, object>>)moduleParameters[submoduleKey];
 
-                                                        if (!submodule.ContainsKey(instructionSetKey) || submodule[instructionSetKey] == null)
+                                                        foreach (var submodule in submodules)
                                                         {
-                                                            var submoduleDataSheet = new Dictionary<string, object>(moduleParameters);
-                                                            submoduleDataSheet.Remove(submoduleKey);
-
-                                                            foreach (var pair in submodule)
+                                                            if (submodule.ContainsKey("currentSubmodule") && ((bool)submodule["currentSubmodule"]))
                                                             {
-                                                                submoduleDataSheet.Add(pair.Key, pair.Value);
-                                                            }
-                                                            if (!submodule.ContainsKey(instructionSetKey))
-                                                            {
-                                                                submoduleDataSheet.Add(instructionSetKey, null);
-                                                                submodule.Add(instructionSetKey, null);
+                                                                continue;
                                                             }
 
-                                                            Log.LogInformation("TMP Data sheet to calculate: " + JToken.FromObject(submoduleDataSheet));
-                                                            var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
-                                                            Log.LogInformation("TMP Data sheet returned: " + JToken.FromObject(returnedDataSheet));
-
-                                                            foreach (var returnedKey in submodule.Keys.ToList())
+                                                            if (!submodule.ContainsKey(instructionSetKey) || submodule[instructionSetKey] == null)
                                                             {
-                                                                if (returnedDataSheet[returnedKey] != null)
+                                                                var submoduleDataSheet = new Dictionary<string, object>(moduleParameters);
+                                                                submoduleDataSheet.Remove(submoduleKey);
+
+                                                                foreach (var pair in submodule)
                                                                 {
-                                                                    if (!submodule.ContainsKey(returnedKey))
+                                                                    submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                                }
+                                                                if (!submodule.ContainsKey(instructionSetKey))
+                                                                {
+                                                                    submoduleDataSheet.Add(instructionSetKey, null);
+                                                                    submodule.Add(instructionSetKey, null);
+                                                                }
+
+                                                                Log.LogInformation("TMP Data sheet to calculate: " + JToken.FromObject(submoduleDataSheet));
+                                                                var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
+                                                                Log.LogInformation("TMP Data sheet returned: " + JToken.FromObject(returnedDataSheet));
+
+                                                                foreach (var returnedKey in submodule.Keys.ToList())
+                                                                {
+                                                                    if (returnedDataSheet[returnedKey] != null)
                                                                     {
-                                                                        submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
-                                                                    }
-                                                                    else if (submodule[returnedKey] == null)
-                                                                    {
-                                                                        submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                                                        if (!submodule.ContainsKey(returnedKey))
+                                                                        {
+                                                                            submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                        }
+                                                                        else if (submodule[returnedKey] == null)
+                                                                        {
+                                                                            submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                                                        }
                                                                     }
                                                                 }
                                                             }
-                                                        }
 
-                                                        if (submodule.ContainsKey(instructionSetKey) && submodule[instructionSetKey] != null)
-                                                        {
-                                                            submoduleDataList.Add(submodule[instructionSetKey]);
+                                                            if (submodule.ContainsKey(instructionSetKey) && submodule[instructionSetKey] != null)
+                                                            {
+                                                                submoduleDataList.Add(submodule[instructionSetKey]);
+                                                            }
                                                         }
                                                     }
                                                     
