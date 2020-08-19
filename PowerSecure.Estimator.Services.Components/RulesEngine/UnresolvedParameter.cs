@@ -76,6 +76,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 var jProp = Token.Children<JProperty>().First();
                                 var unresolvedParameters = jProp.Value.Children().Select(jToken => new UnresolvedParameter(jToken, this)).ToArray();
                                 object retValue = null;
+                                if(!Functions.ContainsKey(jProp.Name))
+                                {
+                                    Log?.LogError($"Primitive {jProp.Name} does not exist in primitive dictionary.");
+                                    return null;
+                                }
                                 IFunction function = Functions[jProp.Name];
                                 try
                                 {
