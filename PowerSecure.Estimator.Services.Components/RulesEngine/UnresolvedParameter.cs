@@ -217,20 +217,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                     }
                                                                 }
                                                             }
-                                                            foreach (var returnedKey in returnedDataSheet.Keys)
-                                                            {
-                                                                if (returnedDataSheet[returnedKey] != null && !submodule.Keys.Contains(returnedKey))
-                                                                {
-                                                                    if (!moduleParameters.ContainsKey(returnedKey))
-                                                                    {
-                                                                        moduleParameters.Add(returnedKey, returnedDataSheet[returnedKey]);
-                                                                    }
-                                                                    else if (Parameters[returnedKey] == null)
-                                                                    {
-                                                                        moduleParameters[returnedKey] = returnedDataSheet[returnedKey];
-                                                                    }
-                                                                }
-                                                            }
                                                         }
 
                                                         if (submodule.ContainsKey(instructionSetKey) && submodule[instructionSetKey] != null)
