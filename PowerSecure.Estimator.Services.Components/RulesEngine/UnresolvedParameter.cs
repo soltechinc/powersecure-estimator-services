@@ -118,7 +118,124 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                         if (key.Contains("[]"))
                                         {
                                             string[] keyParts = key.Split(".");
-                                            if (keyParts.Length > 1 && keyParts[0].EndsWith("[]"))
+                                            
+                                            if (keyParts.Length == 3 && keyParts[0].EndsWith("[]") && keyParts[1].EndsWith("[]"))
+                                            { //cross-module submodule evaluation logic
+
+                                                var moduleDataList = new List<object>();
+
+                                                string moduleKey = $"{keyParts[0].Replace("[]", string.Empty)}";
+                                                if (!Parameters.ContainsKey(moduleKey))
+                                                {
+                                                    Log?.LogWarning($"Unable to find module {moduleKey}");
+
+                                                    return moduleDataList.ToArray();
+                                                }
+
+                                                var modules = (List<Dictionary<string, object>>)Parameters[moduleKey];
+                                                
+                                                string submoduleKey = $"{moduleKey}.{keyParts[1].Replace("[]", string.Empty)}";
+                                                string instructionSetKey = $"{submoduleKey}.{keyParts[2]}";
+                                                var keysToEvaluate = new List<string>() { instructionSetKey };
+
+                                                foreach (var module in modules.ToList())
+                                                {
+                                                    foreach (var k in Parameters.Keys)
+                                                    {
+                                                        if (!k.Contains(".") && !module.ContainsKey(k) && k != moduleKey)
+                                                        {
+                                                            module.Add(k, Parameters[k]);
+                                                        }
+                                                        else if (k == "all.projecttype" && !module.ContainsKey(k))
+                                                        {
+                                                            module.Add(k, Parameters[k]);
+                                                        }
+                                                        else if (k == "all.outsideequipmentpercentage" && !module.ContainsKey(k))
+                                                        {
+                                                            module.Add(k, Parameters[k]);
+                                                        }
+                                                        else if (k == "all.desiredinstallrate" && !module.ContainsKey(k))
+                                                        {
+                                                            module.Add(k, Parameters[k]);
+                                                        }
+                                                        else if (k == "all.effectivedate" && !module.ContainsKey(k))
+                                                        {
+                                                            module.Add(k, Parameters[k]);
+                                                        }
+                                                        else if (k == "all.usstate" && !module.ContainsKey(k))
+                                                        {
+                                                            module.Add(k, Parameters[k]);
+                                                        }
+                                                    }
+
+                                                    var moduleParameters = new Dictionary<string, object>(module.Where(p => p.Value != null));
+                                                    var submoduleDataList = new List<object>();
+                                                    var submodules = (List<Dictionary<string, object>>)moduleParameters[submoduleKey];
+                                                    
+                                                    foreach (var submodule in submodules)
+                                                    {
+                                                        if (submodule.ContainsKey("currentSubmodule") && ((bool)submodule["currentSubmodule"]))
+                                                        {
+                                                            continue;
+                                                        }
+
+                                                        if (!submodule.ContainsKey(instructionSetKey) || submodule[instructionSetKey] == null)
+                                                        {
+                                                            var submoduleDataSheet = new Dictionary<string, object>(moduleParameters);
+                                                            submoduleDataSheet.Remove(submoduleKey);
+
+                                                            foreach (var pair in submodule)
+                                                            {
+                                                                submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                            }
+                                                            if (!submodule.ContainsKey(instructionSetKey))
+                                                            {
+                                                                submoduleDataSheet.Add(instructionSetKey, null);
+                                                                submodule.Add(instructionSetKey, null);
+                                                            }
+                                                            var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
+                                                            foreach (var returnedKey in submodule.Keys.ToList())
+                                                            {
+                                                                if (returnedDataSheet[returnedKey] != null)
+                                                                {
+                                                                    if (!submodule.ContainsKey(returnedKey))
+                                                                    {
+                                                                        submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                    }
+                                                                    else if (submodule[returnedKey] == null)
+                                                                    {
+                                                                        submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                                                    }
+                                                                }
+                                                            }
+                                                            foreach (var returnedKey in returnedDataSheet.Keys)
+                                                            {
+                                                                if (returnedDataSheet[returnedKey] != null && !submodule.Keys.Contains(returnedKey))
+                                                                {
+                                                                    if (!moduleParameters.ContainsKey(returnedKey))
+                                                                    {
+                                                                        moduleParameters.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                    }
+                                                                    else if (Parameters[returnedKey] == null)
+                                                                    {
+                                                                        moduleParameters[returnedKey] = returnedDataSheet[returnedKey];
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        if (submodule.ContainsKey(instructionSetKey) && submodule[instructionSetKey] != null)
+                                                        {
+                                                            submoduleDataList.Add(submodule[instructionSetKey]);
+                                                        }
+                                                    }
+                                                    
+                                                    moduleDataList.Add(submoduleDataList.ToArray());
+                                                }
+
+                                                Parameters.Add(key, moduleDataList.ToArray());
+                                            }
+                                            else if (keyParts.Length > 1 && keyParts[0].EndsWith("[]"))
                                             {
                                                 //module array logic
                                                 var moduleDataList = new List<object>();
