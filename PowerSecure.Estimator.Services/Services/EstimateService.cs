@@ -159,7 +159,7 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 }
                 {
-                    BusinessOpportunityLineItem boli = ((List<BusinessOpportunityLineItem>)_businessOpportunityLineItemRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = boliId }).GetAwaiter().GetResult()).First();
+                    BusinessOpportunityLineItem boli = JObject.Parse(((Document)_businessOpportunityLineItemRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = boliId }).GetAwaiter().GetResult()).ToString()).ToObject<BusinessOpportunityLineItem>();
                     if (!string.IsNullOrEmpty(boli.State))
                     {
                         dataSheet.Add("all.usstate", $"${boli.State.ToLower()}");
