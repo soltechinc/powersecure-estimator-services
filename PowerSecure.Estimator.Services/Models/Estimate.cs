@@ -60,6 +60,8 @@ namespace PowerSecure.Estimator.Services.Models {
         [JsonProperty("desiredRateForInstall")]
         public string DesiredRateForInstall { get; set; }
 
+        [JsonProperty("boliId")]
+        public string BOLIId { get; set; }
 
         [JsonProperty("includedModules")]
         public List<ModuleDefinition> Modules { get; set; }

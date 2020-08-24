@@ -102,9 +102,12 @@ namespace PowerSecure.Estimator.Services.Repositories {
             var items = new List<Estimate>();
 
             while (query.HasMoreResults) {
-                foreach (Estimate item in await query.ExecuteNextAsync()) {
-                    var module = new List<ModuleDefinition>();
-                    items.Add(item);
+                foreach (Estimate item in await query.ExecuteNextAsync())
+                {
+                    if (!queryParams.ContainsKey("boliid") || item.BOLIId == queryParams["boliid"])
+                    {
+                        items.Add(item);
+                    }
                 }
             }
 
