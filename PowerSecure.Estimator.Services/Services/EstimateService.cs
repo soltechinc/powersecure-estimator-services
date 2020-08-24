@@ -117,9 +117,10 @@ namespace PowerSecure.Estimator.Services.Services
 
         private void IncludeEstimateData(JObject uiInputs, Dictionary<string, object> dataSheet)
         {
-            string currentModuleTitle = uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
-            string estimateId = uiInputs.Properties().Where(prop => prop.Name == "estimateId").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
-            string boliNumber = uiInputs.Properties().Where(prop => prop.Name == "boLiId").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
+            string currentModuleTitle = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "moduletitle").First().Value.ToObject<string>().ToLower().Trim();
+            string estimateId = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "estimateid").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
+            string boliNumber = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "bolinumber").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
+            string boliId = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "boliid").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
 
             if (estimateId != null && boliNumber != null)
             {
@@ -158,7 +159,7 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 }
                 {
-                    BusinessOpportunityLineItem boli = ((List<BusinessOpportunityLineItem>)_businessOpportunityLineItemRepository.Get(boliNumber, new Dictionary<string, string>()).GetAwaiter().GetResult()).First();
+                    BusinessOpportunityLineItem boli = ((List<BusinessOpportunityLineItem>)_businessOpportunityLineItemRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = boliId }).GetAwaiter().GetResult()).First();
                     if (!string.IsNullOrEmpty(boli.State))
                     {
                         dataSheet.Add("all.usstate", $"${boli.State.ToLower()}");
