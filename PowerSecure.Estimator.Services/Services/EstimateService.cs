@@ -48,13 +48,14 @@ namespace PowerSecure.Estimator.Services.Services
 
             string moduleName = !hasModuleTitle ? string.Empty : uiInputs.Properties().Where(prop => prop.Name == "moduleTitle").First().Value.ToObject<string>().ToLower().Trim();
 
-            if (!hasModuleTitle)
+            if (!hasModuleTitle || uiInputs.Properties().Any(prop => prop.Name.ToLower() == "datasheet"))
             {
                 dataSheet = (Dictionary<string,object>)DataSheetFromJToken(uiInputs);
+                IncludeEstimateData(uiInputs, dataSheet, moduleName);
             }
             else
             {
-                IncludeEstimateData(uiInputs, dataSheet);
+                IncludeEstimateData(uiInputs, dataSheet, moduleName);
 
                 //Translate into data sheet
                 ParseFromJson(uiInputs, dataSheet, moduleName);
@@ -115,14 +116,13 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        private void IncludeEstimateData(JObject uiInputs, Dictionary<string, object> dataSheet)
+        private void IncludeEstimateData(JObject uiInputs, Dictionary<string, object> dataSheet, string moduleName)
         {
-            string currentModuleTitle = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "moduletitle").First().Value.ToObject<string>().ToLower().Trim();
             string estimateId = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "estimateid").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
             string boliNumber = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "bolinumber").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
             string boliId = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "boliid").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
 
-            if (estimateId != null && boliNumber != null)
+            if (estimateId != null && boliNumber != null && boliId != null)
             {
                 {
                     Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
@@ -143,7 +143,7 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         string moduleTitle = module.ModuleTitle.ToLower();
 
-                        if (moduleTitle == currentModuleTitle)
+                        if (moduleTitle == moduleName)
                         {
                             continue;
                         }
