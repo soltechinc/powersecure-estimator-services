@@ -209,16 +209,23 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                             foreach (var returnedKey in submodule.Keys.ToList())
                                                             {
-                                                                if (returnedDataSheet[returnedKey] != null)
+                                                                if (returnedKey.Contains("."))
                                                                 {
-                                                                    if (!submodule.ContainsKey(returnedKey))
+                                                                    if (returnedDataSheet[returnedKey] != null)
                                                                     {
-                                                                        submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                        if (!submodule.ContainsKey(returnedKey))
+                                                                        {
+                                                                            submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                        }
+                                                                        else if (submodule[returnedKey] == null)
+                                                                        {
+                                                                            submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                                                        }
                                                                     }
-                                                                    else if (submodule[returnedKey] == null)
-                                                                    {
-                                                                        submodule[returnedKey] = returnedDataSheet[returnedKey];
-                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    submodule.Remove(returnedKey);
                                                                 }
                                                             }
                                                         }

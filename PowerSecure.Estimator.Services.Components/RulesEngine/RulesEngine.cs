@@ -148,6 +148,32 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
 
                 dataSheet[key] = parameters[key];
+                
+                foreach(var dataSheetKey in dataSheet.Keys)
+                {
+                    if(!dataSheetKey.Contains("."))
+                    {
+                        //stripping modules out of modules
+                        switch (dataSheet[dataSheetKey])
+                        {
+                            case List<Dictionary<string, object>> modules:
+                                {
+                                    foreach (var module in modules)
+                                    {
+                                        var list = module.Keys.Where(x => !x.Contains(".")).ToList();
+                                        foreach (var str in list)
+                                        {
+                                            module.Remove(str);
+                                        }
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+
+                        }
+                    }
+                }
             }
             
             return dataSheet;
