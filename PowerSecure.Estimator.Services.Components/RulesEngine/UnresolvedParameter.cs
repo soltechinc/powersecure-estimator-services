@@ -231,9 +231,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                     
                                                     moduleDataList.Add(submoduleDataList.ToArray());
 
-                                                    foreach (var k in Parameters.Keys)
+                                                    foreach (var k in module.Keys)
                                                     {
-                                                        if (!k.Contains(".") && module.ContainsKey(k) && k != moduleKey)
+                                                        if (!k.Contains("."))
                                                         {
                                                             module.Remove(k);
                                                         }
@@ -329,9 +329,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             }
                                                         }
 
-                                                        foreach (var k in Parameters.Keys)
+                                                        foreach (var k in module.Keys)
                                                         {
-                                                            if (!k.Contains(".") && module.ContainsKey(k) && k != moduleKey)
+                                                            if (!k.Contains("."))
                                                             {
                                                                 module.Remove(k);
                                                             }
