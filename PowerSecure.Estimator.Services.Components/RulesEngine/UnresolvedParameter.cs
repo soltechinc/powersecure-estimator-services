@@ -231,7 +231,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                     
                                                     moduleDataList.Add(submoduleDataList.ToArray());
 
-                                                    foreach (var k in module.Keys)
+                                                    foreach (var k in module.Keys.ToList())
                                                     {
                                                         if (!k.Contains("."))
                                                         {
@@ -329,7 +329,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             }
                                                         }
 
-                                                        foreach (var k in module.Keys)
+                                                        foreach (var k in module.Keys.ToList())
                                                         {
                                                             if (!k.Contains("."))
                                                             {

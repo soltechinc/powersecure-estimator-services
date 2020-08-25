@@ -19,7 +19,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         private IEnumerable<object> FlattenEnumerator(object[] parameters)
         {
-            foreach(var obj in new List<object>(parameters))
+            foreach(var obj in parameters)
             {
                 if(obj == null)
                 {
@@ -32,7 +32,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 {
                     case object[] objs:
                         {
-                            foreach(var subObj in new List<object>(FlattenEnumerator(objs)))
+                            foreach(var subObj in FlattenEnumerator(objs))
                             {
                                 yield return subObj;
                             }
