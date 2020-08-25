@@ -455,10 +455,6 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     {
                                         Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log, CallStack);
                                     }
-                                    if(Parameters[key] is object[] o && o.Length == 1 && o[0] is object[] o2 && o2.Length == 2)
-                                    {
-                                        return o2[1];
-                                    }
 
                                     return Parameters[key];
                                 }
