@@ -519,6 +519,7 @@ namespace PowerSecure.Estimator.Services.Services
                 new Dictionary<string,string>(){ ["label"] = "Guard", ["value"] = "guard", ["maxParams"] = "1", ["minParams"] = "2" },
                 new Dictionary<string,string>(){ ["label"] = "GreaterThan", ["value"] = ">", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "GreaterThanOrEqual", ["value"] = ">=", ["maxParams"] = "none", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Identity", ["value"] = "identity", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "InstructionSet", ["value"] = "instructionSet", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "IsEmpty", ["value"] = "isempty", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "IsFalse", ["value"] = "isfalse", ["maxParams"] = "1", ["minParams"] = "1" },

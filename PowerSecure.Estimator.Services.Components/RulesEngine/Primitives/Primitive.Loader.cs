@@ -40,6 +40,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new GuardPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new IdentityPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new IsEmptyPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new IsFalsePrimitive();
