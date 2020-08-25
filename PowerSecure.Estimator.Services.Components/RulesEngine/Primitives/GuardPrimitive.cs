@@ -14,10 +14,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            decimal? retValue = 0;
+            object retValue = 0m;
             if(parameters.Length > 1)
             {
-                retValue = parameters[1].ToDecimal();
+                retValue = parameters[1].ToResolvedParameter();
             }
 
             return parameters[0].ToResolvedParameter() ?? retValue;
