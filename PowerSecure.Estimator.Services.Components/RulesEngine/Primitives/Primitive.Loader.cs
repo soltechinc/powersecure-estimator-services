@@ -68,6 +68,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new MinusOnePrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new ModulusPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new MultiplicationPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new NotEqualPrimitive();
