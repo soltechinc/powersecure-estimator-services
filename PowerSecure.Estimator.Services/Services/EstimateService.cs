@@ -68,7 +68,7 @@ namespace PowerSecure.Estimator.Services.Services
             
             new RulesEngine().EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, _log);
 
-            if (!hasModuleTitle)
+            if (!hasModuleTitle || uiInputs.Properties().Any(prop => prop.Name.ToLower() == "datasheet"))
             {
                 return (JObject.FromObject(dataSheet), "");
             }
