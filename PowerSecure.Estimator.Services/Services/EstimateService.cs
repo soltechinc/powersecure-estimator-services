@@ -545,6 +545,17 @@ namespace PowerSecure.Estimator.Services.Services
                                         break;
                                     }
                                 }
+                                else if (jObject.Properties().Any(prop => prop.Name == "variableName") &&
+                                    jObject.Properties().Any(prop => prop.Name == "dataObjects") &&
+                                    jObject.Properties().Any(prop => prop.Name == "dataSummary"))
+                                {
+                                    if (!jToken.Path.Contains("submoduleData"))
+                                    {
+                                        break;
+                                    }
+
+                                    submoduleList.Clear();
+                                }
                             }
                             break;
                     }
