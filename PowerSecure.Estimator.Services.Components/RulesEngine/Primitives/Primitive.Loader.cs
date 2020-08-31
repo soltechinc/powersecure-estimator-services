@@ -26,6 +26,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new EqualPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new FilterPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new FindPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new FlattenPrimitive();
