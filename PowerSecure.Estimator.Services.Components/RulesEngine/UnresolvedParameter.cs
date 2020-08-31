@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
@@ -454,6 +455,15 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
                                     {
                                         Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log, CallStack);
+                                    }
+
+                                    if (Parameters[key] is object[] o && o.Length == 2 
+                                        && o[0] is object[] o2 && o2.Length == 2 
+                                        && o2[0] != null && o2[0].ToRawString() == "--No Selection--"
+                                        && string.IsNullOrEmpty(o2[1]?.ToString()) 
+                                        && o[1] is object[] o3 && o3.Length == 2)
+                                    {
+                                        return o3[1];
                                     }
 
                                     return Parameters[key];
