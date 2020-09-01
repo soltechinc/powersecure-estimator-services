@@ -20,6 +20,9 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("materialCost")]
+        public string MaterialCost { get; set; }
+
         [JsonProperty("laborCost")]
         public string LaborCost { get; set; }
 
