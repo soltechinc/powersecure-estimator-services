@@ -43,7 +43,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             {
                 case string s:
                     {
-                        value = $"\"{s}\"";
+                        value = $"\"{s.ToStringLiteral()}\"";
+                        break;
+                    }
+                case bool b:
+                    {
+                        value = parameter.ToString().ToLower();
                         break;
                     }
                 default:

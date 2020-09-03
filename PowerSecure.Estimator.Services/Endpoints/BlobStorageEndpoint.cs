@@ -47,14 +47,6 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogInformation($"Content type: {req.ContentType}");
-                using (var reader = req.Body.WithNonClosingReader())
-                {
-                    log.LogInformation($"Body: {reader.ReadToEnd()}");
-                }
-
-                req.Body.Position = 0;
-
                 log.LogDebug("Function called - UploadFile");
                 var dict = new Dictionary<string, object>();
                 foreach(var pair in req.Form)
@@ -71,12 +63,6 @@ namespace PowerSecure.Estimator.Services.Endpoints
                         {
                             file.CopyTo(mem);
                             list.Add(mem.ToArray());
-
-                            mem.Position = 0;
-                            using (var reader = mem.WithNonClosingReader())
-                            {
-                                log.LogInformation(reader.ReadToEnd());
-                            }
                         }
                     }
                 }

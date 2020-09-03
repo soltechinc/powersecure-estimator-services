@@ -12,6 +12,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new AndPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new BoolPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new CeilingPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new CheckPrimitive();
