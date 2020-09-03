@@ -48,10 +48,12 @@ namespace PowerSecure.Estimator.Services.Endpoints
             try
             {
                 log.LogInformation($"Content type: {req.ContentType}");
-                using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8, true, 4096, true))
+                using (var reader = req.Body.WithNonClosingReader())
                 {
                     log.LogInformation($"Body: {reader.ReadToEnd()}");
                 }
+
+                req.Body.Position = 0;
 
                 log.LogDebug("Function called - UploadFile");
                 var dict = new Dictionary<string, object>();
