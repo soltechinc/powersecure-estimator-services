@@ -44,6 +44,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
         public static async Task<IActionResult> UploadFile(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "files")] HttpRequest req, ILogger log)
         {
+            log.LogInformation($"Content type: {req.ContentType}");
+            using (StreamReader reader = new StreamReader(req.Body))
+            {
+                log.LogInformation($"Body: {reader.ReadToEnd()}");
+            }
 
             try
             {
