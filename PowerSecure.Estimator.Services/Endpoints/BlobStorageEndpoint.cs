@@ -71,13 +71,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
                         {
                             file.CopyTo(mem);
                             list.Add(mem.ToArray());
+
+                            mem.Position = 0;
+                            using (var reader = mem.WithNonClosingReader())
+                            {
+                                log.LogInformation(reader.ReadToEnd());
+                            }
                         }
                     }
                 }
 
                 log.LogInformation("Key/value data: " + JToken.FromObject(dict));
                 log.LogInformation($"Found {list.Count} files with sizes {string.Join(",",list.Select(x => x.Length.ToString()))}");
-
+                
                 return "".ToOkObjectResult();
             }
             catch (Exception ex)
