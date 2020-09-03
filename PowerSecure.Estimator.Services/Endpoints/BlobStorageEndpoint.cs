@@ -13,6 +13,7 @@ using static PowerSecure.Estimator.Services.Shared.DTOs;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Text;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
@@ -44,14 +45,14 @@ namespace PowerSecure.Estimator.Services.Endpoints
         public static async Task<IActionResult> UploadFile(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "files")] HttpRequest req, ILogger log)
         {
-            log.LogInformation($"Content type: {req.ContentType}");
-            using (StreamReader reader = new StreamReader(req.Body))
-            {
-                log.LogInformation($"Body: {reader.ReadToEnd()}");
-            }
-
             try
             {
+                log.LogInformation($"Content type: {req.ContentType}");
+                using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8, true, 4096, true))
+                {
+                    log.LogInformation($"Body: {reader.ReadToEnd()}");
+                }
+
                 log.LogDebug("Function called - UploadFile");
                 var dict = new Dictionary<string, object>();
                 foreach(var pair in req.Form)
