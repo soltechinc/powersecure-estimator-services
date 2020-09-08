@@ -118,7 +118,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                         var submoduleDataSheet = new Dictionary<string, object>(baseDataSheet);
                         foreach(var pair in submodule)
                         {
-                            submoduleDataSheet.Add(pair.Key, pair.Value);
+                            if (!submoduleDataSheet.ContainsKey(pair.Key))
+                            {
+                                submoduleDataSheet.Add(pair.Key, pair.Value);
+                            }
+                            else
+                            {
+                                submoduleDataSheet[pair.Key] = pair.Value;
+                            }
                         }
                         var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, callStack);
                         foreach(var submoduleKey in submodule.Keys.ToList())
