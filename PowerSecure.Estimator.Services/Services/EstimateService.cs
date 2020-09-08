@@ -311,11 +311,11 @@ namespace PowerSecure.Estimator.Services.Services
                                                 dataSheetList.Add(lastDataSheet);
                                                 if (jToken.Path.Contains("currentSubmodule"))
                                                 {
-                                                    lastDataSheet.Add("currentSubmodule", true);
+                                                    lastDataSheet.Add("currentsubmodule", true);
                                                 }
                                                 else
                                                 {
-                                                    lastDataSheet.Add("currentSubmodule", false);
+                                                    lastDataSheet.Add("currentsubmodule", false);
                                                 }
                                             }
 
@@ -376,11 +376,11 @@ namespace PowerSecure.Estimator.Services.Services
                                                         dataSheetList.Add(lastDataSheet);
                                                         if (jToken.Path.Contains("currentSubmodule"))
                                                         {
-                                                            lastDataSheet.Add("currentSubmodule", true);
+                                                            lastDataSheet.Add("currentsubmodule", true);
                                                         }
                                                         else
                                                         {
-                                                            lastDataSheet.Add("currentSubmodule", false);
+                                                            lastDataSheet.Add("currentsubmodule", false);
                                                         }
                                                     }
 
@@ -429,11 +429,11 @@ namespace PowerSecure.Estimator.Services.Services
                                             lastDataSheet = new Dictionary<string, object>();
                                             if (jToken.Path.Contains("currentSubmodule"))
                                             {
-                                                lastDataSheet.Add("currentSubmodule", true);
+                                                lastDataSheet.Add("currentsubmodule", true);
                                             }
                                             else
                                             {
-                                                lastDataSheet.Add("currentSubmodule", false);
+                                                lastDataSheet.Add("currentsubmodule", false);
                                             }
                                             dataSheetList.Add(lastDataSheet);
                                         }
@@ -461,11 +461,11 @@ namespace PowerSecure.Estimator.Services.Services
                                         var dataSheetList = new List<Dictionary<string, object>>() { new Dictionary<string, object>() };
                                         if (jToken.Path.Contains("currentSubmodule"))
                                         {
-                                            dataSheetList[0].Add("currentSubmodule", true);
+                                            dataSheetList[0].Add("currentsubmodule", true);
                                         }
                                         else
                                         {
-                                            dataSheetList[0].Add("currentSubmodule", false);
+                                            dataSheetList[0].Add("currentsubmodule", false);
                                         }
                                         dataSheet.Add(fullSubmoduleName, dataSheetList);
                                     }

@@ -94,7 +94,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 }
                                 catch (Exception ex)
                                 {
-                                    Log?.LogWarning(ex, $"Exception while attempting to run primitive {jProp.Name}: {ex.StackTrace}");
+                                    Log?.LogWarning(ex, $"Exception while attempting to run primitive {jProp.Name}");
                                     return null;
                                 }
 
@@ -191,7 +191,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                     foreach (var submodule in submodules)
                                                     {
-                                                        if (submodule.ContainsKey("currentSubmodule") && ((bool)submodule["currentSubmodule"]))
+                                                        if (submodule.ContainsKey("currentsubmodule") && ((bool)submodule["currentsubmodule"]))
                                                         {
                                                             continue;
                                                         }
@@ -385,7 +385,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                 foreach (var submodule in submodules)
                                                 {
-                                                    if(submodule.ContainsKey("currentSubmodule") && ((bool)submodule["currentSubmodule"]))
+                                                    if(submodule.ContainsKey("currentsubmodule") && ((bool)submodule["currentsubmodule"]))
                                                     {
                                                         continue;
                                                     }

@@ -84,7 +84,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                                 {
                                     if(pair.Value != null)
                                     {
-                                        newDict.Add(pair.Key, pair.Value);
+                                        newDict.Add(pair.Key.Trim().ToLower(), pair.Value);
                                     }
                                 }
                                 newListValue.Add(newDict);
