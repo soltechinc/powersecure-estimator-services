@@ -94,7 +94,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 }
                                 catch (Exception ex)
                                 {
-                                    Log?.LogWarning(ex, $"Exception while attempting to run primitive {jProp.Name}");
+                                    Log?.LogWarning(ex, $"Exception while attempting to run primitive {jProp.Name}: {ex.StackTrace}");
                                     return null;
                                 }
 
