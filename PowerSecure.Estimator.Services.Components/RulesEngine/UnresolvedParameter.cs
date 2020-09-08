@@ -203,7 +203,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                             foreach (var pair in submodule)
                                                             {
-                                                                submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                                if(!submoduleDataSheet.ContainsKey(pair.Key))
+                                                                {
+                                                                    submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                                }
+                                                                else
+                                                                {
+                                                                    submoduleDataSheet[pair.Key] = pair.Value;
+                                                                }
                                                             }
                                                             if (!submodule.ContainsKey(instructionSetKey))
                                                             {
@@ -390,7 +397,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                         foreach (var pair in submodule)
                                                         {
-                                                            submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                            if (!submoduleDataSheet.ContainsKey(pair.Key))
+                                                            {
+                                                                submoduleDataSheet.Add(pair.Key, pair.Value);
+                                                            }
+                                                            else
+                                                            {
+                                                                submoduleDataSheet[pair.Key] = pair.Value;
+                                                            }
                                                         }
                                                         if(!submodule.ContainsKey(submoduleDataKey))
                                                         {
