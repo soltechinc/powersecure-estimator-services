@@ -160,7 +160,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         {
                                                             module.Add(k, Parameters[k]);
                                                         }
-                                                        else if (COPIED_KEYS.Contains(k) && !module.ContainsKey(k))
+                                                        else if ((COPIED_KEYS.Contains(k) ||
+                                                            k.StartsWith("boli.") ||
+                                                            k.StartsWith("estimate."))
+                                                        && !module.ContainsKey(k))
                                                         {
                                                             module.Add(k, Parameters[k]);
                                                         }

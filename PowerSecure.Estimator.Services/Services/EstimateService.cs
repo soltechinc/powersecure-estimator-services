@@ -157,6 +157,17 @@ namespace PowerSecure.Estimator.Services.Services
                         ParseFromJson(JObject.FromObject(module), moduleDataSheet, moduleTitle);
                         ((List<Dictionary<string, object>>)dataSheet[moduleTitle]).Add(moduleDataSheet);
                     }
+
+                    foreach(var prop in typeof(Estimate).GetProperties())
+                    {
+                        string name = $"estimate.{prop.Name.ToLower()}";
+                        object value = prop.GetValue(estimate);
+                        if(value == null || prop.Name.ToLower() == "modules")
+                        {
+                            continue;
+                        }
+                        dataSheet.Add(name, $"${value.ToString()}");
+                    }
                 }
                 {
                     BusinessOpportunityLineItem boli = JObject.Parse(((Document)_businessOpportunityLineItemRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = boliId }).GetAwaiter().GetResult()).ToString()).ToObject<BusinessOpportunityLineItem>();
@@ -167,6 +178,17 @@ namespace PowerSecure.Estimator.Services.Services
                     if(!string.IsNullOrEmpty(boli.City))
                     {
                         dataSheet.Add("all.uscity", $"${boli.City.ToLower()}");
+                    }
+
+                    foreach (var prop in typeof(BusinessOpportunityLineItem).GetProperties())
+                    {
+                        string name = $"boli.{prop.Name.ToLower()}";
+                        object value = prop.GetValue(boli);
+                        if (value == null || prop.Name.ToLower() == "authorizedusers")
+                        {
+                            continue;
+                        }
+                        dataSheet.Add(name, $"${value.ToString()}");
                     }
                 }
             }
