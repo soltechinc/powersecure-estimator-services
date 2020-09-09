@@ -12,10 +12,12 @@ namespace PowerSecure.Estimator.Services.Services
     public class ModuleDefinitionService
     {
         private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
+        private readonly IFactorRepository _factorRepository;
 
-        public ModuleDefinitionService(IModuleDefinitionRepository moduleDefinitionRepository)
+        public ModuleDefinitionService(IModuleDefinitionRepository moduleDefinitionRepository, IFactorRepository factorRepository = null)
         {
             _moduleDefinitionRepository = moduleDefinitionRepository;
+            _factorRepository = factorRepository;
         }
 
         public async Task<(object,string)> List(IDictionary<string, string> queryParams)
@@ -30,9 +32,9 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Upsert(JObject document)
         {
-            if(document["moduleId"].ToString() == "") {
-                string moduleId = JTokenExtension.CreateGUID(document);
-                document = JTokenExtension.SetGUID(document, moduleId);
+            if((!document.Properties().Any(x => x.Name == "moduleId")) || string.IsNullOrWhiteSpace(document["moduleId"].ToString()))
+            { 
+                document["moduleId"] = Guid.NewGuid().ToString();
             }
             return (await _moduleDefinitionRepository.Upsert(document), "OK");
         }

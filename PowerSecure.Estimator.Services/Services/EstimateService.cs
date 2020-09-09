@@ -958,12 +958,90 @@ namespace PowerSecure.Estimator.Services.Services
             return false;
         }
         
-        public async Task<(object, string)> Clone(JObject document, string path) {
+        public async Task<(object, string)> Clone(JObject document, string path)
+        {
             path = path.Split('/').Last();
-            document = JTokenExtension.WalkNode(document, path);
+            document = (JObject)WalkForRevisionAndVersion(document, path);
             return (await _estimateRepository.Clone(document), "OK");
         }
 
+        public static string IncrementString(string value)
+        {
+            var prefix = Regex.Match(value, "^\\D+").Value;
+            var number = Regex.Replace(value, "^\\D+", "");
+            var i = int.Parse(number) + 1;
+            var newString = prefix + i.ToString(new string('0', number.Length));
+            return newString;
+        }
+
+        private static string ChangeStringToZero(string value)
+        {
+            var prefix = Regex.Match(value, "^\\D+").Value;
+            var number = Regex.Replace(value, "^\\D+", "");
+            var i = int.Parse(number);
+            var zero = 0;
+            i = zero;
+            var newString = prefix + i.ToString(new string('0', number.Length));
+            return newString;
+        }
+
+        private static JToken SetTime()
+        {
+            return DateTime.Today.GetDateTimeFormats('d')[0];
+        }
+
+        private static JToken WalkForRevisionAndVersion(JToken node, string path)
+        {
+            switch (node.Type)
+            {
+                case JTokenType.Object:
+                    foreach (var child in node.Children<JProperty>())
+                    {
+                        string childValue = child.Value.ToString();
+                        string childName = child.Name.ToLower().ToString();
+                        bool isPath = childName.Contains(path);
+                        bool hasNum = childValue.Any(char.IsDigit);
+                        DateTime date;
+                        bool isDate = DateTime.TryParse(childValue, out date);
+                        switch (path)
+                        {
+                            case "revision":
+                                if (isPath && hasNum)
+                                {
+                                    if (isDate)
+                                    {
+                                        child.Value = SetTime();
+                                    }
+                                    else
+                                    {
+                                        child.Value = IncrementString(childValue);
+                                    }
+                                }
+                                break;
+                            case "version":
+                                if (isPath && hasNum)
+                                {
+                                    child.Value = IncrementString(childValue);
+                                }
+                                else if (childName.Contains("revision"))
+                                {
+                                    if (isDate)
+                                    {
+                                        child.Value = SetTime();
+                                    }
+                                    else
+                                    {
+                                        child.Value = ChangeStringToZero(childValue);
+                                    }
+                                }
+                                break;
+                        }
+                        WalkForRevisionAndVersion(child, path);
+                    }
+                    break;
+            }
+            return node;
+        }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams) {
             return (await _estimateRepository.List(queryParams), "OK");

@@ -9,47 +9,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PowerSecure.Estimator.Services.Repositories {
-    public class CosmosEstimateRepository : IEstimateRepository {
+namespace PowerSecure.Estimator.Services.Repositories
+{
+    public class CosmosEstimateRepository : IEstimateRepository
+    {
         private readonly DocumentClient _dbClient;
         private readonly string _databaseId;
         private readonly string _collectionId;
- 
-        public CosmosEstimateRepository(DocumentClient dbClient) {
+
+        public CosmosEstimateRepository(DocumentClient dbClient)
+        {
             _dbClient = dbClient;
             _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
             _collectionId = Environment.GetEnvironmentVariable("estimateCollectionId", EnvironmentVariableTarget.Process);
         }
 
 
-        public async Task<object> Clone(JObject document) {
-            //if (document.ContainsKey("id")) {
-            //    return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
-            //}
-
+        public async Task<object> Clone(JObject document)
+        {
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
-        private async Task<JObject> UpdateNumber(JObject document) {
-            JToken result;
-            string estimateNumber = "";
-            document.TryGetValue("estimateNumber", out result);
-            if (result.Type == JTokenType.String) {
-                estimateNumber = JTokenExtension.IncrementString(result.ToString());
-            }
-            return document;
-        }
-
-        public async Task<object> Upsert(JObject document) {
-           // document = await UpdateNumber(document);
-            if (document.ContainsKey("id")) {
-              return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
+        public async Task<object> Upsert(JObject document)
+        {
+            if (document.ContainsKey("id"))
+            {
+                return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["boliNumber"].ToString()) });
             }
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
-        public async Task<int> Delete(string boli, IDictionary<string, string> queryParams) {
-            if (queryParams.ContainsKey("id")) {
+        public async Task<int> Delete(string boli, IDictionary<string, string> queryParams)
+        {
+            if (queryParams.ContainsKey("id"))
+            {
                 await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(boli) });
                 return 1;
             }
@@ -59,8 +52,10 @@ namespace PowerSecure.Estimator.Services.Repositories {
                 .AsDocumentQuery();
 
             var list = new List<Document>();
-            while (query.HasMoreResults) {
-                foreach (Estimate item in await query.ExecuteNextAsync()) {
+            while (query.HasMoreResults)
+            {
+                foreach (Estimate item in await query.ExecuteNextAsync())
+                {
                     list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: item.Id), new RequestOptions { PartitionKey = new PartitionKey(item.BOLINumber) }));
                 }
             }
@@ -68,20 +63,16 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return list.Count;
         }
 
-        public async Task<object> List(IDictionary<string, string> queryParams) {
+        public async Task<object> List(IDictionary<string, string> queryParams)
+        {
             var query = _dbClient.CreateDocumentQuery<Estimate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
             var items = new List<Estimate>();
 
-            bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value)) {
-                reportFullObject = (value.Trim().ToLower() == "full");
-            }
-            while (query.HasMoreResults) {
-                foreach (Estimate item in await query.ExecuteNextAsync()) {
-                    if (!reportFullObject) {
-                        //module.Rest = null;
-                    }
+            while (query.HasMoreResults)
+            {
+                foreach (Estimate item in await query.ExecuteNextAsync())
+                {
                     items.Add(item);
                 }
             }
@@ -89,8 +80,10 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return items;
         }
 
-        public async Task<object> Get(string boli, IDictionary<string, string> queryParams) {
-            if (queryParams.ContainsKey("id")) {
+        public async Task<object> Get(string boli, IDictionary<string, string> queryParams)
+        {
+            if (queryParams.ContainsKey("id"))
+            {
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
                     new RequestOptions { PartitionKey = new PartitionKey(boli) });
             }
@@ -101,7 +94,8 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
             var items = new List<Estimate>();
 
-            while (query.HasMoreResults) {
+            while (query.HasMoreResults)
+            {
                 foreach (Estimate item in await query.ExecuteNextAsync())
                 {
                     if (!queryParams.ContainsKey("boliid") || item.BOLIId == queryParams["boliid"])
@@ -114,25 +108,31 @@ namespace PowerSecure.Estimator.Services.Repositories {
             return items;
         }
 
-        public async Task<int> Reset(JToken jToken) {
+        public async Task<int> Reset(JToken jToken)
+        {
             var documentQuery = _dbClient.CreateDocumentQuery<Estimate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .AsDocumentQuery();
 
             var items = new List<Estimate>();
 
-            while (documentQuery.HasMoreResults) {
-                foreach (Estimate item in await documentQuery.ExecuteNextAsync()) {
+            while (documentQuery.HasMoreResults)
+            {
+                foreach (Estimate item in await documentQuery.ExecuteNextAsync())
+                {
                     items.Add(item);
                 }
             }
 
-            foreach (var item in items) {
+            foreach (var item in items)
+            {
                 await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: item.Id), new RequestOptions { PartitionKey = new PartitionKey(item.Title) });
             }
 
             int count = 0;
-            foreach (var child in jToken.Children()) {
-                if (child.Type != JTokenType.Object) {
+            foreach (var child in jToken.Children())
+            {
+                if (child.Type != JTokenType.Object)
+                {
                     continue;
                 }
 
