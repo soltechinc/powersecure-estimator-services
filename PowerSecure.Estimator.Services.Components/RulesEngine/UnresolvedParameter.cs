@@ -24,6 +24,9 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public ILogger Log { get; set; }
         public ISet<string> CallStack { get; set; } = new HashSet<string>();
 
+        private static readonly string[] COPIED_KEYS = new string[] { "all.projecttype", "all.outsideequipmentpercentage",
+            "all.desiredinstallrate","all.effectivedate","all.usstate","all.uscity"};
+
         private UnresolvedParameter(JToken jToken, UnresolvedParameter parentParameter)
         {
             Token = jToken;
@@ -157,23 +160,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         {
                                                             module.Add(k, Parameters[k]);
                                                         }
-                                                        else if (k == "all.projecttype" && !module.ContainsKey(k))
-                                                        {
-                                                            module.Add(k, Parameters[k]);
-                                                        }
-                                                        else if (k == "all.outsideequipmentpercentage" && !module.ContainsKey(k))
-                                                        {
-                                                            module.Add(k, Parameters[k]);
-                                                        }
-                                                        else if (k == "all.desiredinstallrate" && !module.ContainsKey(k))
-                                                        {
-                                                            module.Add(k, Parameters[k]);
-                                                        }
-                                                        else if (k == "all.effectivedate" && !module.ContainsKey(k))
-                                                        {
-                                                            module.Add(k, Parameters[k]);
-                                                        }
-                                                        else if (k == "all.usstate" && !module.ContainsKey(k))
+                                                        else if (COPIED_KEYS.Contains(k) && !module.ContainsKey(k))
                                                         {
                                                             module.Add(k, Parameters[k]);
                                                         }

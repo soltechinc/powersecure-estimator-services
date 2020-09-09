@@ -164,6 +164,10 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         dataSheet.Add("all.usstate", $"${boli.State.ToLower()}");
                     }
+                    if(!string.IsNullOrEmpty(boli.City))
+                    {
+                        dataSheet.Add("all.uscity", $"${boli.City.ToLower()}");
+                    }
                 }
             }
         }
