@@ -20,7 +20,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
     {
         [FunctionName("ListModules")]
         public static async Task<IActionResult> List(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modules")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modulesX")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
@@ -42,7 +42,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("GetModule")]
         public static async Task<IActionResult> Get(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modules/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modulesX/{id}")] HttpRequest req,
             string id,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
@@ -65,7 +65,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("EditModule")]
         public static async Task<IActionResult> Upsert(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "modules")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "modulesX")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
@@ -87,13 +87,13 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("DeleteModule")]
         public static async Task<IActionResult> Delete(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "modules/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "modulesX/{id}")] HttpRequest req,
             string id,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
             try
-            { 
+            {
                 log.LogDebug($"Function called - DeleteModule (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
@@ -110,7 +110,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("ImportModules")]
         public static async Task<IActionResult> Import(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modules/import/{env}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "modulesX/import/{env}")] HttpRequest req,
             string env,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)

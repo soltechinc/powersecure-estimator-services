@@ -16,7 +16,7 @@ using PowerSecure.Estimator.Services.ActionResults;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
-    public static class ModuleDefinitionEndpoint 
+    public static class ModuleDefinitionEndpoint
     {
         [FunctionName("ListModuleDefinitions")]
         public static async Task<IActionResult> List(
@@ -75,7 +75,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient)).Upsert(JObject.Parse(requestBody)).Result;
+                (object returnValue, string message) = new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient), new CosmosFactorRepository(dbClient)).Upsert(JObject.Parse(requestBody)).Result;
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             ILogger log)
         {
             try
-            { 
+            {
                 log.LogDebug($"Function called - DeleteModuleDefinition (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();

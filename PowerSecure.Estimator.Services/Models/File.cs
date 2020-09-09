@@ -5,8 +5,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace PowerSecure.Estimator.Services.Models {
-    public class File : PowerSecureBase {
+namespace PowerSecure.Estimator.Services.Models
+{
+    public class File
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
 
@@ -21,7 +29,7 @@ namespace PowerSecure.Estimator.Services.Models {
 
         [JsonProperty("uploadedBy")]
         public string UploadedBy { get; set; }
-        
+
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
@@ -36,13 +44,5 @@ namespace PowerSecure.Estimator.Services.Models {
 
         [JsonProperty("moduleId")]
         public string ModuleId { get; set; }
-
-        public File() : base() {
-
-        }
-
-        public File(string title) : base(title) {
-
-        }        
     }
 }

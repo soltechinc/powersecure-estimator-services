@@ -23,17 +23,21 @@ namespace PowerSecure.Estimator.Services.Endpoints
     {
         [FunctionName("ListEstimateTemplates")]
         public static async Task<IActionResult> List(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "estimateTemplates")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "estimateTemplatesX")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log) {
-            try {
+            ILogger log)
+        {
+            try
+            {
                 log.LogDebug("Function called - ListEstimates");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
                 (object returnValue, string message) = await new EstimateTemplateService(new CosmosEstimateTemplateRepository(dbClient)).List(queryParams);
                 return returnValue.ToOkObjectResult(message: message);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
             }
@@ -42,18 +46,22 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("GetEstimateTemplate")]
         public static async Task<IActionResult> Get(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "estimateTemplates/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "estimateTemplatesX/{id}")] HttpRequest req,
             string id,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log) {
-            try {
+            ILogger log)
+        {
+            try
+            {
                 log.LogDebug($"Function called - GetEstimate (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
                 (object returnValue, string message) = await new EstimateTemplateService(new CosmosEstimateTemplateRepository(dbClient)).Get(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
             }
@@ -63,17 +71,21 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("EditEstimateTemplate")]
         public static async Task<IActionResult> Upsert(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimateTemplates")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "estimateTemplatesX")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log) {
-            try {
+            ILogger log)
+        {
+            try
+            {
                 log.LogDebug("Function called - EditEstimate");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
                 (object returnValue, string message) = await new EstimateTemplateService(new CosmosEstimateTemplateRepository(dbClient)).Upsert(JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
             }
