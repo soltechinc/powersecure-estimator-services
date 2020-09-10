@@ -116,7 +116,7 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        private void IncludeEstimateData(JObject uiInputs, Dictionary<string, object> dataSheet, string moduleName)
+        public void IncludeEstimateData(JObject uiInputs, Dictionary<string, object> dataSheet, string moduleName)
         {
             string estimateId = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "estimateid").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
             string boliNumber = uiInputs.Properties().Where(prop => prop.Name.ToLower() == "bolinumber").FirstOrDefault()?.Value?.ToObject<string>()?.Trim();
@@ -154,7 +154,17 @@ namespace PowerSecure.Estimator.Services.Services
                         }
 
                         var moduleDataSheet = new Dictionary<string, object>();
-                        ParseFromJson(JObject.FromObject(module), moduleDataSheet, moduleTitle);
+                        JObject moduleJson = JObject.FromObject(module);
+                        ParseFromJson(moduleJson, moduleDataSheet, moduleTitle);
+                        if(moduleJson.Properties().Any(x => x.Name == "datacache"))
+                        {
+                            var dataCache = ((JObject)moduleJson["datacache"]).ToDictionary();
+                            foreach(var pair in dataCache)
+                            {
+                                moduleDataSheet.Add(pair.Key, pair.Value);
+                            }
+
+                        }
                         ((List<Dictionary<string, object>>)dataSheet[moduleTitle]).Add(moduleDataSheet);
                     }
 
@@ -194,7 +204,7 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        private void ParseFromJson(JObject uiInputs, Dictionary<string,object> dataSheet, string moduleName)
+        public void ParseFromJson(JObject uiInputs, Dictionary<string,object> dataSheet, string moduleName)
         {
             string submoduleName = string.Empty;
             string fullSubmoduleName = string.Empty;

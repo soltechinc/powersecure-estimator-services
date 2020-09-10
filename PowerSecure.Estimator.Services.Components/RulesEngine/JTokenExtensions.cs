@@ -2,6 +2,7 @@
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine
@@ -43,6 +44,23 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                         break;
                     }
             }
+        }
+
+        public static IDictionary<string, object> ToDictionary(this JObject jObject)
+        {
+            return (IDictionary<string, object>)ToCollection(jObject);
+        }
+
+        private static object ToCollection(object obj)
+        {
+            switch(obj)
+            {
+                case JObject jo:
+                    return jo.ToObject<IDictionary<string, object>>().ToDictionary(k => k.Key, v => ToCollection(v.Value));
+                case JArray ja:
+                    return ja.ToObject<List<object>>().Select(ToCollection).ToList();
+            }
+            return obj;
         }
     }
 }
