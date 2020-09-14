@@ -62,6 +62,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new ListPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new LowerCasePrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new MapPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new MarginPrimitive();
@@ -99,6 +101,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			function = new SwitchPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new ThresholdPrimitive();
+			dict.Add(function.Name.ToLower(), function);
+			function = new UpperCasePrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new ZeroPrimitive();
 			dict.Add(function.Name.ToLower(), function);

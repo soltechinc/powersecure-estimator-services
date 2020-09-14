@@ -70,7 +70,16 @@ namespace PowerSecure.Estimator.Services.Services
 
             if (!hasModuleTitle || uiInputs.Properties().Any(prop => prop.Name.ToLower() == "datasheet"))
             {
-                return (JObject.FromObject(dataSheet), "");
+                if(hasModuleTitle && uiInputs.Properties().Any(prop => prop.Name.ToLower() == "uijson"))
+                {
+                    var dataSheetUiJson = (JObject)uiInputs["uijson"];
+                    ParseToJson(dataSheetUiJson, dataSheet, moduleName);
+                    return (dataSheetUiJson, "");
+                }
+                else
+                {
+                    return (JObject.FromObject(dataSheet), "");
+                }
             }
             else
             {
@@ -99,6 +108,10 @@ namespace PowerSecure.Estimator.Services.Services
                         var dict = new Dictionary<string, object>();
                         foreach (var prop in ((JObject)jToken).Properties())
                         {
+                            if(prop.Name.ToLower() == "uijson")
+                            {
+                                continue;
+                            }
                             dict.Add(prop.Name.ToLower(), DataSheetFromJToken(prop.Value));
                         }
                         return dict;
