@@ -18,7 +18,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             int index = (int)parameters[1].ToDecimal();
             int length = parameters.Length == 2 ? -1 : (int)parameters[2].ToDecimal();
 
-            return parameters.Length == 2 ? s.Substring(index) : s.Substring(index, (int)parameters[2].ToDecimal());
+            return parameters.Length == 2 ? s.Substring(index).ToStringLiteral() : s.Substring(index, (int)parameters[2].ToDecimal()).ToStringLiteral();
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
