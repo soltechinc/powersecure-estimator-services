@@ -94,6 +94,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new StepPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new SubStringPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new SubtractionPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new SumProductPrimitive();
