@@ -51,6 +51,8 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Upsert(JObject document)
         {
+            _log.LogInformation($"Document - {document.ToString()}");
+
             if((!document.Properties().Any(x => x.Name == "moduleId")) || string.IsNullOrWhiteSpace(document["moduleId"].ToString()))
             { 
                 document["moduleId"] = Guid.NewGuid().ToString();
@@ -90,10 +92,14 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 }
             }
+
+            var retValue = (await _moduleDefinitionRepository.Upsert(document), "OK");
+            var moduleDefinitionDocument = JObject.Parse(retValue.Item1.ToString());
+
             {
-                string boliNumber = document.Properties().Any(x => x.Name == "boliNumber") ? document["boliNumber"].ToString() : null;
-                string estimateId = document.Properties().Any(x => x.Name == "estimateId") ? document["estimateId"].ToString() : null;
-                string moduleId = document.Properties().Any(x => x.Name == "moduleId") ? document["moduleId"].ToString() : null;
+                string boliNumber = moduleDefinitionDocument.Properties().Any(x => x.Name == "boliNumber") ? moduleDefinitionDocument["boliNumber"].ToString() : null;
+                string estimateId = moduleDefinitionDocument.Properties().Any(x => x.Name == "estimateId") ? moduleDefinitionDocument["estimateId"].ToString() : null;
+                string moduleId = moduleDefinitionDocument.Properties().Any(x => x.Name == "moduleId") ? moduleDefinitionDocument["moduleId"].ToString() : null;
 
                 if (boliNumber != null && estimateId != null && moduleId != null)
                 {
@@ -107,9 +113,9 @@ namespace PowerSecure.Estimator.Services.Services
 
                     for(int i = 0; i < estimate.Modules.Count; ++i)
                     {
-                        if(estimate.Modules[i].Id == moduleId)
+                        if(estimate.Modules[i].ModuleId == moduleId)
                         {
-                            estimate.Modules[i] = document.ToObject<ModuleDefinition>();
+                            estimate.Modules[i] = moduleDefinitionDocument.ToObject<ModuleDefinition>();
                             found = true;
                             break;
                         }
@@ -117,13 +123,13 @@ namespace PowerSecure.Estimator.Services.Services
 
                     if(!found)
                     {
-                        estimate.Modules.Add(document.ToObject<ModuleDefinition>());
+                        estimate.Modules.Add(moduleDefinitionDocument.ToObject<ModuleDefinition>());
                     }
 
                     await _estimateRepository.Upsert(JObject.FromObject(estimate));
                 }
             }
-            return (await _moduleDefinitionRepository.Upsert(document), "OK");
+            return retValue;
         }
 
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
