@@ -149,7 +149,7 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         for (int i = 0; i < estimate.Modules.Count; ++i)
                         {
-                            if (estimate.Modules[i].Id == moduleId)
+                            if (estimate.Modules[i].ModuleId == moduleId)
                             {
                                 estimate.Modules.RemoveAt(i);
                                 break;
