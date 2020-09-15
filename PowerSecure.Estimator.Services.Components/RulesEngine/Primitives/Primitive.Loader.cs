@@ -84,6 +84,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 			dict.Add(function.Name.ToLower(), function);
 			function = new OrPrimitive();
 			dict.Add(function.Name.ToLower(), function);
+			function = new PercentPrimitive();
+			dict.Add(function.Name.ToLower(), function);
 			function = new PowerPrimitive();
 			dict.Add(function.Name.ToLower(), function);
 			function = new PricePrimitive();

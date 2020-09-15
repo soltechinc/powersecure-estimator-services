@@ -23,7 +23,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public (bool Success, string Message) Validate(JToken jToken)
         {
-            if (jToken.Children().Count() != 2 || jToken.Children().Count() != 3)
+            if (jToken.Children().Count() < 2 || jToken.Children().Count() > 3)
             {
                 return (false, $"Expected a parameter array of length 2 or 3, got the following: {jToken.Children().Count()}");
             }
