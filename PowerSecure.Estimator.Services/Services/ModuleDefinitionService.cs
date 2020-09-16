@@ -65,32 +65,46 @@ namespace PowerSecure.Estimator.Services.Services
                 string moduleTitle = document["moduleTitle"].ToString().ToLower();
                 DateTime effectiveDate = document.Properties().Any(x => x.Name == "effectiveDate") ? DateTime.Parse(document["moduleTitle"].ToString()) : DateTime.Now;
                 string cachedInstructionSets = (string)_referenceDataRepository.Lookup("factor", new List<(string, string)> { ("module",moduleTitle) }.ToArray(), effectiveDate, "instructionsetcache");
-                if(cachedInstructionSets != null)
+                
+                var instructionSetNames = cachedInstructionSets.Split(',').Select(x => $"{moduleTitle}.{x.ToLower().Trim()}");
+                var dataSheet = new Dictionary<string, object>();
+                dataSheet.Add($"{moduleTitle}.estimatematerialcost", null);
+                dataSheet.Add($"{moduleTitle}.estimatelaborcost", null);
+                dataSheet.Add($"{moduleTitle}.estimatetotalcost", null);
+                dataSheet.Add($"{moduleTitle}.estimatematerialusetax", null);
+                dataSheet.Add($"{moduleTitle}.estimatecostwithusetax", null);
+                dataSheet.Add($"{moduleTitle}.estimatesellprice", null);
+                foreach (var instructionSetName in instructionSetNames)
                 {
-                    var instructionSetNames = cachedInstructionSets.Split(',').Select(x => x.ToLower().Trim());
+                    dataSheet.Add(instructionSetName, null);
+                }
+                var keysToEvaluate = dataSheet.Keys.ToArray();
+                {
                     var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository, _log);
-                    var dataSheet = new Dictionary<string, object>();
                     estimateService.IncludeEstimateData(document, dataSheet, moduleTitle);
                     estimateService.ParseFromJson(document, dataSheet, moduleTitle);
-                    dataSheet.Add("all.effectivedate", effectiveDate.ToString("M/d/yyyy"));
-                    foreach(var instructionSetName in instructionSetNames)
+                }
+                dataSheet.Add("all.effectivedate", effectiveDate.ToString("M/d/yyyy"));
+                var resultDataSheet = new RulesEngine().EvaluateDataSheet(dataSheet, keysToEvaluate, effectiveDate, Primitive.Load(), _instructionSetRepository, _referenceDataRepository, _log, new HashSet<string>());
+                var dataCacheDict = new Dictionary<string, object>();
+                foreach(var instructionSetName in instructionSetNames)
+                {
+                    if(resultDataSheet.ContainsKey(instructionSetName) && resultDataSheet[instructionSetName] != null)
                     {
-                        dataSheet.Add(instructionSetName, null);
-                    }
-                    var resultDataSheet = new RulesEngine().EvaluateDataSheet(dataSheet, instructionSetNames, effectiveDate, Primitive.Load(), _instructionSetRepository, _referenceDataRepository, _log, new HashSet<string>());
-                    var dataCacheDict = new Dictionary<string, object>();
-                    foreach(var instructionSetName in instructionSetNames)
-                    {
-                        if(resultDataSheet.ContainsKey(instructionSetName) && resultDataSheet[instructionSetName] != null)
-                        {
-                            dataCacheDict.Add(instructionSetName, resultDataSheet[instructionSetName]);
-                        }
-                    }
-                    if(dataCacheDict.Count > 0)
-                    {
-                        document.Add("datacache", JToken.FromObject(dataCacheDict));
+                        dataCacheDict.Add(instructionSetName, resultDataSheet[instructionSetName]);
                     }
                 }
+                if(dataCacheDict.Count > 0)
+                {
+                    document.Add("datacache", JToken.FromObject(dataCacheDict));
+                }
+
+                document.UpdateKeyWithValue("materialCost", dataSheet[$"{moduleTitle}.estimatematerialcost"]);
+                document.UpdateKeyWithValue("laborCost", dataSheet[$"{moduleTitle}.estimatelaborcost"]);
+                document.UpdateKeyWithValue("totalCost", dataSheet[$"{moduleTitle}.estimatetotalcost"]);
+                document.UpdateKeyWithValue("materialUseTax", dataSheet[$"{moduleTitle}.estimatematerialusetax"]);
+                document.UpdateKeyWithValue("totalCostWithTax", dataSheet[$"{moduleTitle}.estimatecostwithusetax"]);
+                document.UpdateKeyWithValue("sellPrice", dataSheet[$"{moduleTitle}.estimatesellprice"]);
             }
 
             var retValue = (await _moduleDefinitionRepository.Upsert(document), "OK");

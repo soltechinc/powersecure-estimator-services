@@ -47,9 +47,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
             return list.Count;
         }
-
-
-
+        
         public async Task<object> List(IDictionary<string, string> queryParams) {
             var query = _dbClient.CreateDocumentQuery<ModuleDefinition>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
@@ -69,9 +67,7 @@ namespace PowerSecure.Estimator.Services.Repositories {
             }
             return items;
         }
-
-
-
+        
         public async Task<object> Get(string id, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
