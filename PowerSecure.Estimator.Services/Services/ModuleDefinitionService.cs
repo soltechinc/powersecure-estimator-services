@@ -63,10 +63,10 @@ namespace PowerSecure.Estimator.Services.Services
                     document.Remove("datacache");
                 }
                 string moduleTitle = document["moduleTitle"].ToString().ToLower();
-                DateTime effectiveDate = document.Properties().Any(x => x.Name == "effectiveDate") ? DateTime.Parse(document["moduleTitle"].ToString()) : DateTime.Now;
+                DateTime effectiveDate = document.Properties().Any(x => x.Name == "effectiveDate") ? DateTime.Parse(document["effectiveDate"].ToString()) : DateTime.Now;
                 string cachedInstructionSets = (string)_referenceDataRepository.Lookup("factor", new List<(string, string)> { ("module",moduleTitle) }.ToArray(), effectiveDate, "instructionsetcache");
                 
-                var instructionSetNames = cachedInstructionSets.Split(',').Select(x => $"{moduleTitle}.{x.ToLower().Trim()}");
+                var instructionSetNames = cachedInstructionSets == null ? new string[0] : cachedInstructionSets.Split(',').Select(x => $"{moduleTitle}.{x.ToLower().Trim()}");
                 var dataSheet = new Dictionary<string, object>();
                 dataSheet.Add($"{moduleTitle}.estimatematerialcost", null);
                 dataSheet.Add($"{moduleTitle}.estimatelaborcost", null);
