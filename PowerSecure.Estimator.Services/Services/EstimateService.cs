@@ -235,7 +235,8 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         case JObject jObject:
                             {
-                                if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "file input")
+                                if (jObject.Properties().Any(prop => prop.Name == "inputType") 
+                                && (jObject["inputType"].ToObject<string>().ToLower() == "file input" || jObject["inputType"].ToObject<string>().ToLower() == "simple text output"))
                                 {
                                     break;
                                 }
@@ -630,7 +631,8 @@ namespace PowerSecure.Estimator.Services.Services
                 {
                     case JObject jObject:
                         {
-                            if (jObject.Properties().Any(prop => prop.Name == "inputType") && jObject["inputType"].ToObject<string>().ToLower() == "file input")
+                            if (jObject.Properties().Any(prop => prop.Name == "inputType") 
+                                && (jObject["inputType"].ToObject<string>().ToLower() == "file input" || jObject["inputType"].ToObject<string>().ToLower() == "simple text output"))
                             {
                                 break;
                             }
