@@ -1111,12 +1111,17 @@ namespace PowerSecure.Estimator.Services.Services
             return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
 
-        public async Task<(object, string)> ExportSummary(JObject document)
+        public async Task<(object, string)> ExportSummary(JObject document, ILogger log)
         {
-            return (null,null);
+            return await Export(document, await new BlobStorageService().GetResource("summary_xslt", log), log);
         }
 
-        private async Task<(object,string)> Export(JObject inputJsonObject, Stream xsltStream)
+        public async Task<(object, string)> ExportOwnedAsset(JObject document, ILogger log)
+        {
+            return await Export(document, await new BlobStorageService().GetResource("ownedasset_xslt", log), log);
+        }
+
+        private async Task<(object,string)> Export(JObject inputJsonObject, Stream xsltStream, ILogger log)
         {
             using (var stringWriter = new Utf8StringWriter())
             {
@@ -1138,33 +1143,13 @@ namespace PowerSecure.Estimator.Services.Services
                 }
 
                 using (var spreadsheet = SpreadsheetDocument.FromFlatOpcString(stringWriter.ToString().Replace("&gt;", "")))
+                using (var memoryStream = new MemoryStream())
                 {
-                    spreadsheet.WorkbookPart.Workbook.Save(null);
+                    spreadsheet.WorkbookPart.Workbook.Save(memoryStream);
+                    memoryStream.Position = 0;
+                    return await new BlobStorageService().UploadFile(memoryStream, Guid.NewGuid().ToString(), log);
                 }
             }
-
-            return (null, null);
-            /*
-            // Now lets validate the results
-            try
-            {
-                OpenXmlValidator validator = new OpenXmlValidator();
-                int count = 0;
-                foreach (ValidationErrorInfo error in validator.Validate(SpreadsheetDocument.Open(outputExcelFile, true)))
-                {
-                    count;
-                    Console.WriteLine("Error "  count);
-                    Console.WriteLine("Description: "  error.Description);
-                    Console.WriteLine("Path: "  error.Path.XPath);
-                    Console.WriteLine("Part: "  error.Part.Uri);
-                    Console.WriteLine("-------------------------------------------");
-                }
-                //Console.ReadKey();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }*/
         }
 
         private sealed class Utf8StringWriter : StringWriter

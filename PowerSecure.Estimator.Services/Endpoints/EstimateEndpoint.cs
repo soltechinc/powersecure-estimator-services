@@ -182,5 +182,67 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ExportSummary")]
+        public static async Task<IActionResult> ExportSummary(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "estimates/export/summary")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ExportSummary");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                log.LogInformation($"Request Body: {requestBody}");
+
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).ExportSummary(JObject.Parse(requestBody), log);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                string path = returnValue.ToString();
+                return new List<Dictionary<string, object>> { new Dictionary<string, object> { ["Path"] = path, ["Url"] = $"/files/{path}" } }.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+        [FunctionName("ExportOwnedAsset")]
+        public static async Task<IActionResult> ExportOwnedAsset(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "estimates/export/ownedasset")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ExportSummary");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                log.LogInformation($"Request Body: {requestBody}");
+
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).ExportOwnedAsset(JObject.Parse(requestBody), log);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                string path = returnValue.ToString();
+                return new List<Dictionary<string, object>> { new Dictionary<string, object> { ["Path"] = path, ["Url"] = $"/files/{path}" } }.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }
