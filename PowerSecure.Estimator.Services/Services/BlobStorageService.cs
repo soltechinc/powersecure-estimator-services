@@ -43,5 +43,15 @@ namespace PowerSecure.Estimator.Services.Services
             Stream blobStream = await blobBlock.OpenReadAsync();
             return (blobStream, "OK");
         }
+
+        public async Task<(object,string)> DeleteFile(string path, ILogger log)
+        {
+            log.LogInformation($"Deleting file - {path}");
+            var blobContainer = GetCloudBlobContainer();
+            var blobBlock = blobContainer.GetBlockBlobReference(path);
+            var deleted = await blobBlock.DeleteIfExistsAsync();
+
+            return (deleted ? 1 : 0, deleted ? "1 file deleted" : "No files deleted");
+        }
     }
 }

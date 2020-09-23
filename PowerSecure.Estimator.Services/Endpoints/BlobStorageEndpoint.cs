@@ -68,7 +68,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                     }
                 }
 
-                return list.Select(x => new Dictionary<string, object> { ["Path"] = x, ["Url"] = $"api/files/{x}" }).ToOkObjectResult();
+                return list.Select(x => new Dictionary<string, object> { ["Path"] = x, ["Url"] = $"/api/files/{x}" }).ToOkObjectResult();
             }
             catch (Exception ex)
             {
@@ -84,8 +84,25 @@ namespace PowerSecure.Estimator.Services.Endpoints
             try
             {
                 log.LogDebug("Function called - DownloadFile");
-                var retValue = await new BlobStorageService().DownloadFile(path, log);
-                return new FileStreamResult((Stream)retValue.Item1, "application/octet-stream"); ;
+                (object stream, string message) = await new BlobStorageService().DownloadFile(path, log);
+                return new FileStreamResult((Stream)stream, "application/octet-stream");
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+        [FunctionName("DeleteFile")]
+        public static async Task<IActionResult> DeleteFile(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "files/{path}")] HttpRequest req, string path, ILogger log)
+        {
+            try
+            {
+                log.LogDebug("Function called - DeleteFile");
+                (object returnValue, string message) = await new BlobStorageService().DeleteFile(path, log);
+                return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
