@@ -40,8 +40,12 @@ namespace PowerSecure.Estimator.Services.Services
             log.LogInformation($"Downloading file - {path}");
             var blobContainer = GetCloudBlobContainer();
             var blobBlock = blobContainer.GetBlockBlobReference(path);
-            Stream blobStream = await blobBlock.OpenReadAsync();
-            return (blobStream, "OK");
+            if (await blobBlock.ExistsAsync())
+            {
+                Stream blobStream = await blobBlock.OpenReadAsync();
+                return (blobStream, "OK");
+            }
+            return (null, "Error");
         }
 
         public async Task<(object,string)> DeleteFile(string path, ILogger log)

@@ -85,7 +85,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug("Function called - DownloadFile");
                 (object stream, string message) = await new BlobStorageService().DownloadFile(path, log);
-                return new FileStreamResult((Stream)stream, "application/octet-stream");
+                if (stream != null)
+                {
+                    return new FileStreamResult((Stream)stream, "application/octet-stream");
+                }
+                return new object().ToNotFoundObjectResult();
             }
             catch (Exception ex)
             {

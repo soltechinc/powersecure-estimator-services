@@ -24,6 +24,7 @@ namespace PowerSecure.Estimator.Services.ActionResults
                     return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.OK);
             }
         }
+
         public static IActionResult ToServerErrorObjectResult(this object obj, string message = "Error")
         {
             switch (obj)
@@ -34,6 +35,19 @@ namespace PowerSecure.Estimator.Services.ActionResults
                     return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.InternalServerError);
                 default:
                     return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public static IActionResult ToNotFoundObjectResult(this object obj, string message = "Not Found")
+        {
+            switch (obj)
+            {
+                case JObject jObj:
+                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.NotFound);
+                case IEnumerable e:
+                    return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.NotFound);
+                default:
+                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.NotFound);
             }
         }
 
