@@ -43,11 +43,11 @@ namespace PowerSecure.Estimator.Services.ActionResults
             switch (obj)
             {
                 case JObject jObj:
-                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.NotFound);
+                    return ResultFromStatusCode(new List<object>(), 0, message, HttpStatusCode.NotFound);
                 case IEnumerable e:
                     return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.NotFound);
                 default:
-                    return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.NotFound);
+                    return ResultFromStatusCode(new List<object>(), 0, message, HttpStatusCode.NotFound);
             }
         }
 

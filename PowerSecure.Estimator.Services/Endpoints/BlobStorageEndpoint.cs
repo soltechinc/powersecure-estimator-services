@@ -106,7 +106,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug("Function called - DeleteFile");
                 (object returnValue, string message) = await new BlobStorageService().DeleteFile(path, log);
-                return returnValue.ToOkObjectResult(message: message);
+                if(returnValue == null)
+                {
+                    return new object[0].ToOkObjectResult(message: message);
+                }
+                return new List<Dictionary<string, object>> { new Dictionary<string, object> { ["Path"] = path, ["Url"] = $"/api/files/{path}" } }.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {

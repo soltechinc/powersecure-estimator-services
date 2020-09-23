@@ -55,7 +55,7 @@ namespace PowerSecure.Estimator.Services.Services
             var blobBlock = blobContainer.GetBlockBlobReference(path);
             var deleted = await blobBlock.DeleteIfExistsAsync();
 
-            return (deleted ? 1 : 0, deleted ? "1 file deleted" : "No files deleted");
+            return (deleted ? path : null, deleted ? "1 file deleted" : "No files deleted");
         }
     }
 }
