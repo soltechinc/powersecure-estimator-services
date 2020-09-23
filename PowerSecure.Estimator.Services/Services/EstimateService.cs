@@ -1145,9 +1145,9 @@ namespace PowerSecure.Estimator.Services.Services
                 using (var memoryStream = new MemoryStream())
                 {
                     using (var spreadsheet = SpreadsheetDocument.FromFlatOpcString(stringWriter.ToString().Replace("&gt;", "")))
+                    using (var xmlWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings { CloseOutput = false }))
                     {
-                        spreadsheet.WorkbookPart.Workbook.Save(memoryStream);
-                        spreadsheet.Close();
+                        spreadsheet.WorkbookPart.Workbook.WriteTo(xmlWriter);
                     }
 
                     memoryStream.Position = 0;
