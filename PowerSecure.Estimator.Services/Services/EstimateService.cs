@@ -28,25 +28,23 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IInstructionSetRepository _instructionSetRepository;
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IDictionary<string, IFunction> _functions;
-        private readonly ILogger _log;
         private readonly IEstimateRepository _estimateRepository;
         private readonly IBusinessOpportunityLineItemRepository _businessOpportunityLineItemRepository;
 
-        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, IBusinessOpportunityLineItemRepository businessOpportunityLineItemRepository, ILogger log)
+        public EstimateService(IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, IBusinessOpportunityLineItemRepository businessOpportunityLineItemRepository)
         {
             _instructionSetRepository = instructionSetRepository;
             _referenceDataRepository = referenceDataRepository;
             _estimateRepository = estimateRepository;
             _businessOpportunityLineItemRepository = businessOpportunityLineItemRepository;
             _functions = Primitive.Load();
-            _log = log;
         }
 
         public EstimateService(IEstimateRepository estimateRepository) {
             _estimateRepository = estimateRepository;
         }
 
-        public async Task<(object, string)> Evaluate(JObject uiInputs)
+        public async Task<(object, string)> Evaluate(JObject uiInputs, ILogger log)
         {
             var dataSheet = new Dictionary<string, object>();
             bool hasModuleTitle = uiInputs.Properties().Any(prop => prop.Name == "moduleTitle");
@@ -71,7 +69,7 @@ namespace PowerSecure.Estimator.Services.Services
                 dataSheet.Add("all.effectivedate", DateTime.Now.ToString("M/d/yyyy"));
             }
             
-            new RulesEngine().EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, _log);
+            new RulesEngine().EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, log);
 
             if (!hasModuleTitle || uiInputs.Properties().Any(prop => prop.Name.ToLower() == "datasheet"))
             {
@@ -1131,17 +1129,10 @@ namespace PowerSecure.Estimator.Services.Services
                     transform.Load(xsltReader, new XsltSettings(true, true), new XmlUrlResolver());
                 }
 
-                using (var memoryStream = new MemoryStream())
+                using (var inputDocReader = new XmlNodeReader(JsonConvert.DeserializeXmlNode(new JObject { { "Items", new JArray(inputJsonObject) } }.ToString())))
+                using (var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Encoding = Encoding.UTF8 }))
                 {
-                    var jObj = new JObject();
-                    jObj.Add("Items", new JArray(inputJsonObject));
-                    JsonConvert.DeserializeXmlNode(jObj.ToString()).Save(memoryStream);
-                    memoryStream.Position = 0;
-                    using (var inputDocReader = new XmlTextReader(memoryStream))
-                    using (var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Encoding = Encoding.UTF8 }))
-                    {
-                        transform.Transform(inputDocReader, xmlWriter);
-                    }
+                    transform.Transform(inputDocReader, xmlWriter);
                 }
 
                 using (var memoryStream = new MemoryStream())

@@ -80,7 +80,7 @@ namespace PowerSecure.Estimator.Services.Services
                 }
                 var keysToEvaluate = dataSheet.Keys.ToArray();
                 {
-                    var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository, _log);
+                    var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository);
                     estimateService.IncludeEstimateData(document, dataSheet, moduleTitle);
                     estimateService.ParseFromJson(document, dataSheet, moduleTitle);
                 }

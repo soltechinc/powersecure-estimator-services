@@ -16,11 +16,11 @@ namespace PowerSecure.Estimator.Services.UnitTest.Services
         [TestMethod]
         public void HappyPathTest_evaluate()
         {
-            var estimateService = new EstimateService(null,null,null,null,null);
+            var estimateService = new EstimateService(null,null,null,null);
 
             JObject inputFromUi = JObject.Parse(File.ReadAllText(@".\Resources\module_evaluate_sample_json1.json"));
 
-            var retValue = Task.Run(async () => await estimateService.Evaluate(inputFromUi)).GetAwaiter().GetResult();
+            var retValue = Task.Run(async () => await estimateService.Evaluate(inputFromUi, null)).GetAwaiter().GetResult();
         }
     }
 }
