@@ -1126,9 +1126,9 @@ namespace PowerSecure.Estimator.Services.Services
             using (var stringWriter = new Utf8StringWriter())
             {
                 XslCompiledTransform transform = new XslCompiledTransform();
-                using (var xsltReader = new StreamReader(xsltStream))
+                using (var xsltReader = XmlReader.Create(xsltStream))
                 {
-                    transform.Load(xsltReader.ReadToEnd(), new XsltSettings(true, true), new XmlUrlResolver());
+                    transform.Load(xsltReader, new XsltSettings(true, true), new XmlUrlResolver());
                 }
 
                 using (var memoryStream = new MemoryStream())
