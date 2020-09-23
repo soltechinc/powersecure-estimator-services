@@ -1133,7 +1133,9 @@ namespace PowerSecure.Estimator.Services.Services
 
                 using (var memoryStream = new MemoryStream())
                 {
-                    JsonConvert.DeserializeXmlNode(inputJsonObject.ToString()).Save(memoryStream);
+                    var jObj = new JObject();
+                    jObj.Add("Items", new JArray(inputJsonObject));
+                    JsonConvert.DeserializeXmlNode(jObj.ToString()).Save(memoryStream);
                     memoryStream.Position = 0;
                     using (var inputDocReader = new XmlTextReader(memoryStream))
                     using (var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Encoding = Encoding.UTF8 }))
