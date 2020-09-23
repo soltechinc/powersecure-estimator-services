@@ -1142,7 +1142,7 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 }
 
-                _log.LogInformation($"XML - {stringWriter.ToString().Replace("&gt;", "")}");
+                log.LogInformation($"XML - {stringWriter.ToString().Replace("&gt;", "")}");
 
                 using (var memoryStream = new MemoryStream())
                 {
