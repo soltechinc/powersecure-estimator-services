@@ -1142,14 +1142,11 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 }
 
-                log.LogInformation($"XML - {stringWriter.ToString().Replace("&gt;", "")}");
-
                 using (var memoryStream = new MemoryStream())
                 {
-                    using (var spreadsheet = SpreadsheetDocument.FromFlatOpcString(stringWriter.ToString().Replace("&gt;", "")))
-                    using (var xmlWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings { CloseOutput = false }))
+                    using (var spreadsheet = SpreadsheetDocument.FromFlatOpcString(stringWriter.ToString().Replace("&gt;", ""), memoryStream, true))
                     {
-                        spreadsheet.WorkbookPart.Workbook.WriteTo(xmlWriter);
+                        spreadsheet.Save();
                     }
 
                     memoryStream.Position = 0;
