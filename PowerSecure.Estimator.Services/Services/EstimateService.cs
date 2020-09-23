@@ -15,6 +15,11 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using PowerSecure.Estimator.Services.Models;
 using Microsoft.Azure.Documents;
+using DocumentFormat.OpenXml.Validation;
+using DocumentFormat.OpenXml.Packaging;
+using System.Xml;
+using System.IO;
+using System.Xml.Xsl;
 
 namespace PowerSecure.Estimator.Services.Services
 {
@@ -1104,6 +1109,69 @@ namespace PowerSecure.Estimator.Services.Services
             int newDocumentCount = await _estimateRepository.Reset(jObj["Items"]);
 
             return (newDocumentCount, $"{newDocumentCount} documents created.");
+        }
+
+        public async Task<(object, string)> ExportSummary(JObject document)
+        {
+            return (null,null);
+        }
+
+        private async Task<(object,string)> Export(JObject inputJsonObject, Stream xsltStream)
+        {
+            using (var stringWriter = new Utf8StringWriter())
+            {
+                XslCompiledTransform transform = new XslCompiledTransform();
+                using (var xsltReader = new StreamReader(xsltStream))
+                {
+                    transform.Load(xsltReader.ReadToEnd(), new XsltSettings(true, true), new XmlUrlResolver());
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    JsonConvert.DeserializeXmlNode(inputJsonObject.ToString()).Save(memoryStream);
+                    memoryStream.Position = 0;
+                    using (var inputDocReader = new XmlTextReader(memoryStream))
+                    using (var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Encoding = Encoding.UTF8 }))
+                    {
+                        transform.Transform(inputDocReader, xmlWriter);
+                    }
+                }
+
+                using (var spreadsheet = SpreadsheetDocument.FromFlatOpcString(stringWriter.ToString().Replace("&gt;", "")))
+                {
+                    spreadsheet.WorkbookPart.Workbook.Save(null);
+                }
+            }
+
+            return (null, null);
+            /*
+            // Now lets validate the results
+            try
+            {
+                OpenXmlValidator validator = new OpenXmlValidator();
+                int count = 0;
+                foreach (ValidationErrorInfo error in validator.Validate(SpreadsheetDocument.Open(outputExcelFile, true)))
+                {
+                    count;
+                    Console.WriteLine("Error "  count);
+                    Console.WriteLine("Description: "  error.Description);
+                    Console.WriteLine("Path: "  error.Path.XPath);
+                    Console.WriteLine("Part: "  error.Part.Uri);
+                    Console.WriteLine("-------------------------------------------");
+                }
+                //Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }*/
+        }
+
+        private sealed class Utf8StringWriter : StringWriter
+        {
+            private readonly Encoding encoding = Encoding.UTF8;
+
+            public override Encoding Encoding { get { return this.encoding; } }
         }
     }
 }

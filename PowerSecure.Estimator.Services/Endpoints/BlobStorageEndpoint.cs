@@ -68,7 +68,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                     }
                 }
 
-                return list.Select(x => new Dictionary<string, object> { ["Path"] = x, ["Url"] = $"/api/files/{x}" }).ToOkObjectResult();
+                return list.Select(x => new Dictionary<string, object> { ["Path"] = x, ["Url"] = $"/files/{x}" }).ToOkObjectResult();
             }
             catch (Exception ex)
             {

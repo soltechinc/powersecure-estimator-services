@@ -15,11 +15,11 @@ namespace PowerSecure.Estimator.Services.Services
         private static readonly string BLOB_STORAGE_CONNECTION_STRING = AppSettings.Get("BlobStorageConnectionString");
         private static readonly string BLOB_STORAGE_CONTAINER_NAME = AppSettings.Get("BlobStorageContainerName");
 
-        private static CloudBlobContainer GetCloudBlobContainer()
+        private static CloudBlobContainer GetCloudBlobContainer(string containerName = null)
         {
             var cloudStorageAccount = CloudStorageAccount.Parse(BLOB_STORAGE_CONNECTION_STRING);
             var blobClient = cloudStorageAccount.CreateCloudBlobClient();
-            return blobClient.GetContainerReference(BLOB_STORAGE_CONTAINER_NAME);
+            return blobClient.GetContainerReference(string.IsNullOrEmpty(containerName) ? BLOB_STORAGE_CONTAINER_NAME : containerName);
         }
 
         public async Task<(object, string)> UploadFile(Stream blob, string path, ILogger log)
@@ -56,6 +56,18 @@ namespace PowerSecure.Estimator.Services.Services
             var deleted = await blobBlock.DeleteIfExistsAsync();
 
             return (deleted ? path : null, deleted ? "1 file deleted" : "No files deleted");
+        }
+
+        public async Task<Stream> GetResource(string path, ILogger log)
+        {
+            log.LogInformation($"Getting resource - {path}");
+            var blobContainer = GetCloudBlobContainer("resources");
+            var blobBlock = blobContainer.GetBlockBlobReference(path);
+            if (await blobBlock.ExistsAsync())
+            {
+                return await blobBlock.OpenReadAsync();
+            }
+            return null;
         }
     }
 }
