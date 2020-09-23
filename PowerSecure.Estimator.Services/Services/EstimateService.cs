@@ -1142,10 +1142,14 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 }
 
-                using (var spreadsheet = SpreadsheetDocument.FromFlatOpcString(stringWriter.ToString().Replace("&gt;", "")))
                 using (var memoryStream = new MemoryStream())
                 {
-                    spreadsheet.WorkbookPart.Workbook.Save(memoryStream);
+                    using (var spreadsheet = SpreadsheetDocument.FromFlatOpcString(stringWriter.ToString().Replace("&gt;", "")))
+                    {
+                        spreadsheet.WorkbookPart.Workbook.Save(memoryStream);
+                        spreadsheet.Close();
+                    }
+
                     memoryStream.Position = 0;
                     return await new BlobStorageService().UploadFile(memoryStream, Guid.NewGuid().ToString(), log);
                 }
