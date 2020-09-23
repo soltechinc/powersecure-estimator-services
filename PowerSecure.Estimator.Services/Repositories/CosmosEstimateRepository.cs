@@ -20,8 +20,8 @@ namespace PowerSecure.Estimator.Services.Repositories
         public CosmosEstimateRepository(DocumentClient dbClient)
         {
             _dbClient = dbClient;
-            _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("estimateCollectionId", EnvironmentVariableTarget.Process);
+            _databaseId = AppSettings.Get("databaseId");
+            _collectionId = AppSettings.Get("estimateCollectionId");
         }
 
 

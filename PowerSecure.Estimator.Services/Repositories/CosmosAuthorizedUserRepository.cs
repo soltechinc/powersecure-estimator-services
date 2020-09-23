@@ -17,8 +17,8 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
         public CosmosAuthorizedUserRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
-            _databaseId = Environment.GetEnvironmentVariable("databaseAdminId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("userCollectionId", EnvironmentVariableTarget.Process);
+            _databaseId = AppSettings.Get("databaseAdminId");
+            _collectionId = AppSettings.Get("userCollectionId");
         }
 
         private async Task<JObject> SetDefaultRole(JObject document) {

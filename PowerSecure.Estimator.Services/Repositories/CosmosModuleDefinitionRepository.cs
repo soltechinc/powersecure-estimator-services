@@ -17,8 +17,8 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
         public CosmosModuleDefinitionRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
-            _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("moduleDefinitionsCollectionId", EnvironmentVariableTarget.Process);
+            _databaseId = AppSettings.Get("databaseId");
+            _collectionId = AppSettings.Get("moduleDefinitionsCollectionId");
         }
 
         public async Task<object> Upsert(JObject document) {

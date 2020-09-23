@@ -17,8 +17,8 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
         public CosmosPermissionsRepository(DocumentClient dbClient) {
             _dbClient = dbClient;
-            _databaseId = Environment.GetEnvironmentVariable("databaseAdminId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("permissionCollectionId", EnvironmentVariableTarget.Process);
+            _databaseId = AppSettings.Get("databaseAdminId");
+            _collectionId = AppSettings.Get("permissionCollectionId");
         }
 
         public async Task<object> Upsert(JObject document) {

@@ -23,8 +23,8 @@ namespace PowerSecure.Estimator.Services.Repositories
         public CosmosFactorRepository(DocumentClient dbClient)
         {
             _dbClient = dbClient;
-            _databaseId = Environment.GetEnvironmentVariable("databaseId", EnvironmentVariableTarget.Process);
-            _collectionId = Environment.GetEnvironmentVariable("factorsCollectionId", EnvironmentVariableTarget.Process);
+            _databaseId = AppSettings.Get("databaseId");
+            _collectionId = AppSettings.Get("factorsCollectionId");
         }
 
         private static string CreateHash(string valueKey) {

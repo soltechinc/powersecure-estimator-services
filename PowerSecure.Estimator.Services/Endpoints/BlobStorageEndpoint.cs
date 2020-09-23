@@ -14,33 +14,12 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text;
+using System.Net.Http;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
     public static class BlobStorageEndpoint
     {
-        [FunctionName("GetABS")]
-        public static async Task<IActionResult> Get(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "abs")] HttpRequest req, ILogger log)
-        {
-            try
-            {
-                log.LogDebug("Function called - GetABS");
-                var abs = new ABSDTO();
-                abs.blobStorageAccountName = AppSettings.Get("BlobStorageAccountName");
-                abs.blobStorageConnectionString = AppSettings.Get("BlobStorageConnectionString");
-                abs.blobStorageKey = AppSettings.Get("BlobStorageKey");
-                abs.sasToken = AppSettings.Get("StorageAccountSASToken");
-                string results = JsonConvert.SerializeObject(abs);
-                return new JsonResult(results);
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
-
         [FunctionName("UploadFile")]
         public static async Task<IActionResult> UploadFile(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "files")] HttpRequest req, ILogger log)
@@ -49,51 +28,70 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug("Function called - UploadFile");
                 var dict = new Dictionary<string, object>();
-                foreach(var pair in req.Form)
+                foreach (var pair in req.Form)
                 {
-                    dict.Add(pair.Key, pair.Value.ToArray());
+                    dict.Add(pair.Key.ToLower(), pair.Value.ToArray());
                 }
 
-                var list = new List<byte[]>();
+                string path = ((string[])dict["path"])[0];
+
+                var list = new List<string>();
                 if(req.Form.Files != null)
                 {
-                    foreach(var file in req.Form.Files)
+                    if(req.Form.Files.Count > 1)
                     {
-                        using (MemoryStream mem = new MemoryStream())
+                        int fileCount = 0;
+                        foreach (var file in req.Form.Files)
                         {
-                            file.CopyTo(mem);
-                            list.Add(mem.ToArray());
+                            using (MemoryStream mem = new MemoryStream())
+                            {
+                                file.CopyTo(mem);
+                                mem.Position = 0;
+                                var retValue = await new BlobStorageService().UploadFile(mem, $"{path}-{fileCount}", log);
+                                list.Add(retValue.Item1.ToString());
+                            }
+                            fileCount++;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var file in req.Form.Files)
+                        {
+                            using (MemoryStream mem = new MemoryStream())
+                            {
+                                file.CopyTo(mem);
+                                mem.Position = 0;
+                                var retValue = await new BlobStorageService().UploadFile(mem, path, log);
+                                list.Add(retValue.Item1.ToString());
+                            }
                         }
                     }
                 }
 
-                log.LogInformation("Key/value data: " + JToken.FromObject(dict));
-                log.LogInformation($"Found {list.Count} files with sizes {string.Join(",",list.Select(x => x.Length.ToString()))}");
-                
-                return "".ToOkObjectResult();
+                return list.Select(x => new Dictionary<string, object> { ["Path"] = x, ["Url"] = $"api/files/{x}" }).ToOkObjectResult();
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
             }
-            /*
+        }
+
+        [FunctionName("DownloadFile")]
+        public static async Task<IActionResult> DownloadFile(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "files/{path}")] HttpRequest req, string path, ILogger log)
+        {
             try
             {
-                log.LogDebug("Function called - UploadFile");
-                var abs = new ABSDTO();
-                abs.blobStorageAccountName = AppSettings.Get("BlobStorageAccountName");
-                abs.blobStorageConnectionString = AppSettings.Get("BlobStorageConnectionString");
-                abs.blobStorageKey = AppSettings.Get("BlobStorageKey");
-                abs.sasToken = AppSettings.Get("StorageAccountSASToken");
-                string results = JsonConvert.SerializeObject(abs);
-                return new JsonResult(results);
+                log.LogDebug("Function called - DownloadFile");
+                var retValue = await new BlobStorageService().DownloadFile(path, log);
+                return new FileStreamResult((Stream)retValue.Item1, "application/octet-stream"); ;
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
-            }*/
+            }
         }
     }
 }

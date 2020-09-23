@@ -66,7 +66,7 @@ namespace PowerSecure.Estimator.Services.Services
         public async Task<(object, string)> Import(string env, string module)
         {
             string envSetting = $"{env}-url";
-            string url = Environment.GetEnvironmentVariable(envSetting);
+            string url = AppSettings.Get(envSetting);
             if(url == null)
             {
                 return (null, $"Unable to find environment setting: {envSetting}");
