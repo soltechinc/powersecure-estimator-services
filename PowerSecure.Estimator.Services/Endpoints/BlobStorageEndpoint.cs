@@ -96,7 +96,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                         string filename = queryParams["filename"];
                         if(Path.GetFileNameWithoutExtension(filename) == "*")
                         {
-                            filename = $"{path}.{Path.GetExtension(filename)}";
+                            filename = $"{path}{Path.GetExtension(filename)}";
                         }
                         return new FileStreamResult((Stream)stream, "application/octet-stream")
                         {
