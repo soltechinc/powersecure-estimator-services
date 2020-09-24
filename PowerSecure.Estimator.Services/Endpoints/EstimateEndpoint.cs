@@ -205,7 +205,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 }
 
                 string path = returnValue.ToString();
-                return new List<Dictionary<string, object>> { new Dictionary<string, object> { ["Path"] = path, ["Url"] = $"/files/{path}" } }.ToOkObjectResult(message: message);
+                return new List<Dictionary<string, object>> { new Dictionary<string, object> { ["Path"] = path, ["Url"] = $"/files/{path}?filename=*.xlsx" } }.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {
@@ -236,7 +236,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 }
 
                 string path = returnValue.ToString();
-                return new List<Dictionary<string, object>> { new Dictionary<string, object> { ["Path"] = path, ["Url"] = $"/files/{path}" } }.ToOkObjectResult(message: message);
+                return new List<Dictionary<string, object>> { new Dictionary<string, object> { ["Path"] = path, ["Url"] = $"/files/{path}?filename=*.xlsx" } }.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
             {

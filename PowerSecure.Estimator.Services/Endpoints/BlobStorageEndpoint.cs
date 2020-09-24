@@ -84,10 +84,29 @@ namespace PowerSecure.Estimator.Services.Endpoints
             try
             {
                 log.LogDebug("Function called - DownloadFile");
+                
+                var queryParams = req.GetQueryParameterDictionary();
+
                 (object stream, string message) = await new BlobStorageService().DownloadFile(path, log);
+
                 if (stream != null)
                 {
-                    return new FileStreamResult((Stream)stream, "application/octet-stream");
+                    if(queryParams.ContainsKey("filename"))
+                    {
+                        string filename = queryParams["filename"];
+                        if(Path.GetFileNameWithoutExtension(filename) == "*")
+                        {
+                            filename = $"{path}.{Path.GetExtension(filename)}";
+                        }
+                        return new FileStreamResult((Stream)stream, "application/octet-stream")
+                        {
+                            FileDownloadName = filename
+                        };
+                    }
+                    else
+                    {
+                        return new FileStreamResult((Stream)stream, "application/octet-stream");
+                    }
                 }
                 return new object().ToNotFoundObjectResult();
             }
