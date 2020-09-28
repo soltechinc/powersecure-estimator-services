@@ -18,6 +18,8 @@ namespace PowerSecure.Estimator.Services.ActionResults
             {
                 case JObject jObj:
                     return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.OK);
+                case string s:
+                    return ResultFromStatusCode(new List<object> { s }, 1, message, HttpStatusCode.OK);
                 case IEnumerable e:
                     return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.OK);
                 default:
@@ -31,6 +33,8 @@ namespace PowerSecure.Estimator.Services.ActionResults
             {
                 case JObject jObj:
                     return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.InternalServerError);
+                case string s:
+                    return ResultFromStatusCode(new List<object> { s }, 1, message, HttpStatusCode.InternalServerError);
                 case IEnumerable e:
                     return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.InternalServerError);
                 default:
@@ -40,15 +44,7 @@ namespace PowerSecure.Estimator.Services.ActionResults
 
         public static IActionResult ToNotFoundObjectResult(this object obj, string message = "Not Found")
         {
-            switch (obj)
-            {
-                case JObject jObj:
-                    return ResultFromStatusCode(new List<object>(), 0, message, HttpStatusCode.NotFound);
-                case IEnumerable e:
-                    return ResultFromStatusCode(obj, e.Count(), message, HttpStatusCode.NotFound);
-                default:
-                    return ResultFromStatusCode(new List<object>(), 0, message, HttpStatusCode.NotFound);
-            }
+            return ResultFromStatusCode(new List<object>(), 0, message, HttpStatusCode.NotFound);
         }
 
         private static IActionResult ResultFromStatusCode(object obj, int count, string message, HttpStatusCode httpStatusCode)
