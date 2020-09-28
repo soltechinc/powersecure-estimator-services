@@ -166,6 +166,11 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> Lookup(IDictionary<string, string> queryParams)
         {
+            if(!queryParams.TryGetValue("key", out string value) || string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
             return await AsyncLookup(string.Empty, new (string, string)[] { ("module", "all") }, DateTime.Now, queryParams["key"]);
         }
 

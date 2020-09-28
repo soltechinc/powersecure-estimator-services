@@ -55,8 +55,22 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams);
-                return returnValue.ToOkObjectResult(message: message);
+                if (id.ToLower() == "lookup")
+                {
+                    (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Lookup(queryParams);
+
+                    if (returnValue == null)
+                    {
+                        return new object().ToNotFoundObjectResult();
+                    }
+
+                    return returnValue.ToOkObjectResult(message: message);
+                }
+                else
+                {
+                    (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Get(id, queryParams);
+                    return returnValue.ToOkObjectResult(message: message);
+                }
             }
             catch (Exception ex)
             {
@@ -119,34 +133,6 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 var queryParams = req.GetQueryParameterDictionary();
 
                 (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Delete(id, queryParams);
-                return returnValue.ToOkObjectResult(message: message);
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
-
-        [FunctionName("LookupFactor")]
-        public static async Task<IActionResult> Lookup(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "factors/lookup/")] HttpRequest req,
-            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log)
-        {
-            try
-            {
-                log.LogDebug($"Function called - LookupFactor");
-
-                var queryParams = req.GetQueryParameterDictionary();
-
-                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Lookup(queryParams);
-
-                if(returnValue == null)
-                {
-                    return new object().ToNotFoundObjectResult();
-                }
-
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
