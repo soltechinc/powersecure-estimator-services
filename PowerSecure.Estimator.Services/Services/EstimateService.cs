@@ -142,18 +142,6 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 {
                     Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
-                    if (!string.IsNullOrEmpty(estimate.ProjectType))
-                    {
-                        dataSheet.Add("all.projecttype", $"${estimate.ProjectType}");
-                    }
-                    if (!string.IsNullOrEmpty(estimate.OutsideEquipmentPercent))
-                    {
-                        dataSheet.Add("all.outsideequipmentpercentage", (decimal.Parse(estimate.OutsideEquipmentPercent) / 100m));
-                    }
-                    if (!string.IsNullOrEmpty(estimate.DesiredRateForInstall))
-                    {
-                        dataSheet.Add("all.desiredinstallrate", decimal.Parse(estimate.DesiredRateForInstall));
-                    }
 
                     foreach (var module in estimate.Modules ?? Enumerable.Empty<ModuleDefinition>())
                     {
@@ -192,19 +180,18 @@ namespace PowerSecure.Estimator.Services.Services
                         {
                             continue;
                         }
-                        dataSheet.Add(name, $"${value.ToString()}");
+                        if (decimal.TryParse(value.ToString(), out var result))
+                        {
+                            dataSheet.Add(name, result);
+                        }
+                        else
+                        {
+                            dataSheet.Add(name, $"${value.ToString()}");
+                        }
                     }
                 }
                 {
                     BusinessOpportunityLineItem boli = JObject.Parse(((Document)_businessOpportunityLineItemRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = boliId }).GetAwaiter().GetResult()).ToString()).ToObject<BusinessOpportunityLineItem>();
-                    if (!string.IsNullOrEmpty(boli.State))
-                    {
-                        dataSheet.Add("all.usstate", $"${boli.State.ToLower()}");
-                    }
-                    if(!string.IsNullOrEmpty(boli.City))
-                    {
-                        dataSheet.Add("all.uscity", $"${boli.City.ToLower()}");
-                    }
 
                     foreach (var prop in typeof(BusinessOpportunityLineItem).GetProperties())
                     {
@@ -214,7 +201,14 @@ namespace PowerSecure.Estimator.Services.Services
                         {
                             continue;
                         }
-                        dataSheet.Add(name, $"${value.ToString()}");
+                        if (decimal.TryParse(value.ToString(), out var result))
+                        {
+                            dataSheet.Add(name, result);
+                        }
+                        else
+                        {
+                            dataSheet.Add(name, $"${value.ToString()}");
+                        }
                     }
                 }
             }

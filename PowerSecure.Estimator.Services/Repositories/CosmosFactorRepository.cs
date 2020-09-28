@@ -32,7 +32,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                       .Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2"))).ToString();
         }
 
-        private async Task<object> CreateKey(JObject document) { 
+        private object CreateKey(JObject document) { 
         document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
         document["hash"] = CreateHash(document.Properties()
                                 .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
@@ -61,7 +61,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                 });
                 waitHandles[j] = handle;
                 thread.Start();
-                await CreateKey((JObject)items[i]);
+                CreateKey((JObject)items[i]);
                 await Upsert((JObject)items[i]);
             }
             WaitHandle.WaitAll(waitHandles);
@@ -164,12 +164,22 @@ namespace PowerSecure.Estimator.Services.Repositories
             return factors;
         }
 
+        public async Task<object> Lookup(IDictionary<string, string> queryParams)
+        {
+            return await AsyncLookup(string.Empty, new (string, string)[] { ("module", "all") }, DateTime.Now, queryParams["key"]);
+        }
+
         object IReferenceDataRepository.Lookup(string dataSetName, (string SearchParam, string Value)[] criteria, DateTime effectiveDate, string returnFieldName)
         {
+            return AsyncLookup(dataSetName, criteria, effectiveDate, returnFieldName).GetAwaiter().GetResult();
+        }
+
+        private async Task<object> AsyncLookup(string dataSetName, (string SearchParam, string Value)[] criteria, DateTime effectiveDate, string returnFieldName)
+        {
             var str = new StringBuilder("select * from f where f.returnattribute = \"" + returnFieldName.ToLower() + "\"");
-            foreach((string searchParam, string value) in criteria)
+            foreach ((string searchParam, string value) in criteria)
             {
-                if(searchParam == null || value == null)
+                if (searchParam == null || value == null)
                 {
                     return null;
                 }
@@ -179,11 +189,11 @@ namespace PowerSecure.Estimator.Services.Repositories
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId),
                             str.ToString()).AsDocumentQuery();
 
-            Factor result = query.ExecuteNextAsync().Result.Where(f => DateTime.Parse(f.startdate.ToString()) < effectiveDate)
+            Factor result = (await query.ExecuteNextAsync()).Where(f => DateTime.Parse(f.startdate.ToString()) < effectiveDate)
                           .OrderByDescending(f => f.creationdate.ToString())
                           .FirstOrDefault();
 
-            if(result == null)
+            if (result == null)
             {
                 return null;
             }

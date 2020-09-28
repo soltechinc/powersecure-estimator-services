@@ -128,6 +128,34 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
+        [FunctionName("LookupFactor")]
+        public static async Task<IActionResult> Lookup(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "factors/lookup/")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - LookupFactor");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Lookup(queryParams);
+
+                if(returnValue == null)
+                {
+                    return new object().ToNotFoundObjectResult();
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
         [FunctionName("ImportFactors")]
         public static async Task<IActionResult> Import(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "factors/import/{env}")] HttpRequest req,

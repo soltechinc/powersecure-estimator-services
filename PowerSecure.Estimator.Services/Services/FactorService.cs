@@ -24,6 +24,11 @@ namespace PowerSecure.Estimator.Services.Services
             return (await _factorRepository.List(queryParams),"OK");
         }
 
+        public async Task<(object, string)> Lookup(IDictionary<string, string> queryParams)
+        {
+            return (await _factorRepository.List(queryParams), "OK");
+        }
+
         public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
         {
             return (await _factorRepository.Get(id, queryParams),"OK");

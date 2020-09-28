@@ -24,9 +24,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                     {
                         return d;
                     }
-                case string s:
+                case string s when !s.StartsWith('$'):
                     {
                         return decimal.Parse(s);
+                    }
+                case string s when s.StartsWith('$'):
+                    {
+                        return decimal.Parse(s.Substring(1));
                     }
                 case bool b:
                     {
@@ -62,6 +66,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                 case string s when !s.StartsWith('$'):
                     {
                         return bool.Parse(s);
+                    }
+                case string s when s.StartsWith('$'):
+                    {
+                        return bool.Parse(s.Substring(1));
                     }
                 default:
                     {

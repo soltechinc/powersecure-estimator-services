@@ -16,8 +16,11 @@ namespace PowerSecure.Estimator.Services.Repositories
         Task<object> Upsert(JObject document);
 
         Task<object> UpsertList(JObject document);
+
         Task<int> Delete(string id, IDictionary<string, string> queryParams);
 
         Task<int> Reset(string module, JToken jToken);
+
+        Task<object> Lookup(IDictionary<string, string> queryParams);
     }
 }
