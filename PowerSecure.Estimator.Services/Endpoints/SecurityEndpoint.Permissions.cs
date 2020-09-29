@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
@@ -14,21 +14,21 @@ using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
-    public class ModuleCutsheetEndpoint
+    public static partial class SecurityEndpoint
     {
-        [FunctionName("ListModuleCutsheets")]
-        public static async Task<IActionResult> List(
-             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "moduleCutsheets")] HttpRequest req,
-             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-             ILogger log)
+        [FunctionName("ListPermissions")]
+        public static async Task<IActionResult> ListPermissions(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/permissions")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
         {
             try
             {
-                log.LogDebug("Function called - ListModuleCutsheets");
+                log.LogDebug("Function called - ListPermissions");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleCutsheetService(new CosmosModuleCutsheetRepository(dbClient)).List(queryParams);
+                (object returnValue, string message) = await new PermissionsService(new CosmosPermissionsRepository(dbClient)).List(queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -38,20 +38,20 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
-        [FunctionName("GetModuleCutsheet")]
-        public static async Task<IActionResult> Get(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "moduleCutsheets/{id}")] HttpRequest req,
+        [FunctionName("GetPermission")]
+        public static async Task<IActionResult> GetPermission(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/permissions/{id}")] HttpRequest req,
             string id,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
             try
             {
-                log.LogDebug($"Function called - GetModuleCutsheets (Id: {id})");
+                log.LogDebug($"Function called - GetPermission (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleCutsheetService(new CosmosModuleCutsheetRepository(dbClient)).Get(id, queryParams);
+                (object returnValue, string message) = await new PermissionsService(new CosmosPermissionsRepository(dbClient)).Get(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -61,19 +61,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
-        [FunctionName("EditModuleCutsheet")]
-        public static async Task<IActionResult> Upsert(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "moduleCutsheets")] HttpRequest req,
+        [FunctionName("EditPermission")]
+        public static async Task<IActionResult> UpsertPermission(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "security/permissions")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
             try
             {
-                log.LogDebug("Function called - EditModuleCutsheet");
+                log.LogDebug("Function called - EditPermission");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new ModuleCutsheetService(new CosmosModuleCutsheetRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                (object returnValue, string message) = await new PermissionsService(new CosmosPermissionsRepository(dbClient)).Upsert(JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -83,20 +83,20 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
-        [FunctionName("DeleteModuleCutsheet")]
-        public static async Task<IActionResult> Delete(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "moduleCutsheets/{id}")] HttpRequest req,
+        [FunctionName("DeletePermission")]
+        public static async Task<IActionResult> DeletePermission(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "security/permissions/{id}")] HttpRequest req,
             string id,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
             ILogger log)
         {
             try
             {
-                log.LogDebug($"Function called - DeleteModuleCutsheet (Id: {id})");
+                log.LogDebug($"Function called - DeletePermission (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleCutsheetService(new CosmosModuleCutsheetRepository(dbClient)).Delete(id, queryParams);
+                (object returnValue, string message) = await new PermissionsService(new CosmosPermissionsRepository(dbClient)).Get(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

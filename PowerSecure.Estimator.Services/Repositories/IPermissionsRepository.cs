@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
-    public interface IModuleCutsheetRepository
+    public interface IPermissionsRepository
     {
         Task<object> List(IDictionary<string, string> queryParams);
 
-        Task<object> Get(string id, IDictionary<string, string> queryParams);
+        Task<object> Get(string id);
 
         Task<object> Upsert(JObject document);
 
-        Task<int> Delete(string id, IDictionary<string, string> queryParams);
+        Task<int> Delete(string id);
     }
 }

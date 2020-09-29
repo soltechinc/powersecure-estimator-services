@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
-    public interface ISecurityRepository
+    public interface IUserRepository
     {
         Task<object> List(IDictionary<string, string> queryParams);
 
-        Task<object> Get(string id, IDictionary<string, string> queryParams);
+        Task<object> Get(string id);
 
         Task<object> Upsert(JObject document);
+
+        Task<int> Delete(string id);
     }
 }

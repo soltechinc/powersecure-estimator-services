@@ -35,29 +35,5 @@ namespace PowerSecure.Estimator.Services.Services
             int deletedDocumentCount = await _moduleVendorQuoteRepository.Delete(id, queryParams);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
         }
-
-        private static readonly HttpClient _httpClient = new HttpClient();
-
-        public async Task<(object, string)> Import(string env)
-        {
-            string envSetting = $"{env}-url";
-            string url = AppSettings.Get(envSetting);
-            if (url == null)
-            {
-                return (null, $"Unable to find environment setting: {envSetting}");
-            }
-
-            string returnValue = await _httpClient.GetStringAsync($"{url}/api/moduleVendorQuotes/?object=full");
-            var jObj = JObject.Parse(returnValue);
-
-            if (jObj["Status"].ToString() != "200")
-            {
-                return (null, "Error when calling list api");
-            }
-
-            int newDocumentCount = await _moduleVendorQuoteRepository.Reset(jObj["Items"]);
-
-            return (newDocumentCount, $"{newDocumentCount} documents created.");
-        }
     }
 }

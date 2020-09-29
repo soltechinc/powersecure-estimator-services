@@ -40,6 +40,6 @@ namespace PowerSecure.Estimator.Services.Models
         public string CreatedBy { get; set; }
 
         [JsonProperty("authorizedUsers")]
-        public List<AuthorizedUser> AuthorizedUsers { get; set; }
+        public List<User> AuthorizedUsers { get; set; }
     }
 }

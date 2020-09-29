@@ -17,7 +17,8 @@ namespace PowerSecure.Estimator.Services.Endpoints
     {
         [FunctionName("UploadFile")]
         public static async Task<IActionResult> UploadFile(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "files")] HttpRequest req, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "files")] HttpRequest req, 
+            ILogger log)
         {
             try
             {
@@ -74,7 +75,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("DownloadFile")]
         public static async Task<IActionResult> DownloadFile(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "files/{path}")] HttpRequest req, string path, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "files/{path}")] HttpRequest req, 
+            string path, 
+            ILogger log)
         {
             try
             {
@@ -114,7 +117,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
         [FunctionName("DeleteFile")]
         public static async Task<IActionResult> DeleteFile(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "files/{path}")] HttpRequest req, string path, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "files/{path}")] HttpRequest req, 
+            string path, 
+            ILogger log)
         {
             try
             {

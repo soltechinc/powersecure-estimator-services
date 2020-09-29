@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
-    public class ModuleVendorQuoteEndpoint
+    public static class ModuleVendorQuoteEndpoint
     {
         [FunctionName("ListModuleVendorQuotes")]
         public static async Task<IActionResult> List(
@@ -105,33 +105,5 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
-
-        [FunctionName("ImportModuleVendorQuotes")]
-        public static async Task<IActionResult> Import(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "moduleVendorQuotes/import/{env}")] HttpRequest req,
-            string env,
-            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log)
-        {
-            try
-            {
-                log.LogDebug($"Function called - ImportModuleVendorQuotes (Env: {env})");
-
-                (object returnValue, string message) = await new ModuleVendorQuoteService(new CosmosModuleVendorQuoteRepository(dbClient)).Import(env);
-
-                if (returnValue == null)
-                {
-                    return new object().ToServerErrorObjectResult(message: message);
-                }
-
-                return returnValue.ToOkObjectResult(message: message);
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
-        // GetDocuments // read from partition
     }
 }

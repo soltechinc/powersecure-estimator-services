@@ -17,7 +17,6 @@ namespace PowerSecure.Estimator.Services.Endpoints
 {
     public static class EstimateEndpoint
     {
-
         [FunctionName("EvaluateEstimate")]
         public static async Task<IActionResult> Evaluate(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "estimates/evaluate")] HttpRequest req,
@@ -172,33 +171,6 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 var queryParams = req.GetQueryParameterDictionary();
 
                 (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Delete(id, queryParams);
-                return returnValue.ToOkObjectResult(message: message);
-            }
-            catch (Exception ex)
-            {
-                log.LogError(ex, "Caught exception");
-                return new object().ToServerErrorObjectResult();
-            }
-        }
-
-        [FunctionName("ImportEstimates")]
-        public static async Task<IActionResult> Import(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "estimates/import/{env}")] HttpRequest req,
-            string env,
-            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log)
-        {
-            try
-            {
-                log.LogDebug($"Function called - ImportEstimates (Env: {env})");
-
-                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Import(env);
-
-                if (returnValue == null)
-                {
-                    return new object().ToServerErrorObjectResult(message: message);
-                }
-
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

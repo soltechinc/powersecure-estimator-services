@@ -2,7 +2,7 @@
 
 namespace PowerSecure.Estimator.Services.Models
 {
-    public class AuthorizedUser
+    public class User
     {
         [JsonProperty("id")]
         public string Id { get; set; }

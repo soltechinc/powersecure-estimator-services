@@ -65,13 +65,15 @@ namespace PowerSecure.Estimator.Services.Services
                 string cachedInstructionSets = (string)_referenceDataRepository.Lookup("factor", new List<(string, string)> { ("module", moduleTitle) }.ToArray(), effectiveDate, "instructionsetcache");
 
                 var instructionSetNames = cachedInstructionSets == null ? new string[0] : cachedInstructionSets.Split(',').Select(x => $"{moduleTitle}.{x.ToLower().Trim()}");
-                var dataSheet = new Dictionary<string, object>();
-                dataSheet.Add($"{moduleTitle}.estimatematerialcost", null);
-                dataSheet.Add($"{moduleTitle}.estimatelaborcost", null);
-                dataSheet.Add($"{moduleTitle}.estimatetotalcost", null);
-                dataSheet.Add($"{moduleTitle}.estimatematerialusetax", null);
-                dataSheet.Add($"{moduleTitle}.estimatecostwithusetax", null);
-                dataSheet.Add($"{moduleTitle}.estimatesellprice", null);
+                var dataSheet = new Dictionary<string, object>
+                {
+                    { $"{moduleTitle}.estimatematerialcost", null },
+                    { $"{moduleTitle}.estimatelaborcost", null },
+                    { $"{moduleTitle}.estimatetotalcost", null },
+                    { $"{moduleTitle}.estimatematerialusetax", null },
+                    { $"{moduleTitle}.estimatecostwithusetax", null },
+                    { $"{moduleTitle}.estimatesellprice", null }
+                };
                 foreach (var instructionSetName in instructionSetNames)
                 {
                     dataSheet.Add(instructionSetName, null);
@@ -175,30 +177,6 @@ namespace PowerSecure.Estimator.Services.Services
 
             int deletedDocumentCount = await _moduleDefinitionRepository.Delete(id, queryParams);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
-        }
-
-        private static readonly HttpClient _httpClient = new HttpClient();
-
-        public async Task<(object, string)> Import(string env)
-        {
-            string envSetting = $"{env}-url";
-            string url = AppSettings.Get(envSetting);
-            if (url == null)
-            {
-                return (null, $"Unable to find environment setting: {envSetting}");
-            }
-
-            string returnValue = await _httpClient.GetStringAsync($"{url}/api/moduleDefinitions/?object=full");
-            var jObj = JObject.Parse(returnValue);
-
-            if (jObj["Status"].ToString() != "200")
-            {
-                return (null, "Error when calling list api");
-            }
-
-            int newDocumentCount = await _moduleDefinitionRepository.Reset(jObj["Items"]);
-
-            return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
     }
 }

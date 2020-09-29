@@ -21,8 +21,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             _databaseId = AppSettings.Get("databaseId");
             _collectionId = AppSettings.Get("estimateCollectionId");
         }
-
-
+        
         public async Task<object> Clone(JObject document)
         {
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
@@ -104,42 +103,6 @@ namespace PowerSecure.Estimator.Services.Repositories
             }
 
             return items;
-        }
-
-        public async Task<int> Reset(JToken jToken)
-        {
-            var documentQuery = _dbClient.CreateDocumentQuery<Estimate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
-                .AsDocumentQuery();
-
-            var items = new List<Estimate>();
-
-            while (documentQuery.HasMoreResults)
-            {
-                foreach (Estimate item in await documentQuery.ExecuteNextAsync())
-                {
-                    items.Add(item);
-                }
-            }
-
-            foreach (var item in items)
-            {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: item.Id), new RequestOptions { PartitionKey = new PartitionKey(item.Title) });
-            }
-
-            int count = 0;
-            foreach (var child in jToken.Children())
-            {
-                if (child.Type != JTokenType.Object)
-                {
-                    continue;
-                }
-
-                await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), (JObject)child);
-
-                count++;
-            }
-
-            return count;
         }
     }
 }

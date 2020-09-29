@@ -6,7 +6,6 @@ namespace PowerSecure.Estimator.Services.Models
 {
     public class BusinessOpportunity
     {
-
         [JsonProperty("id")]
         public string Id { get; set; }
 

@@ -1022,8 +1022,7 @@ namespace PowerSecure.Estimator.Services.Services
                         string childName = child.Name.ToLower().ToString();
                         bool isPath = childName.Contains(path);
                         bool hasNum = childValue.Any(char.IsDigit);
-                        DateTime date;
-                        bool isDate = DateTime.TryParse(childValue, out date);
+                        bool isDate = DateTime.TryParse(childValue, out DateTime date);
                         switch (path)
                         {
                             case "revision":
@@ -1083,30 +1082,6 @@ namespace PowerSecure.Estimator.Services.Services
         {
             int deletedDocumentCount = await _estimateRepository.Delete(id, queryParams);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
-        }
-
-        private static readonly HttpClient _httpClient = new HttpClient();
-
-        public async Task<(object, string)> Import(string env)
-        {
-            string envSetting = $"{env}-url";
-            string url = AppSettings.Get(envSetting);
-            if (url == null)
-            {
-                return (null, $"Unable to find environment setting: {envSetting}");
-            }
-
-            string returnValue = await _httpClient.GetStringAsync($"{url}/api/estimates/?object=full");
-            var jObj = JObject.Parse(returnValue);
-
-            if (jObj["Status"].ToString() != "200")
-            {
-                return (null, "Error when calling list api");
-            }
-
-            int newDocumentCount = await _estimateRepository.Reset(jObj["Items"]);
-
-            return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
 
         public async Task<(object, string)> ExportSummary(JObject document, ILogger log)

@@ -21,7 +21,7 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
         {
-            return (await _estimateTemplateRepository.Get(id, queryParams), "OK");
+            return (await _estimateTemplateRepository.Get(id), "OK");
         }
 
         public async Task<(object, string)> Upsert(JObject document)
@@ -31,7 +31,7 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
         {
-            int deletedDocumentCount = await _estimateTemplateRepository.Delete(id, queryParams);
+            int deletedDocumentCount = await _estimateTemplateRepository.Delete(id);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
         }
     }

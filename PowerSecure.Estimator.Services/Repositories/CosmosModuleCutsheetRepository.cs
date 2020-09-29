@@ -113,41 +113,5 @@ namespace PowerSecure.Estimator.Services.Repositories
 
             return items;
         }
-
-        public async Task<int> Reset(JToken jToken)
-        {
-            var documentQuery = _dbClient.CreateDocumentQuery<ModuleCutsheet>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
-                .AsDocumentQuery();
-
-            var items = new List<ModuleCutsheet>();
-
-            while (documentQuery.HasMoreResults)
-            {
-                foreach (ModuleCutsheet item in await documentQuery.ExecuteNextAsync())
-                {
-                    items.Add(item);
-                }
-            }
-
-            foreach (var item in items)
-            {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: item.Id), new RequestOptions { PartitionKey = new PartitionKey(item.Id) });
-            }
-
-            int count = 0;
-            foreach (var child in jToken.Children())
-            {
-                if (child.Type != JTokenType.Object)
-                {
-                    continue;
-                }
-
-                await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), (JObject)child);
-
-                count++;
-            }
-
-            return count;
-        }
     }
 }

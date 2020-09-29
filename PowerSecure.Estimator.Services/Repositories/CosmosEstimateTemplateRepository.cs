@@ -31,28 +31,10 @@ namespace PowerSecure.Estimator.Services.Repositories
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
-        public async Task<int> Delete(string id, IDictionary<string, string> queryParams)
+        public async Task<int> Delete(string id)
         {
-            if (queryParams.ContainsKey("id"))
-            {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(id) });
-                return 1;
-            }
-
-            var query = _dbClient.CreateDocumentQuery<EstimateTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
-                .Where(i => i.Id == id)
-                .AsDocumentQuery();
-
-            var list = new List<Document>();
-            while (query.HasMoreResults)
-            {
-                foreach (EstimateTemplate item in await query.ExecuteNextAsync())
-                {
-                    list.Add(await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: item.Id), new RequestOptions { PartitionKey = new PartitionKey(item.Id) }));
-                }
-            }
-
-            return list.Count;
+            await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(id) });
+            return 1;
         }
 
         public async Task<object> List(IDictionary<string, string> queryParams)
@@ -72,29 +54,10 @@ namespace PowerSecure.Estimator.Services.Repositories
             return items;
         }
 
-        public async Task<object> Get(string id, IDictionary<string, string> queryParams)
+        public async Task<object> Get(string id)
         {
-            if (queryParams.ContainsKey("id"))
-            {
-                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
-                    new RequestOptions { PartitionKey = new PartitionKey(id) });
-            }
-
-            var query = _dbClient.CreateDocumentQuery<EstimateTemplate>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
-                .Where(i => i.Id == id)
-                .AsDocumentQuery();
-
-            var items = new List<EstimateTemplate>();
-
-            while (query.HasMoreResults)
-            {
-                foreach (EstimateTemplate item in await query.ExecuteNextAsync())
-                {
-                    items.Add(item);
-                }
-            }
-
-            return items;
+            return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id),
+                new RequestOptions { PartitionKey = new PartitionKey(id) });
         }
     }
 }
