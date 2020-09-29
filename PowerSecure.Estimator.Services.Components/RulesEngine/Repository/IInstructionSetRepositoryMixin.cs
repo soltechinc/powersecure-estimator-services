@@ -1,15 +1,14 @@
 ﻿using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
 {
     public static class IInstructionSetRepositoryMixin
     {
-        public static IInstructionSet ValidateInstructionSet(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<string, string,string,string, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IFunction> functions)
+        public static IInstructionSet ValidateInstructionSet(this IInstructionSetRepository repository, string instructionSetModule, string instructionSetName, string instructionDefinition, DateTime startDate, DateTime creationDate, Func<string, string, string, string, DateTime, DateTime, IInstructionSet> instructionSetFactory, IDictionary<string, IFunction> functions)
         {
             if (instructionSetModule == null) throw new ArgumentNullException("instructionSetModule");
             if (instructionSetName == null) throw new ArgumentNullException("instructionSetName");
@@ -17,7 +16,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Repository
             if (repository == null) throw new ArgumentNullException("repository");
             if (instructionSetFactory == null) throw new ArgumentNullException("instructionSetFactory");
             if (functions == null) throw new ArgumentNullException("functions");
-            
+
             instructionSetName = instructionSetName.Trim().ToLower();
             instructionSetModule = instructionSetModule.Trim().ToLower();
 

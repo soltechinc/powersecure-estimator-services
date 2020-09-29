@@ -1,18 +1,16 @@
 ﻿// 2 parameters. Both parameters are equal-sized arrays of numerics.
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using System.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class SumProductPrimitive : IFunction
     {
         public string Name => "sumproduct";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var values = parameters[0].ToObjectArray().ToDecimal().ToArray();
@@ -43,7 +41,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             }
 
             var list = new List<JToken>(jToken.Children());
-            if(list[0].Children().Count() == 0 || list[1].Children().Count() == 0)
+            if (list[0].Children().Count() == 0 || list[1].Children().Count() == 0)
             {
                 return (false, "Expected parameter arrays to have entries.");
             }

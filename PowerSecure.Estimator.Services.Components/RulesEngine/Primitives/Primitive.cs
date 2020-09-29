@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
@@ -15,7 +13,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
             assembly.GetTypes()
                 .Where(p => typeof(IFunction).IsAssignableFrom(p) && p.IsClass)
-                .Aggregate(functions, (acc,type) =>
+                .Aggregate(functions, (acc, type) =>
                 {
                     var primitive = (IFunction)Activator.CreateInstance(type);
                     acc.Add(primitive.Name.ToLower(), primitive);

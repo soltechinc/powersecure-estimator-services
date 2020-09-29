@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace PowerSecure.Estimator.Services.Models {
-    public class Estimate {
+namespace PowerSecure.Estimator.Services.Models
+{
+    public class Estimate
+    {
         [JsonProperty("id")]
         public string Id { get; set; }
 

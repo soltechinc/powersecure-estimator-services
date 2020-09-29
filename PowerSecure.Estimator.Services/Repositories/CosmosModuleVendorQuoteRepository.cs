@@ -1,14 +1,10 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Models;
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Repositories
@@ -75,9 +71,9 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 foreach (ModuleVendorQuote item in await query.ExecuteNextAsync())
                 {
-                    if(!reportFullObject)
+                    if (!reportFullObject)
                     {
-                         //item.Rest = null;
+                        //item.Rest = null;
                     }
                     items.Add(item);
                 }
@@ -90,7 +86,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         {
             if (queryParams.ContainsKey("id"))
             {
-                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), 
+                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
                     new RequestOptions { PartitionKey = new PartitionKey(id) });
             }
 

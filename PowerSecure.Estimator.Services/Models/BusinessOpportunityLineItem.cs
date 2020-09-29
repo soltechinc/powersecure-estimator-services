@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace PowerSecure.Estimator.Services.Models {
-    public class BusinessOpportunityLineItem {
+namespace PowerSecure.Estimator.Services.Models
+{
+    public class BusinessOpportunityLineItem
+    {
         [JsonProperty("id")]
         public string Id { get; set; }
 

@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
@@ -19,20 +17,20 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         private IEnumerable<object> FlattenEnumerator(object[] parameters)
         {
-            foreach(var obj in parameters)
+            foreach (var obj in parameters)
             {
-                if(obj == null)
+                if (obj == null)
                 {
                     yield return null;
                     continue;
                 }
 
                 var resolvedObj = obj.ToResolvedParameter();
-                switch(resolvedObj)
+                switch (resolvedObj)
                 {
                     case object[] objs:
                         {
-                            foreach(var subObj in FlattenEnumerator(objs))
+                            foreach (var subObj in FlattenEnumerator(objs))
                             {
                                 yield return subObj;
                             }

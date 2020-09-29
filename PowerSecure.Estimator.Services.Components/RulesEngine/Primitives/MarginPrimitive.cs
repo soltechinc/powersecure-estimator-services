@@ -1,18 +1,15 @@
 ﻿// 2 or 3 parameters. Parameter 1 is price, parameter 2 is cost, parameter 3 is an optionally-applied margin.
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class MarginPrimitive : IFunction
     {
         public string Name => "margin";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var decimals = parameters.ToDecimal().ToArray();
@@ -21,7 +18,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             var cost = decimals[1];
             var applyMargin = decimals.Length == 3 ? decimals[2] : 1;
 
-            if(price <= 0)
+            if (price <= 0)
             {
                 return 0;
             }

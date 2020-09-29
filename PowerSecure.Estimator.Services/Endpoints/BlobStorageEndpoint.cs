@@ -4,17 +4,12 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using PowerSecure.Estimator.Services.ActionResults;
+using PowerSecure.Estimator.Services.Services;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using PowerSecure.Estimator.Services.Services;
-using Newtonsoft.Json;
-using static PowerSecure.Estimator.Services.Shared.DTOs;
 using System.IO;
-using Newtonsoft.Json.Linq;
 using System.Linq;
-using System.Text;
-using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
@@ -36,9 +31,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 string path = ((string[])dict["path"])[0];
 
                 var list = new List<string>();
-                if(req.Form.Files != null)
+                if (req.Form.Files != null)
                 {
-                    if(req.Form.Files.Count > 1)
+                    if (req.Form.Files.Count > 1)
                     {
                         int fileCount = 0;
                         foreach (var file in req.Form.Files)
@@ -84,17 +79,17 @@ namespace PowerSecure.Estimator.Services.Endpoints
             try
             {
                 log.LogDebug("Function called - DownloadFile");
-                
+
                 var queryParams = req.GetQueryParameterDictionary();
 
                 (object stream, string message) = await new BlobStorageService().DownloadFile(path, log);
 
                 if (stream != null)
                 {
-                    if(queryParams.ContainsKey("filename"))
+                    if (queryParams.ContainsKey("filename"))
                     {
                         string filename = queryParams["filename"];
-                        if(Path.GetFileNameWithoutExtension(filename) == "*")
+                        if (Path.GetFileNameWithoutExtension(filename) == "*")
                         {
                             filename = $"{path}{Path.GetExtension(filename)}";
                         }
@@ -125,7 +120,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug("Function called - DeleteFile");
                 (object returnValue, string message) = await new BlobStorageService().DeleteFile(path, log);
-                if(returnValue == null)
+                if (returnValue == null)
                 {
                     return new object[0].ToOkObjectResult(message: message);
                 }

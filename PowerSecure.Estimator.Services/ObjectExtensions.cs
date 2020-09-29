@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.ActionResults
 {
@@ -14,7 +11,7 @@ namespace PowerSecure.Estimator.Services.ActionResults
     {
         public static IActionResult ToOkObjectResult(this object obj, string message = "OK")
         {
-            switch(obj)
+            switch (obj)
             {
                 case JObject jObj:
                     return ResultFromStatusCode(new List<object> { obj }, 1, message, HttpStatusCode.OK);
@@ -55,7 +52,7 @@ namespace PowerSecure.Estimator.Services.ActionResults
         private static int Count(this IEnumerable e)
         {
             int count = 0;
-            foreach(var o in e)
+            foreach (var o in e)
             {
                 count++;
             }

@@ -1,11 +1,10 @@
 ﻿// 2 or more parameters, or 1 parameter if it is an array.
+using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
@@ -15,7 +14,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            switch(parameters.Length)
+            switch (parameters.Length)
             {
                 case 1:
                     return CheckGreaterThan(parameters[0].ToObjectArray());
@@ -24,7 +23,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                         var first = parameters[0].ToComparable();
                         var second = parameters[1].ToResolvedParameter();
 
-                        if(second is object[] objects)
+                        if (second is object[] objects)
                         {
                             return objects.Select(o => (object)(first.CompareTo(o.ToComparable()) > 0)).ToArray();
                         }
@@ -41,7 +40,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
             IComparable first = null;
             foreach (var compare in objects.ToComparable())
             {
-                if(first == null)
+                if (first == null)
                 {
                     first = compare;
                     continue;
@@ -65,7 +64,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                     return (false, "Did not expect any arrays as parameters.");
                 }
 
-                if(jToken.Children().Count() == 1)
+                if (jToken.Children().Count() == 1)
                 {
                     var child = jToken.Children().First();
                     if (child.Children().Count() < 2)

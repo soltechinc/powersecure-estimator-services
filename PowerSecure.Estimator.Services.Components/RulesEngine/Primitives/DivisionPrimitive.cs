@@ -1,18 +1,15 @@
 ﻿// 2 or more parameters, or 1 parameter if it is an array.
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class DivisionPrimitive : IFunction
     {
         public string Name => "/";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters.Length > 1 ?

@@ -1,16 +1,15 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
-using PowerSecure.Estimator.Services.Components.RulesEngine;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
@@ -142,7 +141,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                     }
                 }
             }).GetAwaiter().GetResult();
-            
+
             return instructionSets.Where(x => x.StartDate <= effectiveDate).OrderByDescending(x => x.CreationDate).FirstOrDefault();
         }
 

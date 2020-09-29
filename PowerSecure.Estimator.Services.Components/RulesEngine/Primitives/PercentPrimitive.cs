@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
@@ -14,8 +11,8 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            return parameters.Length == 1 ? 
-                parameters[0].ToDecimal()?.ToString("P2")?.ToStringLiteral() : 
+            return parameters.Length == 1 ?
+                parameters[0].ToDecimal()?.ToString("P2")?.ToStringLiteral() :
                 parameters[0].ToDecimal()?.ToString($"P{parameters[1].ToDecimal() ?? 0}")?.ToStringLiteral();
         }
 

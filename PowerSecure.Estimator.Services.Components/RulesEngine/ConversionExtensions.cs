@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
 {
@@ -161,17 +158,17 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                     }
                 case string s:
                     {
-                        if(s.StartsWith('$'))
+                        if (s.StartsWith('$'))
                         {
                             return s.Substring(1).ToLower();
                         }
 
-                        if(decimal.TryParse(s, out decimal d))
+                        if (decimal.TryParse(s, out decimal d))
                         {
                             return d;
                         }
 
-                        if(bool.TryParse(s, out bool b))
+                        if (bool.TryParse(s, out bool b))
                         {
                             return b ? 1m : 0m;
                         }
@@ -208,7 +205,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
 
         public static object ToInstructionSet(this object obj, object p, string searchString)
         {
-            switch(obj)
+            switch (obj)
             {
                 case null:
                     {

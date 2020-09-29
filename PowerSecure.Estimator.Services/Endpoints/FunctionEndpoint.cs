@@ -5,15 +5,12 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.ActionResults;
 using PowerSecure.Estimator.Services.Repositories;
 using PowerSecure.Estimator.Services.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using PowerSecure.Estimator.Services.ActionResults;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
@@ -77,7 +74,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
                 (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody));
-                
+
                 if (returnValue == null)
                 {
                     return new object().ToServerErrorObjectResult(message: message);
@@ -148,7 +145,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
-        
+
         [FunctionName("EditFunctionFromUi")]
         public static async Task<IActionResult> UpsertFromUi(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "functions/ui")] HttpRequest req,
@@ -164,7 +161,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 log.LogInformation(requestBody);
 
                 (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).UpsertFromUi(requestBody);
-                
+
                 if (returnValue == null)
                 {
                     return new object().ToServerErrorObjectResult(message: message);

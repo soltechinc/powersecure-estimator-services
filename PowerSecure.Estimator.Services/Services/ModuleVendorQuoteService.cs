@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Services
@@ -18,7 +15,7 @@ namespace PowerSecure.Estimator.Services.Services
             _moduleVendorQuoteRepository = moduleVendorQuoteRepository;
         }
 
-        public async Task<(object,string)> List(IDictionary<string, string> queryParams)
+        public async Task<(object, string)> List(IDictionary<string, string> queryParams)
         {
             return (await _moduleVendorQuoteRepository.List(queryParams), "OK");
         }
@@ -32,7 +29,7 @@ namespace PowerSecure.Estimator.Services.Services
         {
             return (await _moduleVendorQuoteRepository.Upsert(document), "OK");
         }
-        
+
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
         {
             int deletedDocumentCount = await _moduleVendorQuoteRepository.Delete(id, queryParams);

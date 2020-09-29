@@ -1,6 +1,5 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
@@ -11,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Services
@@ -39,7 +37,7 @@ namespace PowerSecure.Estimator.Services.Services
             _log = log;
         }
 
-        public async Task<(object,string)> List(IDictionary<string, string> queryParams)
+        public async Task<(object, string)> List(IDictionary<string, string> queryParams)
         {
             return (await _moduleDefinitionRepository.List(queryParams), "OK");
         }
@@ -53,19 +51,19 @@ namespace PowerSecure.Estimator.Services.Services
         {
             _log.LogInformation($"Document - {document.ToString()}");
 
-            if((!document.Properties().Any(x => x.Name == "moduleId")) || string.IsNullOrWhiteSpace(document["moduleId"].ToString()))
-            { 
+            if ((!document.Properties().Any(x => x.Name == "moduleId")) || string.IsNullOrWhiteSpace(document["moduleId"].ToString()))
+            {
                 document["moduleId"] = Guid.NewGuid().ToString();
             }
             {
-                if(document.Properties().Any(x => x.Name == "datacache"))
+                if (document.Properties().Any(x => x.Name == "datacache"))
                 {
                     document.Remove("datacache");
                 }
                 string moduleTitle = document["moduleTitle"].ToString().ToLower();
                 DateTime effectiveDate = document.Properties().Any(x => x.Name == "effectiveDate") ? DateTime.Parse(document["effectiveDate"].ToString()) : DateTime.Now;
-                string cachedInstructionSets = (string)_referenceDataRepository.Lookup("factor", new List<(string, string)> { ("module",moduleTitle) }.ToArray(), effectiveDate, "instructionsetcache");
-                
+                string cachedInstructionSets = (string)_referenceDataRepository.Lookup("factor", new List<(string, string)> { ("module", moduleTitle) }.ToArray(), effectiveDate, "instructionsetcache");
+
                 var instructionSetNames = cachedInstructionSets == null ? new string[0] : cachedInstructionSets.Split(',').Select(x => $"{moduleTitle}.{x.ToLower().Trim()}");
                 var dataSheet = new Dictionary<string, object>();
                 dataSheet.Add($"{moduleTitle}.estimatematerialcost", null);
@@ -87,14 +85,14 @@ namespace PowerSecure.Estimator.Services.Services
                 dataSheet.Add("all.effectivedate", effectiveDate.ToString("M/d/yyyy"));
                 var resultDataSheet = new RulesEngine().EvaluateDataSheet(dataSheet, keysToEvaluate, effectiveDate, Primitive.Load(), _instructionSetRepository, _referenceDataRepository, _log, new HashSet<string>());
                 var dataCacheDict = new Dictionary<string, object>();
-                foreach(var instructionSetName in instructionSetNames)
+                foreach (var instructionSetName in instructionSetNames)
                 {
-                    if(resultDataSheet.ContainsKey(instructionSetName) && resultDataSheet[instructionSetName] != null)
+                    if (resultDataSheet.ContainsKey(instructionSetName) && resultDataSheet[instructionSetName] != null)
                     {
                         dataCacheDict.Add(instructionSetName, resultDataSheet[instructionSetName]);
                     }
                 }
-                if(dataCacheDict.Count > 0)
+                if (dataCacheDict.Count > 0)
                 {
                     document.Add("datacache", JToken.FromObject(dataCacheDict));
                 }
@@ -120,14 +118,14 @@ namespace PowerSecure.Estimator.Services.Services
                     bool found = false;
                     Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
 
-                    if(estimate.Modules == null)
+                    if (estimate.Modules == null)
                     {
                         estimate.Modules = new List<ModuleDefinition>();
                     }
 
-                    for(int i = 0; i < estimate.Modules.Count; ++i)
+                    for (int i = 0; i < estimate.Modules.Count; ++i)
                     {
-                        if(estimate.Modules[i].ModuleId == moduleId)
+                        if (estimate.Modules[i].ModuleId == moduleId)
                         {
                             estimate.Modules[i] = moduleDefinitionDocument.ToObject<ModuleDefinition>();
                             found = true;
@@ -135,7 +133,7 @@ namespace PowerSecure.Estimator.Services.Services
                         }
                     }
 
-                    if(!found)
+                    if (!found)
                     {
                         estimate.Modules.Add(moduleDefinitionDocument.ToObject<ModuleDefinition>());
                     }

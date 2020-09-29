@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace PowerSecure.Estimator.Services.Models {
-    public class ModuleCutsheet {
+namespace PowerSecure.Estimator.Services.Models
+{
+    public class ModuleCutsheet
+    {
         [JsonProperty("id")]
         public string Id { get; set; }
 

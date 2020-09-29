@@ -1,18 +1,15 @@
 ﻿// 4 parameters. If parameter 1 is greater than or equal to parameter 2, parameter 3 is returned. Otherwise, parameter 4 is returned.
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class ThresholdPrimitive : IFunction
     {
         public string Name => "threshold";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return parameters[0].ToDecimal() >= parameters[1].ToDecimal() ? parameters[2].ToResolvedParameter() : parameters[3].ToResolvedParameter();

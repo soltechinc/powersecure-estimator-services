@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using Microsoft.Extensions.Logging;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
@@ -27,7 +25,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             {
                 token = JObject.Parse(instructionSet.Instructions);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.LogError($"Error while parsing instruction set {instructionSetName}", ex);
                 return null;

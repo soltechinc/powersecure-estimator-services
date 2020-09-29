@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Services
@@ -48,7 +44,7 @@ namespace PowerSecure.Estimator.Services.Services
             return (null, "Error");
         }
 
-        public async Task<(object,string)> DeleteFile(string path, ILogger log)
+        public async Task<(object, string)> DeleteFile(string path, ILogger log)
         {
             log.LogInformation($"Deleting file - {path}");
             var blobContainer = GetCloudBlobContainer();

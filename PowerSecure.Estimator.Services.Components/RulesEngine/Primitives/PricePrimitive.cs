@@ -1,18 +1,15 @@
 ﻿// 2 or 3 parameters. Parameter 1 is cost, parameter 2 is margin, parameter 3 is tax
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class PricePrimitive : IFunction
     {
         public string Name => "price";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var decimals = parameters.ToDecimal().ToArray();
@@ -26,7 +23,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 return 0;
             }
 
-            return (cost/(1-margin))+tax;
+            return (cost / (1 - margin)) + tax;
         }
 
         public (bool Success, string Message) Validate(JToken jToken)

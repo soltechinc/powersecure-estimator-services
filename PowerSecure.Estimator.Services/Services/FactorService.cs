@@ -19,9 +19,9 @@ namespace PowerSecure.Estimator.Services.Services
             _factorRepository = factorRepository;
         }
 
-        public async Task<(object, string)> List(IDictionary<string,string> queryParams)
+        public async Task<(object, string)> List(IDictionary<string, string> queryParams)
         {
-            return (await _factorRepository.List(queryParams),"OK");
+            return (await _factorRepository.List(queryParams), "OK");
         }
 
         public async Task<(object, string)> Lookup(IDictionary<string, string> queryParams)
@@ -31,27 +31,28 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
         {
-            return (await _factorRepository.Get(id, queryParams),"OK");
+            return (await _factorRepository.Get(id, queryParams), "OK");
         }
 
-        public async Task<(object, string)> UpsertList(JObject document) {
+        public async Task<(object, string)> UpsertList(JObject document)
+        {
             return (await _factorRepository.UpsertList(document), "OK");
         }
 
 
         public async Task<(object, string)> Upsert(JObject document)
-        {   
+        {
             document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
             document["hash"] = CreateHash(document.Properties()
                                 .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
                                 .SelectMany(o => new string[] { o.Name, o.Value.ToString() })
                                 .OrderBy(s => s)
                                 .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
-            if(!document.ContainsKey("creationdate"))
+            if (!document.ContainsKey("creationdate"))
             {
                 document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
             }
-            return (await _factorRepository.Upsert(document),"OK");
+            return (await _factorRepository.Upsert(document), "OK");
         }
 
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
@@ -72,7 +73,7 @@ namespace PowerSecure.Estimator.Services.Services
         {
             string envSetting = $"{env}-url";
             string url = AppSettings.Get(envSetting);
-            if(url == null)
+            if (url == null)
             {
                 return (null, $"Unable to find environment setting: {envSetting}");
             }
@@ -80,7 +81,7 @@ namespace PowerSecure.Estimator.Services.Services
             string returnValue = await _httpClient.GetStringAsync($"{url}/api/factors/?module={module}&object=full");
             var jObj = JObject.Parse(returnValue);
 
-            if(jObj["Status"].ToString() != "200")
+            if (jObj["Status"].ToString() != "200")
             {
                 return (null, "Error when calling list api");
             }

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class FilterPrimitive : IFunction
     {
         public string Name => "filter";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var searchString = parameters[0].ToStringLiteral();
@@ -24,24 +22,24 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                     {
                         var list = new List<object>();
                         var filterArray = parameters[1].ToObjectArray().Select(o => (UnresolvedParameter)o).ToArray();
-                        foreach(var objArray in objs.Select(o => o.ToObjectArray()))
+                        foreach (var objArray in objs.Select(o => o.ToObjectArray()))
                         {
-                            if(objArray.Length < filterArray.Length)
+                            if (objArray.Length < filterArray.Length)
                             {
                                 continue;
                             }
 
                             bool add = true;
                             var resolvedObjs = objArray.Select(o => o.ToResolvedParameter()).ToArray();
-                            for(int i = 0; i < filterArray.Length; ++i)
+                            for (int i = 0; i < filterArray.Length; ++i)
                             {
-                                if(resolvedObjs[i].ToComparable().CompareTo(filterArray[i].ToInstructionSet(resolvedObjs[i], searchString).ToComparable()) != 0)
+                                if (resolvedObjs[i].ToComparable().CompareTo(filterArray[i].ToInstructionSet(resolvedObjs[i], searchString).ToComparable()) != 0)
                                 {
                                     add = false;
                                 }
                             }
 
-                            if(add)
+                            if (add)
                             {
                                 list.Add(resolvedObjs);
                             }

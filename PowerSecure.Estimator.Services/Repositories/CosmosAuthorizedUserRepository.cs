@@ -21,19 +21,12 @@ namespace PowerSecure.Estimator.Services.Repositories {
             _collectionId = AppSettings.Get("userCollectionId");
         }
 
-        private async Task<JObject> SetDefaultRole(JObject document) {
-            JToken result;
-            document.TryGetValue("role", out result);
-            if (result.Type != JTokenType.String) {
-                string role = "Estimator";
-                document["role"] = role;
+        public async Task<object> Upsert(JObject document) {
+            if(!document.TryGetValue("role", out JToken result) || result.Type != JTokenType.String)
+            {
+                document.Add("role", JToken.FromObject("Estimator"));
             }
 
-            return document;
-        }
-
-        public async Task<object> Upsert(JObject document) {
-            document = await SetDefaultRole(document);
             if (document.ContainsKey("id")) {
                 return (Document)await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["id"].ToString()) });
             }
@@ -68,15 +61,8 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
             var items = new List<AuthorizedUser>();
 
-            bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value)) {
-                reportFullObject = (value.Trim().ToLower() == "full");
-            }
             while (query.HasMoreResults) {
                 foreach (AuthorizedUser item in await query.ExecuteNextAsync()) {
-                    if (!reportFullObject) {
-                        //item.Rest = null;
-                    }
                     items.Add(item);
                 }
             }

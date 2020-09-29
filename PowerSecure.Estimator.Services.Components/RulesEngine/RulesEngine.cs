@@ -1,14 +1,13 @@
-﻿using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
-namespace PowerSecure.Estimator.Services.Components.RulesEngine {
+namespace PowerSecure.Estimator.Services.Components.RulesEngine
+{
     public class RulesEngine
     {
         public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log)
@@ -60,29 +59,29 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
         {
             var missingParameters = new HashSet<string>();
             var parameters = new Dictionary<string, object>();
-            
+
             log.LogInformation("Temp keys to evaluate: " + JToken.FromObject(keysToEvaluate));
 
             foreach (var parameter in dataSheet)
             {
-                if(keysToEvaluate.Contains(parameter.Key))
+                if (keysToEvaluate.Contains(parameter.Key))
                 {
                     if (parameter.Value == null)
                     {
                         missingParameters.Add(parameter.Key.Trim().ToLower());
                     }
-                    else if(parameter.Value is List<Dictionary<string, object>> listValue)
+                    else if (parameter.Value is List<Dictionary<string, object>> listValue)
                     {
                         missingParameters.Add(parameter.Key.Trim().ToLower());
                         if (parameter.Key.Contains("."))
                         {   //submodules
                             var newListValue = new List<Dictionary<string, object>>();
-                            foreach(var dict in listValue)
+                            foreach (var dict in listValue)
                             {
                                 var newDict = new Dictionary<string, object>();
-                                foreach(var pair in dict)
+                                foreach (var pair in dict)
                                 {
-                                    if(pair.Value != null)
+                                    if (pair.Value != null)
                                     {
                                         newDict.Add(pair.Key.Trim().ToLower(), pair.Value);
                                     }
@@ -113,10 +112,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 { //submodule evaluation
                     var baseDataSheet = new Dictionary<string, object>(dataSheet);
                     baseDataSheet.Remove(key);
-                    foreach(var submodule in submodules)
+                    foreach (var submodule in submodules)
                     {
                         var submoduleDataSheet = new Dictionary<string, object>(baseDataSheet);
-                        foreach(var pair in submodule)
+                        foreach (var pair in submodule)
                         {
                             if (!submoduleDataSheet.ContainsKey(pair.Key))
                             {
@@ -128,7 +127,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                             }
                         }
                         var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, callStack);
-                        foreach(var submoduleKey in submodule.Keys.ToList())
+                        foreach (var submoduleKey in submodule.Keys.ToList())
                         {
                             submodule[submoduleKey] = returnedDataSheet[submoduleKey];
                         }
@@ -155,10 +154,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                 }
 
                 dataSheet[key] = parameters[key];
-                
-                foreach(var dataSheetKey in dataSheet.Keys)
+
+                foreach (var dataSheetKey in dataSheet.Keys)
                 {
-                    if(!dataSheetKey.Contains("."))
+                    if (!dataSheetKey.Contains("."))
                     {
                         //stripping modules out of modules
                         switch (dataSheet[dataSheetKey])
@@ -182,7 +181,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine {
                     }
                 }
             }
-            
+
             return dataSheet;
         }
     }

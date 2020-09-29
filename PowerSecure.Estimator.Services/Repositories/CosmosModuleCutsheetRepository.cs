@@ -1,14 +1,10 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Models;
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Repositories
@@ -60,10 +56,12 @@ namespace PowerSecure.Estimator.Services.Repositories
             return list.Count;
         }
 
-        public async Task<object> List(IDictionary<string, string> queryParams) {
+        public async Task<object> List(IDictionary<string, string> queryParams)
+        {
             IQueryable<ModuleCutsheet> query = _dbClient.CreateDocumentQuery<ModuleCutsheet>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
 
-            if (queryParams.ContainsKey("moduleTitle")) {
+            if (queryParams.ContainsKey("moduleTitle"))
+            {
                 query = query.Where(f => f.ModuleTitle == queryParams["moduleTitle"]);
             }
 
@@ -72,12 +70,16 @@ namespace PowerSecure.Estimator.Services.Repositories
             var documentQuery = query.AsDocumentQuery();
 
             bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value)) {
+            if (queryParams.TryGetValue("object", out string value))
+            {
                 reportFullObject = (value.Trim().ToLower() == "full");
             }
-            while (documentQuery.HasMoreResults) {
-                foreach (ModuleCutsheet item in await documentQuery.ExecuteNextAsync()) {
-                    if (!reportFullObject) {
+            while (documentQuery.HasMoreResults)
+            {
+                foreach (ModuleCutsheet item in await documentQuery.ExecuteNextAsync())
+                {
+                    if (!reportFullObject)
+                    {
                         //factor.Rest = null;
                     }
                     items.Add(item);
@@ -91,7 +93,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         {
             if (queryParams.ContainsKey("id"))
             {
-                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), 
+                return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
                     new RequestOptions { PartitionKey = new PartitionKey(id) });
             }
 

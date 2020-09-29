@@ -1,11 +1,8 @@
 ﻿// 3 parameters - a value, an array of 2-element arrays, each with a value to match and a value to return if matched, and a value to return if there are no matches.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
@@ -15,29 +12,29 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            if(parameters == null || parameters[0] == null || parameters[2] == null)
+            if (parameters == null || parameters[0] == null || parameters[2] == null)
             {
                 return null;
             }
             var resolvedValue = parameters[0].ToResolvedParameter();
             var cases = parameters[1].ToObjectArray();
 
-            if(resolvedValue == null || resolvedValue is object[])
+            if (resolvedValue == null || resolvedValue is object[])
             {
                 return null;
             }
 
             var comparableValue = resolvedValue.ToComparable();
 
-            foreach(object obj in cases)
+            foreach (object obj in cases)
             {
                 var pair = obj.ToObjectArray();
-                if(pair[0] == null || pair[1] == null)
+                if (pair[0] == null || pair[1] == null)
                 {
                     return null;
                 }
 
-                if(comparableValue.CompareTo(pair[0].ToComparable()) == 0)
+                if (comparableValue.CompareTo(pair[0].ToComparable()) == 0)
                 {
                     return pair[1].ToResolvedParameter();
                 }

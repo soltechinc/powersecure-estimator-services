@@ -9,12 +9,8 @@ using PowerSecure.Estimator.Services.ActionResults;
 using PowerSecure.Estimator.Services.Repositories;
 using PowerSecure.Estimator.Services.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
@@ -35,7 +31,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).List(queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
@@ -83,15 +79,19 @@ namespace PowerSecure.Estimator.Services.Endpoints
         public static async Task<IActionResult> UpsertList(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "factorlist")] HttpRequest req,
             [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
-            ILogger log) {
-            try {
+            ILogger log)
+        {
+            try
+            {
                 log.LogDebug("Function called - EditFactor");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
                 (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).UpsertList(JObject.Parse(requestBody.ToLower()));
                 return returnValue.ToOkObjectResult(message: message);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 log.LogError(ex, "Caught exception");
                 return new object().ToServerErrorObjectResult();
             }
@@ -162,7 +162,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Import(env, queryParams["module"]);
 
-                if(returnValue == null)
+                if (returnValue == null)
                 {
                     return new object().ToServerErrorObjectResult(message: message);
                 }

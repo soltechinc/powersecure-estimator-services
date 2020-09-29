@@ -1,18 +1,15 @@
 ﻿// 1 parameter.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class IsEmptyPrimitive : IFunction
     {
         public string Name => "isempty";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             return (parameters[0] == null || string.IsNullOrEmpty(parameters[0].ToRawString()));

@@ -1,18 +1,16 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.ActionResults;
+using PowerSecure.Estimator.Services.Repositories;
+using PowerSecure.Estimator.Services.Services;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using PowerSecure.Estimator.Services.Services;
-using Microsoft.Azure.Documents.Client;
-using PowerSecure.Estimator.Services.Repositories;
-using Newtonsoft.Json.Linq;
-using Microsoft.Azure.Documents;
-using PowerSecure.Estimator.Services.ActionResults;
 
 namespace PowerSecure.Estimator.Services.Endpoints
 {
@@ -93,7 +91,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             ILogger log)
         {
             try
-            { 
+            {
                 log.LogDebug($"Function called - DeleteModuleTemplate (Id: {id})");
 
                 var queryParams = req.GetQueryParameterDictionary();

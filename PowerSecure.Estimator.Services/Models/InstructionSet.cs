@@ -2,10 +2,6 @@
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.Models
 {
@@ -30,7 +26,7 @@ namespace PowerSecure.Estimator.Services.Models
 
         [JsonProperty("name")]
         public string Name { get; private set; }
-        
+
         [JsonProperty("instructions")]
         public string Instructions { get; private set; }
 

@@ -15,14 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="RulesEngine\Primitives\PrimitiveList.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>PrimitiveList.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
@@ -31,15 +23,6 @@
     <None Update="RulesEngine\Primitives\Primitive.Loader.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Primitive.Loader.cs</LastGenOutput>
-    </None>
-    <None Update="RulesEngine\Primitives\PrimitiveList.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PrimitiveList.txt</LastGenOutput>
-    </None>
-    <None Update="RulesEngine\Primitives\PrimitiveList.txt">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>PrimitiveList.tt</DependentUpon>
     </None>
     <None Update="RulesEngine\Primitives\TextTemplate1.txt">
       <DesignTime>True</DesignTime>

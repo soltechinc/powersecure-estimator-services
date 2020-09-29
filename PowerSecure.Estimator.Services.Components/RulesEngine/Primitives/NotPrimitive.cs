@@ -1,11 +1,8 @@
 ﻿// 1 or more parameters.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {

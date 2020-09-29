@@ -1,23 +1,20 @@
 ﻿// 1 or more parameters.
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class SubtractionPrimitive : IFunction
     {
         public string Name => "-";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             if (parameters.Length > 1)
             {
-                return parameters.ToDecimal().Aggregate((decimal?)null,(acc, current) => acc == null ? current : acc - current);
+                return parameters.ToDecimal().Aggregate((decimal?)null, (acc, current) => acc == null ? current : acc - current);
             }
 
             switch (parameters[0].ToResolvedParameter())

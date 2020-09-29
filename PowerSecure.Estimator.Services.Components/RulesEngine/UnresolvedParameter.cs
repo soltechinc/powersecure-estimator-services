@@ -6,7 +6,6 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
@@ -24,8 +23,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public ILogger Log { get; set; }
         public ISet<string> CallStack { get; set; } = new HashSet<string>();
 
-        private static readonly string[] COPIED_KEYS = new string[] { "all.projecttype", "all.outsideequipmentpercentage",
-            "all.desiredinstallrate","all.effectivedate","all.usstate","all.uscity"};
+        private static readonly string[] COPIED_KEYS = new string[] { "all.effectivedate" };
 
         private UnresolvedParameter(JToken jToken, UnresolvedParameter parentParameter)
         {
@@ -42,7 +40,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
         public object ToInstructionSet(object parameter, string searchString)
         {
             string value;
-            switch(parameter)
+            switch (parameter)
             {
                 case string s:
                     {
@@ -63,14 +61,14 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
             searchString = $"\"{searchString}\"";
 
-            string json = Token.ToString(Newtonsoft.Json.Formatting.None).Replace(searchString,value);
-            
+            string json = Token.ToString(Newtonsoft.Json.Formatting.None).Replace(searchString, value);
+
             return new UnresolvedParameter(JToken.Parse(json), this).Resolve();
         }
 
         public object Resolve()
         {
-            if(IsNullValue)
+            if (IsNullValue)
             {
                 return null;
             }
@@ -85,7 +83,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 var jProp = Token.Children<JProperty>().First();
                                 var unresolvedParameters = jProp.Value.Children().Select(jToken => new UnresolvedParameter(jToken, this)).ToArray();
                                 object retValue = null;
-                                if(!Functions.ContainsKey(jProp.Name))
+                                if (!Functions.ContainsKey(jProp.Name))
                                 {
                                     Log?.LogError($"Primitive {jProp.Name} does not exist in primitive dictionary.");
                                     return null;
@@ -101,7 +99,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     return null;
                                 }
 
-                                if(function.Name.StartsWith("is") || function.Name == "guard")
+                                if (function.Name.StartsWith("is") || function.Name == "guard")
                                 {
                                     return retValue;
                                 }
@@ -132,7 +130,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                         if (key.Contains("[]"))
                                         {
                                             string[] keyParts = key.Split(".");
-                                            
+
                                             if (keyParts.Length == 3 && keyParts[0].EndsWith("[]") && keyParts[1].EndsWith("[]"))
                                             { //cross-module submodule evaluation logic
 
@@ -147,7 +145,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                 }
 
                                                 var modules = (List<Dictionary<string, object>>)Parameters[moduleKey];
-                                                
+
                                                 string submoduleKey = $"{moduleKey}.{keyParts[1].Replace("[]", string.Empty)}";
                                                 string instructionSetKey = $"{submoduleKey}.{keyParts[2]}";
                                                 var keysToEvaluate = new List<string>() { instructionSetKey };
@@ -193,7 +191,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                             foreach (var pair in submodule)
                                                             {
-                                                                if(!submoduleDataSheet.ContainsKey(pair.Key))
+                                                                if (!submoduleDataSheet.ContainsKey(pair.Key))
                                                                 {
                                                                     submoduleDataSheet.Add(pair.Key, pair.Value);
                                                                 }
@@ -207,7 +205,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                 submoduleDataSheet.Add(instructionSetKey, null);
                                                                 submodule.Add(instructionSetKey, null);
                                                             }
-                                                            
+
                                                             var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
 
                                                             foreach (var returnedKey in submodule.Keys.ToList())
@@ -238,7 +236,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             submoduleDataList.Add(submodule[instructionSetKey]);
                                                         }
                                                     }
-                                                    
+
                                                     moduleDataList.Add(submoduleDataList.ToArray());
 
                                                     foreach (var k in module.Keys.ToList())
@@ -267,7 +265,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                 var modules = (List<Dictionary<string, object>>)Parameters[moduleKey];
                                                 string moduleDataKey = $"{moduleKey}.{keyParts[1]}";
-                                                if(keyParts.Length == 3)
+                                                if (keyParts.Length == 3)
                                                 {
                                                     moduleDataKey = moduleDataKey + $".{keyParts[2]}";
                                                 }
@@ -375,12 +373,12 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                 foreach (var submodule in submodules)
                                                 {
-                                                    if(submodule.ContainsKey("currentsubmodule") && ((bool)submodule["currentsubmodule"]))
+                                                    if (submodule.ContainsKey("currentsubmodule") && ((bool)submodule["currentsubmodule"]))
                                                     {
                                                         continue;
                                                     }
 
-                                                    if(!submodule.ContainsKey(submoduleDataKey) || submodule[submoduleDataKey] == null)
+                                                    if (!submodule.ContainsKey(submoduleDataKey) || submodule[submoduleDataKey] == null)
                                                     {
                                                         var submoduleDataSheet = new Dictionary<string, object>(Parameters);
                                                         submoduleDataSheet.Remove(submoduleKey);
@@ -396,7 +394,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                 submoduleDataSheet[pair.Key] = pair.Value;
                                                             }
                                                         }
-                                                        if(!submodule.ContainsKey(submoduleDataKey))
+                                                        if (!submodule.ContainsKey(submoduleDataKey))
                                                         {
                                                             submoduleDataSheet.Add(submoduleDataKey, null);
                                                             submodule.Add(submoduleDataKey, null);
@@ -416,7 +414,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                 }
                                                             }
                                                         }
-                                                        foreach(var returnedKey in returnedDataSheet.Keys)
+                                                        foreach (var returnedKey in returnedDataSheet.Keys)
                                                         {
                                                             if (returnedDataSheet[returnedKey] != null && !submodule.Keys.Contains(returnedKey))
                                                             {
@@ -432,7 +430,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         }
                                                     }
 
-                                                    if(submodule.ContainsKey(submoduleDataKey) && submodule[submoduleDataKey] != null)
+                                                    if (submodule.ContainsKey(submoduleDataKey) && submodule[submoduleDataKey] != null)
                                                     {
                                                         submoduleDataList.Add(submodule[submoduleDataKey]);
                                                     }
@@ -466,10 +464,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                         Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log, CallStack);
                                     }
 
-                                    if (Parameters[key] is object[] o && o.Length == 2 
-                                        && o[0] is object[] o2 && o2.Length == 2 
+                                    if (Parameters[key] is object[] o && o.Length == 2
+                                        && o[0] is object[] o2 && o2.Length == 2
                                         && o2[0] != null && o2[0].ToRawString() == "--No Selection--"
-                                        && string.IsNullOrEmpty(o2[1]?.ToString()) 
+                                        && string.IsNullOrEmpty(o2[1]?.ToString())
                                         && o[1] is object[] o3 && o3.Length == 2)
                                     {
                                         return o3[1];
@@ -494,7 +492,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     return null;
                 })();
 
-            if(value == null)
+            if (value == null)
             {
                 IsNullValue = true;
             }

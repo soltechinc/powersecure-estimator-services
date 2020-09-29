@@ -1,24 +1,22 @@
-﻿using Newtonsoft.Json.Linq;
-using PowerSecure.Estimator.Services.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DocumentFormat.OpenXml.Packaging;
+using Microsoft.Azure.Documents;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using Microsoft.Extensions.Logging;
-using System.Net.Http;
-using PowerSecure.Estimator.Services.Endpoints;
-using Newtonsoft.Json;
-using System.Text.RegularExpressions;
 using PowerSecure.Estimator.Services.Models;
-using Microsoft.Azure.Documents;
-using DocumentFormat.OpenXml.Validation;
-using DocumentFormat.OpenXml.Packaging;
-using System.Xml;
+using PowerSecure.Estimator.Services.Repositories;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Xsl;
 
 namespace PowerSecure.Estimator.Services.Services
@@ -40,7 +38,8 @@ namespace PowerSecure.Estimator.Services.Services
             _functions = Primitive.Load();
         }
 
-        public EstimateService(IEstimateRepository estimateRepository) {
+        public EstimateService(IEstimateRepository estimateRepository)
+        {
             _estimateRepository = estimateRepository;
         }
 
@@ -53,7 +52,7 @@ namespace PowerSecure.Estimator.Services.Services
 
             if (!hasModuleTitle || uiInputs.Properties().Any(prop => prop.Name.ToLower() == "datasheet"))
             {
-                dataSheet = (Dictionary<string,object>)DataSheetFromJToken(uiInputs);
+                dataSheet = (Dictionary<string, object>)DataSheetFromJToken(uiInputs);
                 IncludeEstimateData(uiInputs, dataSheet, moduleName);
             }
             else
@@ -64,16 +63,16 @@ namespace PowerSecure.Estimator.Services.Services
                 ParseFromJson(uiInputs, dataSheet, moduleName);
             }
 
-            if(!dataSheet.ContainsKey("all.effectivedate"))
+            if (!dataSheet.ContainsKey("all.effectivedate"))
             {
                 dataSheet.Add("all.effectivedate", DateTime.Now.ToString("M/d/yyyy"));
             }
-            
+
             new RulesEngine().EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, log);
 
             if (!hasModuleTitle || uiInputs.Properties().Any(prop => prop.Name.ToLower() == "datasheet"))
             {
-                if(hasModuleTitle && uiInputs.Properties().Any(prop => prop.Name.ToLower() == "uijson"))
+                if (hasModuleTitle && uiInputs.Properties().Any(prop => prop.Name.ToLower() == "uijson"))
                 {
                     var dataSheetUiJson = (JObject)uiInputs["uijson"];
                     ParseToJson(dataSheetUiJson, dataSheet, moduleName);
@@ -100,7 +99,7 @@ namespace PowerSecure.Estimator.Services.Services
                 case JTokenType.Array:
                     {
                         var list = new List<Dictionary<string, object>>();
-                        foreach(var element in (JArray)jToken)
+                        foreach (var element in (JArray)jToken)
                         {
                             list.Add((Dictionary<string, object>)DataSheetFromJToken(element));
                         }
@@ -111,7 +110,7 @@ namespace PowerSecure.Estimator.Services.Services
                         var dict = new Dictionary<string, object>();
                         foreach (var prop in ((JObject)jToken).Properties())
                         {
-                            if(prop.Name.ToLower() == "uijson")
+                            if (prop.Name.ToLower() == "uijson")
                             {
                                 continue;
                             }
@@ -160,10 +159,10 @@ namespace PowerSecure.Estimator.Services.Services
                         var moduleDataSheet = new Dictionary<string, object>();
                         JObject moduleJson = JObject.FromObject(module);
                         ParseFromJson(moduleJson, moduleDataSheet, moduleTitle);
-                        if(moduleJson.Properties().Any(x => x.Name == "datacache"))
+                        if (moduleJson.Properties().Any(x => x.Name == "datacache"))
                         {
                             var dataCache = ((JObject)moduleJson["datacache"]).ToDictionary();
-                            foreach(var pair in dataCache)
+                            foreach (var pair in dataCache)
                             {
                                 moduleDataSheet.Add(pair.Key, pair.Value);
                             }
@@ -172,11 +171,11 @@ namespace PowerSecure.Estimator.Services.Services
                         ((List<Dictionary<string, object>>)dataSheet[moduleTitle]).Add(moduleDataSheet);
                     }
 
-                    foreach(var prop in typeof(Estimate).GetProperties())
+                    foreach (var prop in typeof(Estimate).GetProperties())
                     {
                         string name = $"estimate.{prop.Name.ToLower()}";
                         object value = prop.GetValue(estimate);
-                        if(value == null || prop.Name.ToLower() == "modules")
+                        if (value == null || prop.Name.ToLower() == "modules")
                         {
                             continue;
                         }
@@ -214,7 +213,7 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        public void ParseFromJson(JObject uiInputs, Dictionary<string,object> dataSheet, string moduleName)
+        public void ParseFromJson(JObject uiInputs, Dictionary<string, object> dataSheet, string moduleName)
         {
             string submoduleName = string.Empty;
             string fullSubmoduleName = string.Empty;
@@ -232,7 +231,7 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         case JObject jObject:
                             {
-                                if (jObject.Properties().Any(prop => prop.Name == "inputType") 
+                                if (jObject.Properties().Any(prop => prop.Name == "inputType")
                                 && (jObject["inputType"].ToObject<string>().ToLower() == "file input" || jObject["inputType"].ToObject<string>().ToLower() == "simple text output"))
                                 {
                                     break;
@@ -249,7 +248,7 @@ namespace PowerSecure.Estimator.Services.Services
                                     if (name.StartsWith("**customitem**"))
                                     {
                                         string customItemKey;
-                                        
+
                                         if (jToken.Path.Contains("submoduleData"))
                                         {
                                             customItemKey = $"{moduleName}.{submoduleName}customitem";
@@ -267,7 +266,7 @@ namespace PowerSecure.Estimator.Services.Services
                                         var dict = new Dictionary<string, object>();
                                         foreach (var prop in jObject.Properties())
                                         {
-                                            if(prop.Name == "variableName")
+                                            if (prop.Name == "variableName")
                                             {
                                                 continue;
                                             }
@@ -537,7 +536,7 @@ namespace PowerSecure.Estimator.Services.Services
 
                                     int index = jObject["number"].ToObject<int>() - 1;
                                     (string summarySubmoduleName, int summarySubmoduleIndex) = submoduleList[index];
-                                        
+
                                     var submodules = (List<Dictionary<string, object>>)dataSheet[$"{moduleName}.{summarySubmoduleName}"];
                                     var submodule = submodules[summarySubmoduleIndex];
 
@@ -582,10 +581,10 @@ namespace PowerSecure.Estimator.Services.Services
                                 {
                                     string tableName = jObject["variableName"].ToObject<string>().ToLower();
                                     var tableItems = (JArray)jObject["tableItems"];
-                                    foreach(var tableJToken in tableItems)
+                                    foreach (var tableJToken in tableItems)
                                     {
                                         var tableJObject = (JObject)tableJToken;
-                                        foreach(var prop in tableJObject.Properties())
+                                        foreach (var prop in tableJObject.Properties())
                                         {
                                             dataSheet.Add($"{moduleName}.{tableName}{prop.Name.ToLower()}", null);
                                         }
@@ -628,13 +627,13 @@ namespace PowerSecure.Estimator.Services.Services
                 {
                     case JObject jObject:
                         {
-                            if (jObject.Properties().Any(prop => prop.Name == "inputType") 
+                            if (jObject.Properties().Any(prop => prop.Name == "inputType")
                                 && (jObject["inputType"].ToObject<string>().ToLower() == "file input" || jObject["inputType"].ToObject<string>().ToLower() == "simple text output"))
                             {
                                 break;
                             }
 
-                            if(jObject.Path.EndsWith("currentSubmodule"))
+                            if (jObject.Path.EndsWith("currentSubmodule"))
                             {
                                 previousIndex++;
                             }
@@ -676,7 +675,7 @@ namespace PowerSecure.Estimator.Services.Services
                                             options.Add(option);
                                         }
 
-                                        if(options.Count == 2 && options[0]["text"] == "--No Selection--" && string.IsNullOrEmpty(options[0]["value"]))
+                                        if (options.Count == 2 && options[0]["text"] == "--No Selection--" && string.IsNullOrEmpty(options[0]["value"]))
                                         {
                                             options.RemoveAt(0);
                                         }
@@ -841,22 +840,22 @@ namespace PowerSecure.Estimator.Services.Services
                                 tableItems.Clear();
                                 var items = new List<JObject>();
                                 bool first = true;
-                                foreach(var itemName in itemNames)
+                                foreach (var itemName in itemNames)
                                 {
                                     var dsi = dataSheet[$"{moduleName}.{tableName}{itemName}"];
-                                    if(dsi == null)
+                                    if (dsi == null)
                                     {
                                         continue;
                                     }
 
                                     var dataSheetItems = new List<object>((IEnumerable<object>)dsi);
-                                    if(dataSheetItems == null)
+                                    if (dataSheetItems == null)
                                     {
                                         continue;
                                     }
-                                    if(first)
+                                    if (first)
                                     {
-                                        foreach(var dataSheetItem in dataSheetItems)
+                                        foreach (var dataSheetItem in dataSheetItems)
                                         {
                                             var obj = new JObject();
                                             var valueJToken = JToken.FromObject(dataSheetItem);
@@ -879,9 +878,9 @@ namespace PowerSecure.Estimator.Services.Services
                                     }
                                     else
                                     {
-                                        for(int i = 0; i < dataSheetItems.Count; ++i)
+                                        for (int i = 0; i < dataSheetItems.Count; ++i)
                                         {
-                                            if(i >= items.Count)
+                                            if (i >= items.Count)
                                             {
                                                 items.Add(new JObject());
                                             }
@@ -907,7 +906,7 @@ namespace PowerSecure.Estimator.Services.Services
                                     }
                                 }
 
-                                foreach(var tableItem in items)
+                                foreach (var tableItem in items)
                                 {
                                     tableItems.Add(tableItem);
                                 }
@@ -922,12 +921,12 @@ namespace PowerSecure.Estimator.Services.Services
 
         private static string UnwrapString(string str)
         {
-            if(string.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 return string.Empty;
             }
 
-            if(str.StartsWith("$"))
+            if (str.StartsWith("$"))
             {
                 return str.Substring(1);
             }
@@ -939,7 +938,7 @@ namespace PowerSecure.Estimator.Services.Services
             if (jObject.Properties().Any(prop => prop.Name == "input"))
             {
                 bool isCalculated = !jObject["input"].ToObject<bool>();
-                if(isCalculated)
+                if (isCalculated)
                 {
                     return true;
                 }
@@ -954,7 +953,7 @@ namespace PowerSecure.Estimator.Services.Services
             }
             if (jObject.Properties().Any(prop => prop.Name == "inputValue"))
             {
-                switch(jObject["inputValue"].Type)
+                switch (jObject["inputValue"].Type)
                 {
                     case JTokenType.String:
                         {
@@ -979,7 +978,7 @@ namespace PowerSecure.Estimator.Services.Services
 
             return false;
         }
-        
+
         public async Task<(object, string)> Clone(JObject document, string path)
         {
             path = path.Split('/').Last();
@@ -1065,36 +1064,43 @@ namespace PowerSecure.Estimator.Services.Services
             return node;
         }
 
-        public async Task<(object, string)> List(IDictionary<string, string> queryParams) {
+        public async Task<(object, string)> List(IDictionary<string, string> queryParams)
+        {
             return (await _estimateRepository.List(queryParams), "OK");
         }
 
-        public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams) {
+        public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
+        {
             return (await _estimateRepository.Get(id, queryParams), "OK");
         }
 
-        public async Task<(object, string)> Upsert(JObject document) {
+        public async Task<(object, string)> Upsert(JObject document)
+        {
             return (await _estimateRepository.Upsert(document), "OK");
         }
 
-        public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams) {
+        public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
+        {
             int deletedDocumentCount = await _estimateRepository.Delete(id, queryParams);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
         }
 
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public async Task<(object, string)> Import(string env) {
+        public async Task<(object, string)> Import(string env)
+        {
             string envSetting = $"{env}-url";
             string url = AppSettings.Get(envSetting);
-            if (url == null) {
+            if (url == null)
+            {
                 return (null, $"Unable to find environment setting: {envSetting}");
             }
 
             string returnValue = await _httpClient.GetStringAsync($"{url}/api/estimates/?object=full");
             var jObj = JObject.Parse(returnValue);
 
-            if (jObj["Status"].ToString() != "200") {
+            if (jObj["Status"].ToString() != "200")
+            {
                 return (null, "Error when calling list api");
             }
 
@@ -1113,7 +1119,7 @@ namespace PowerSecure.Estimator.Services.Services
             return await Export(document, await new BlobStorageService().GetResource("ownedasset_xslt", log), log);
         }
 
-        private async Task<(object,string)> Export(JObject inputJsonObject, Stream xsltStream, ILogger log)
+        private async Task<(object, string)> Export(JObject inputJsonObject, Stream xsltStream, ILogger log)
         {
             using (var stringWriter = new Utf8StringWriter())
             {

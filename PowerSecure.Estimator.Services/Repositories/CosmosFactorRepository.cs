@@ -1,16 +1,16 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Azure.Documents.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using System.Threading;
 using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Repositories
 {
@@ -27,34 +27,40 @@ namespace PowerSecure.Estimator.Services.Repositories
             _collectionId = AppSettings.Get("factorsCollectionId");
         }
 
-        private static string CreateHash(string valueKey) {
+        private static string CreateHash(string valueKey)
+        {
             return MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(valueKey))
                       .Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2"))).ToString();
         }
 
-        private object CreateKey(JObject document) { 
-        document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
-        document["hash"] = CreateHash(document.Properties()
-                                .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
-                                .SelectMany(o => new string[] { o.Name, o.Value.ToString()
-                                })
-                                .OrderBy(s => s)
-                                .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
-            if (!document.ContainsKey("creationdate")) {
+        private object CreateKey(JObject document)
+        {
+            document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
+            document["hash"] = CreateHash(document.Properties()
+                                    .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
+                                    .SelectMany(o => new string[] { o.Name, o.Value.ToString()
+                                    })
+                                    .OrderBy(s => s)
+                                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
+            if (!document.ContainsKey("creationdate"))
+            {
                 document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
             }
             return document;
         }
 
-        public async Task<object> UpsertList(JObject document) {
+        public async Task<object> UpsertList(JObject document)
+        {
             JArray items = (JArray)document["items"];
             int length = items.Count;
             WaitHandle[] waitHandles = new WaitHandle[length];
-            
-            for (int i = 0; length > i; i++) {
+
+            for (int i = 0; length > i; i++)
+            {
                 var j = i;
                 var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
-                var thread = new Thread(() => {
+                var thread = new Thread(() =>
+                {
                     Thread.Sleep(j * 1000);
                     Console.WriteLine("Thread{0} exits", j);
                     handle.Set();
@@ -103,15 +109,15 @@ namespace PowerSecure.Estimator.Services.Repositories
             return list.Count;
         }
 
-        public async Task<object> List(IDictionary<string,string> queryParams)
+        public async Task<object> List(IDictionary<string, string> queryParams)
         {
             IQueryable<Factor> query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true });
 
-            if(queryParams.ContainsKey("module"))
+            if (queryParams.ContainsKey("module"))
             {
                 query = query.Where(f => f.Module == queryParams["module"]);
             }
-            if(queryParams.ContainsKey("returnattribute"))
+            if (queryParams.ContainsKey("returnattribute"))
             {
                 query = query.Where(f => f.ReturnAttribute == queryParams["returnattribute"]);
             }
@@ -146,7 +152,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             {
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(queryParams["module"]) });
             }
-            
+
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true })
                 .Where(f => f.Id == id)
                 .AsDocumentQuery();
@@ -166,7 +172,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         public async Task<object> Lookup(IDictionary<string, string> queryParams)
         {
-            if(!queryParams.TryGetValue("key", out string value) || string.IsNullOrEmpty(value))
+            if (!queryParams.TryGetValue("key", out string value) || string.IsNullOrEmpty(value))
             {
                 return null;
             }
@@ -220,22 +226,22 @@ namespace PowerSecure.Estimator.Services.Repositories
                     ids.Add(factor.Id);
                 }
             }
-            
+
             foreach (var id in ids)
             {
                 await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(module) });
             }
 
             int count = 0;
-            foreach(var child in jToken.Children())
+            foreach (var child in jToken.Children())
             {
-                if(child.Type != JTokenType.Object)
+                if (child.Type != JTokenType.Object)
                 {
                     continue;
                 }
-                
+
                 await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), (JObject)child);
-                
+
                 count++;
             }
 

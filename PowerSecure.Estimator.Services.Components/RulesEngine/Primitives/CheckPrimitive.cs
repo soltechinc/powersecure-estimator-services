@@ -1,22 +1,19 @@
 ﻿// 3 parameters. Parameter 1 is a boolean, parameter 2 is the value returned if true, parameter 3 is the value returned if false.
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class CheckPrimitive : IFunction
     {
         public string Name => "if";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             var condition = parameters[0].ToBoolean();
-            if(!condition.HasValue)
+            if (!condition.HasValue)
             {
                 return null;
             }

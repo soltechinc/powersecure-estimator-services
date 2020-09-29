@@ -1,11 +1,10 @@
 ﻿// 2 or more parameters, or 1 parameter if it is an array.
+using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
@@ -29,7 +28,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                             return objects.Select(o => (object)(first.CompareTo(o.ToComparable()) == 0)).ToArray();
                         }
 
-                        if(first == null || second == null)
+                        if (first == null || second == null)
                         {
                             return null;
                         }

@@ -1,11 +1,9 @@
-﻿using Microsoft.Azure.Documents;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,12 +21,12 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
         {
-            return (await _functionRepository.List(queryParams),"OK");
+            return (await _functionRepository.List(queryParams), "OK");
         }
 
         public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
         {
-            return (await _functionRepository.Get(id, queryParams),"OK");
+            return (await _functionRepository.Get(id, queryParams), "OK");
         }
 
         public async Task<(object, string)> Upsert(JObject document)
@@ -37,7 +35,7 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
             }
-            if(document.ContainsKey("module"))
+            if (document.ContainsKey("module"))
             {
                 document["module"] = document["module"].ToString().ToLower();
             }
@@ -61,7 +59,7 @@ namespace PowerSecure.Estimator.Services.Services
                 return (null, "Function is lacking an instructions property");
             }
 
-            return (await _functionRepository.Upsert(document),"OK");
+            return (await _functionRepository.Upsert(document), "OK");
         }
 
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
@@ -111,7 +109,7 @@ namespace PowerSecure.Estimator.Services.Services
                 requestBodyJObject.Add("id", instructionSet["id"].ToString());
             }
 
-            if(instructionSet.ContainsKey("uijson"))
+            if (instructionSet.ContainsKey("uijson"))
             {
                 instructionSet["uijson"] = requestBodyJObject;
             }
@@ -143,7 +141,7 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 return (null, "Invalid instruction set - no effective date");
             }
-            instructionSetJObject.Add("startdate", DateTime.ParseExact(requestJObject["effectiveDate"].ToString(),"yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("M/d/yyyy"));
+            instructionSetJObject.Add("startdate", DateTime.ParseExact(requestJObject["effectiveDate"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("M/d/yyyy"));
 
             if (!requestJObject.ContainsKey("calculatedVariable"))
             {
@@ -151,7 +149,7 @@ namespace PowerSecure.Estimator.Services.Services
             }
             {
                 var jObject = (JObject)requestJObject["calculatedVariable"];
-                if(!jObject.ContainsKey("variableName") || string.IsNullOrWhiteSpace(jObject["variableName"].ToString()))
+                if (!jObject.ContainsKey("variableName") || string.IsNullOrWhiteSpace(jObject["variableName"].ToString()))
                 {
                     return (null, "Invalid instruction set - no variableName");
                 }
@@ -167,7 +165,7 @@ namespace PowerSecure.Estimator.Services.Services
                     {
                         case JObject jObject:
                             {
-                                if(jObject.ContainsKey("final") && (bool)jObject["final"])
+                                if (jObject.ContainsKey("final") && (bool)jObject["final"])
                                 {
                                     finalSets.Add(jObject);
                                 }
@@ -176,12 +174,12 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 });
 
-                if(finalSets.Count == 0)
+                if (finalSets.Count == 0)
                 {
                     return (null, "Invalid instruction set - no final set");
                 }
 
-                if(finalSets.Count > 1)
+                if (finalSets.Count > 1)
                 {
                     return (null, "Invalid instruction set - more than one final set");
                 }
@@ -201,7 +199,7 @@ namespace PowerSecure.Estimator.Services.Services
                                 }
 
                                 int id = jObject["id"].ToObject<int>();
-                                if(firstId == int.MinValue)
+                                if (firstId == int.MinValue)
                                 {
                                     firstId = id;
                                 }
@@ -228,7 +226,7 @@ namespace PowerSecure.Estimator.Services.Services
 
                                 int id = jObject["id"].ToObject<int>();
 
-                                if(dict[id].Item2 == null)
+                                if (dict[id].Item2 == null)
                                 {
                                     break;
                                 }
@@ -256,7 +254,7 @@ namespace PowerSecure.Estimator.Services.Services
                 if (instructionParamToken is JObject instructionParam)
                 {
                     object value = ParseValueFromInstructionParam(instructionParam);
-                    if(value != null)
+                    if (value != null)
                     {
                         instructionParams.Add(value);
                     }
@@ -314,7 +312,7 @@ namespace PowerSecure.Estimator.Services.Services
             else if (instructionParam.ContainsKey("moduleTitle") && instructionParam.ContainsKey("name"))
             {
                 string moduleTitle;
-                if(instructionParam["moduleTitle"].Type == JTokenType.Object)
+                if (instructionParam["moduleTitle"].Type == JTokenType.Object)
                 {
                     moduleTitle = ((JObject)instructionParam["moduleTitle"])["moduleTitle"].ToString();
                 }
@@ -334,10 +332,10 @@ namespace PowerSecure.Estimator.Services.Services
         private void ResolveInstructionSetsFromDictionary(int currentId, Dictionary<int, (string, List<object>)> dict)
         {
             (string primitive, List<object> parameters) = dict[currentId];
-            for(int i = 0; i < parameters.Count; ++i)
+            for (int i = 0; i < parameters.Count; ++i)
             {
                 string resolvedParameter = ResolveParameter(parameters[i], primitive, dict);
-                if(resolvedParameter != null)
+                if (resolvedParameter != null)
                 {
                     parameters[i] = resolvedParameter;
                 }
@@ -456,7 +454,7 @@ namespace PowerSecure.Estimator.Services.Services
                                             str.Append($"[{matchValue},{returnValue}]");
                                         }
                                     }
-                                    
+
                                     string defaultValue = ResolveParameter(ParseValueFromInstructionParam((JObject)jObject["defaultCase"]), primitive, dict) ?? "null";
 
                                     str.Append($"],{defaultValue}");
@@ -496,13 +494,13 @@ namespace PowerSecure.Estimator.Services.Services
         }
 
         private class UnresolvedSet { public int Id { get; set; } }
-        
+
         public async Task<(object, string)> GetFromUi(string id)
         {
-            return await Get(id, new Dictionary<string,string>());
+            return await Get(id, new Dictionary<string, string>());
         }
-        
-        private List<Dictionary<string, string>> primitives = new List<Dictionary<string, string>>()
+
+        private readonly List<Dictionary<string, string>> primitives = new List<Dictionary<string, string>>()
             {
                 new Dictionary<string,string>(){ ["label"] = "Add", ["value"] = "+", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "And", ["value"] = "and", ["maxParams"] = "none", ["minParams"] = "1" },

@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace PowerSecure.Estimator.Services.Models {
-    public class ModuleVendorQuote {
+namespace PowerSecure.Estimator.Services.Models
+{
+    public class ModuleVendorQuote
+    {
         [JsonProperty("id")]
         public string Id { get; set; }
 

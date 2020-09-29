@@ -1,18 +1,16 @@
 ﻿// 1 or more parameters
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Conversions;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 {
     public class AdditionPrimitive : IFunction
     {
         public string Name => "+";
-        
+
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
             object[] resolvedParameters = parameters.Select(o => o.ToResolvedParameter()).ToArray();
@@ -22,7 +20,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 if (resolvedParameters.All(o => o is object[]))
                 {
                     var list = new List<object>();
-                    foreach(object o in resolvedParameters)
+                    foreach (object o in resolvedParameters)
                     {
                         list.AddRange((object[])o);
                     }
@@ -54,7 +52,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                 return (false, $"Expected a parameter array of length 1 or more, got the following: {jToken.Children().Count()}");
             }
 
-            if(jToken.Children().Any(p => p.Type == JTokenType.Array))
+            if (jToken.Children().Any(p => p.Type == JTokenType.Array))
             {
                 if (jToken.Children().Count() > 1)
                 {
@@ -72,7 +70,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                     return (false, "Did not expect any nested arrays as parameters.");
                 }
             }
-            
+
             return (true, string.Empty);
         }
     }

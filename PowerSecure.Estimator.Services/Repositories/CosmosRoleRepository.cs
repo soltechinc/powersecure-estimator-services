@@ -28,30 +28,20 @@ namespace PowerSecure.Estimator.Services.Repositories {
 
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
-
-
+        
         public async Task<object> List(IDictionary<string, string> queryParams) {
             var query = _dbClient.CreateDocumentQuery<Role>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
             var items = new List<Role>();
-
-            bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value)) {
-                reportFullObject = (value.Trim().ToLower() == "full");
-            }
+            
             while (query.HasMoreResults) {
                 foreach (Role item in await query.ExecuteNextAsync()) {
-                    if (!reportFullObject) {
-                        //item.Rest = null;
-                    }
                     items.Add(item);
                 }
             }
             return items;
         }
-
-
-
+        
         public async Task<object> Get(string id, IDictionary<string, string> queryParams) {
             if (queryParams.ContainsKey("id")) {
                 return (Document)await _dbClient.ReadDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]),
