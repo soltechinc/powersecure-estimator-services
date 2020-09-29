@@ -91,6 +91,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                     {
                         return s.Substring(1);
                     }
+                case object[] o:
+                    {
+                        return string.Empty;
+                    }
                 default:
                     {
                         return obj.ToString();
@@ -113,6 +117,10 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Conversions
                 case string s when s.StartsWith('$'):
                     {
                         return s;
+                    }
+                case object[] o:
+                    {
+                        return "$";
                     }
                 default:
                     {
