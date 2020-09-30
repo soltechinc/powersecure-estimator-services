@@ -3,6 +3,7 @@ using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Services
@@ -41,6 +42,30 @@ namespace PowerSecure.Estimator.Services.Services
         {
             int deletedDocumentCount = await _permissionsRepository.Delete(id);
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
+        }
+
+        private static readonly HttpClient _httpClient = new HttpClient();
+
+        public async Task<(object, string)> Import(string env)
+        {
+            string envSetting = $"{env}-url";
+            string url = AppSettings.Get(envSetting);
+            if (url == null)
+            {
+                return (null, $"Unable to find environment setting: {envSetting}");
+            }
+
+            string returnValue = await _httpClient.GetStringAsync($"{url}/api/security/permissions/?object=full");
+            var jObj = JObject.Parse(returnValue);
+
+            if (jObj["Status"].ToString() != "200")
+            {
+                return (null, "Error when calling list api");
+            }
+
+            int newDocumentCount = await _permissionsRepository.Reset(jObj["Items"]);
+
+            return (newDocumentCount, $"{newDocumentCount} documents created.");
         }
     }
 }

@@ -105,5 +105,34 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ImportPermissions")]
+        public static async Task<IActionResult> Import(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "security/permissions/import/{env}")] HttpRequest req,
+            string env,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ImportPermissions (Env: {env})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new PermissionsService(new CosmosPermissionsRepository(dbClient)).Import(env);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }

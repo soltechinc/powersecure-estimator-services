@@ -13,5 +13,7 @@ namespace PowerSecure.Estimator.Services.Repositories
         Task<object> Upsert(JObject document);
 
         Task<int> Delete(string id);
+
+        Task<int> Reset(JToken jToken);
     }
 }
