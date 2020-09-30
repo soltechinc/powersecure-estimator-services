@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Primitives;
@@ -23,9 +24,10 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IEstimateRepository _estimateRepository;
         private readonly IBusinessOpportunityLineItemRepository _businessOpportunityLineItemRepository;
 
-        public ModuleDefinitionService(IModuleDefinitionRepository moduleDefinitionRepository)
+        public ModuleDefinitionService(IModuleDefinitionRepository moduleDefinitionRepository, ILogger log = null)
         {
             _moduleDefinitionRepository = moduleDefinitionRepository;
+            _log = log ?? NullLogger.Instance;
         }
 
         public ModuleDefinitionService(IModuleDefinitionRepository moduleDefinitionRepository, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, IBusinessOpportunityLineItemRepository businessOpportunityLineItemRepository, ILogger log) : this(moduleDefinitionRepository)
@@ -150,6 +152,9 @@ namespace PowerSecure.Estimator.Services.Services
         {
             {
                 var moduleDefinitionTuple = await Get(id, queryParams);
+
+                _log.LogInformation($"Tuple - {JToken.FromObject(moduleDefinitionTuple).ToString()}");
+
                 var document = JObject.FromObject(moduleDefinitionTuple.Item1);
                 string boliNumber = document.Properties().Any(x => x.Name == "boliNumber") ? document["boliNumber"].ToString() : null;
                 string estimateId = document.Properties().Any(x => x.Name == "estimateId") ? document["estimateId"].ToString() : null;
