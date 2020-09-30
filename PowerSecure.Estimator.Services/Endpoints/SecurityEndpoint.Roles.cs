@@ -96,7 +96,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new RoleService(new CosmosRoleRepository(dbClient)).Get(id, queryParams);
+                (object returnValue, string message) = await new RoleService(new CosmosRoleRepository(dbClient)).Delete(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace PowerSecure.Estimator.Services.Models
 {
@@ -7,7 +8,10 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("list")]
-        public string[] List { get; set; }
+        [JsonProperty("permission")]
+        public string Permission { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object> Rest { get; set; }
     }
 }

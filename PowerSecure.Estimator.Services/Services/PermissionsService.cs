@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Services
@@ -16,7 +18,13 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
         {
-            return (await _permissionsRepository.List(queryParams), "OK");
+            var permissions = (List<Permissions>)await _permissionsRepository.List(queryParams);
+            if(queryParams.TryGetValue("object",out string value) && value.ToLower() == "full")
+            {
+                return (permissions, "OK");
+            }
+
+            return (permissions.Select(x => x.Permission).ToArray(), "OK");
         }
 
         public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)

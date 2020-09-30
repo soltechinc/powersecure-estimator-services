@@ -37,10 +37,15 @@ namespace PowerSecure.Estimator.Services.Repositories
 
             var items = new List<Permissions>();
 
+            bool reportFullObject = (queryParams.TryGetValue("object", out string value) && value.ToLower() == "full");
             while (query.HasMoreResults)
             {
                 foreach (Permissions item in await query.ExecuteNextAsync())
                 {
+                    if (!reportFullObject)
+                    {
+                        item.Rest = null;
+                    }
                     items.Add(item);
                 }
             }
