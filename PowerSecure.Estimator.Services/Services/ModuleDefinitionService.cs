@@ -10,7 +10,6 @@ using PowerSecure.Estimator.Services.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace PowerSecure.Estimator.Services.Services
@@ -24,9 +23,10 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IEstimateRepository _estimateRepository;
         private readonly IBusinessOpportunityLineItemRepository _businessOpportunityLineItemRepository;
 
-        public ModuleDefinitionService(IModuleDefinitionRepository moduleDefinitionRepository, ILogger log = null)
+        public ModuleDefinitionService(IModuleDefinitionRepository moduleDefinitionRepository, IEstimateRepository estimateRepository = null, ILogger log = null)
         {
             _moduleDefinitionRepository = moduleDefinitionRepository;
+            _estimateRepository = estimateRepository;
             _log = log ?? NullLogger.Instance;
         }
 
@@ -152,10 +152,8 @@ namespace PowerSecure.Estimator.Services.Services
         {
             {
                 var moduleDefinitionTuple = await Get(id, queryParams);
-
-                _log.LogInformation($"Tuple - {JToken.FromObject(moduleDefinitionTuple).ToString()}");
-
                 var document = JObject.FromObject(moduleDefinitionTuple.Item1);
+
                 string boliNumber = document.Properties().Any(x => x.Name == "boliNumber") ? document["boliNumber"].ToString() : null;
                 string estimateId = document.Properties().Any(x => x.Name == "estimateId") ? document["estimateId"].ToString() : null;
                 string moduleId = document.Properties().Any(x => x.Name == "moduleId") ? document["moduleId"].ToString() : null;

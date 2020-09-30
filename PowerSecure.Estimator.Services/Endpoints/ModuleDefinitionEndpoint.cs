@@ -96,7 +96,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient), log).Delete(id, queryParams);
+                (object returnValue, string message) = await new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient), new CosmosEstimateRepository(dbClient)).Delete(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
