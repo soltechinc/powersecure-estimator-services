@@ -62,11 +62,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 
             var items = new List<BusinessOpportunityLineItem>();
 
-            bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value))
-            {
-                reportFullObject = (value.Trim().ToLower() == "full");
-            }
+            bool reportFullObject = (queryParams.TryGetValue("object", out string value) && value.ToLower() == "full");
             while (query.HasMoreResults)
             {
                 foreach (BusinessOpportunityLineItem item in await query.ExecuteNextAsync())

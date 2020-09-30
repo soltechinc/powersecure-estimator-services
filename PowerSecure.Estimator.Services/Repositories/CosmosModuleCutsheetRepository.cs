@@ -69,11 +69,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 
             var documentQuery = query.AsDocumentQuery();
 
-            bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value))
-            {
-                reportFullObject = (value.Trim().ToLower() == "full");
-            }
+            bool reportFullObject = (queryParams.TryGetValue("object", out string value) && value.ToLower() == "full");
             while (documentQuery.HasMoreResults)
             {
                 foreach (ModuleCutsheet item in await documentQuery.ExecuteNextAsync())

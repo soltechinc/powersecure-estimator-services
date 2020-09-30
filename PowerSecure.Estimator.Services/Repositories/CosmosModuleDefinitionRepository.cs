@@ -31,16 +31,16 @@ namespace PowerSecure.Estimator.Services.Repositories
             return (Document)await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
         }
 
-        public async Task<int> Delete(string id, IDictionary<string, string> queryParams)
+        public async Task<int> Delete(string moduleId, IDictionary<string, string> queryParams)
         {
             if (queryParams.ContainsKey("id"))
             {
-                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(id) });
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: queryParams["id"]), new RequestOptions { PartitionKey = new PartitionKey(moduleId) });
                 return 1;
             }
 
             var query = _dbClient.CreateDocumentQuery<ModuleDefinition>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId))
-                .Where(i => i.ModuleId == id)
+                .Where(i => i.ModuleId == moduleId)
                 .AsDocumentQuery();
 
             var list = new List<Document>();
@@ -61,11 +61,7 @@ namespace PowerSecure.Estimator.Services.Repositories
 
             var items = new List<ModuleDefinition>();
 
-            bool reportFullObject = false;
-            if (queryParams.TryGetValue("object", out string value))
-            {
-                reportFullObject = (value.Trim().ToLower() == "full");
-            }
+            bool reportFullObject = (queryParams.TryGetValue("object", out string value) && value.ToLower() == "full");
             while (query.HasMoreResults)
             {
                 foreach (ModuleDefinition item in await query.ExecuteNextAsync())

@@ -37,10 +37,15 @@ namespace PowerSecure.Estimator.Services.Repositories
 
             var items = new List<Role>();
 
+            bool reportFullObject = (queryParams.TryGetValue("object", out string value) && value.ToLower() == "full");
             while (query.HasMoreResults)
             {
                 foreach (Role item in await query.ExecuteNextAsync())
                 {
+                    if (!reportFullObject)
+                    {
+                        item.Rest = null;
+                    }
                     items.Add(item);
                 }
             }
@@ -57,6 +62,44 @@ namespace PowerSecure.Estimator.Services.Repositories
         {
             await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(id) });
             return 1;
+        }
+
+        public async Task<int> Reset(JToken jToken)
+        {
+            var documentQuery = _dbClient.CreateDocumentQuery<Role>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = false })
+                .AsDocumentQuery();
+
+            var ids = new List<string>();
+
+            while (documentQuery.HasMoreResults)
+            {
+                foreach (Role item in await documentQuery.ExecuteNextAsync())
+                {
+                    ids.Add(item.Id);
+                }
+            }
+
+            foreach (var id in ids)
+            {
+                await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(id) });
+            }
+
+            int count = 0;
+            foreach (var child in jToken.Children())
+            {
+                if (child.Type != JTokenType.Object)
+                {
+                    continue;
+                }
+
+                var item = child.ToObject<Role>();
+
+                await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), item);
+
+                count++;
+            }
+
+            return count;
         }
     }
 }
