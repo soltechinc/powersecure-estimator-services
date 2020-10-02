@@ -8,6 +8,9 @@ namespace PowerSecure.Estimator.Services.Models
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        [JsonProperty("includedModules")]
+        public List<ModuleDefinition> Modules { get; set; }
+
         [JsonExtensionData]
         public Dictionary<string, object> Rest { get; set; }
     }

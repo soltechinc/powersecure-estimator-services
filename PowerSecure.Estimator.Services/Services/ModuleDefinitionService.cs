@@ -51,8 +51,6 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> Upsert(JObject document)
         {
-            _log.LogInformation($"Document - {document.ToString()}");
-
             if ((!document.Properties().Any(x => x.Name == "moduleId")) || string.IsNullOrWhiteSpace(document["moduleId"].ToString()))
             {
                 document["moduleId"] = Guid.NewGuid().ToString();

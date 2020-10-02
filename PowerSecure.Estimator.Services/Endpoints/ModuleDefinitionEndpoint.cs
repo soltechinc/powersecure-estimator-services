@@ -73,7 +73,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient), new CosmosFunctionRepository(dbClient), new CosmosFactorRepository(dbClient), new CosmosEstimateRepository(dbClient), new CosmosBusinessOpportunityLineItemRepository(dbClient), log).Upsert(JObject.Parse(requestBody)).Result;
+                (object returnValue, string message) = await new ModuleDefinitionService(new CosmosModuleDefinitionRepository(dbClient), new CosmosFunctionRepository(dbClient), new CosmosFactorRepository(dbClient), new CosmosEstimateRepository(dbClient), new CosmosBusinessOpportunityLineItemRepository(dbClient), log).Upsert(JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
