@@ -107,5 +107,30 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ConvertEstimateTemplateToEstimate")]
+        public static async Task<IActionResult> ConvertToEstimate(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "estimateTemplates/convert/{id}")] HttpRequest req,
+            string id,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ConvertEstimateTemplateToEstimate (Id: {id})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                (object returnValue, string message) = await new EstimateTemplateService(new CosmosEstimateTemplateRepository(dbClient), new CosmosEstimateRepository(dbClient), new CosmosModuleDefinitionRepository(dbClient)).Convert(id, JObject.Parse(requestBody), queryParams);
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }
