@@ -65,7 +65,7 @@ namespace PowerSecure.Estimator.Services.Services
             var estimateTemplate = estimateTemplateJObject.ToObject<EstimateTemplate>();
 
             {
-                var moduleDefinitionService = new ModuleDefinitionService(_moduleDefinitionRepository);
+                var moduleDefinitionService = new ModuleDefinitionService(_moduleDefinitionRepository, _estimateRepository, _log);
                 foreach (var moduleDefinition in estimateTemplate.Modules)
                 {
                     moduleDefinition.Id = null;
