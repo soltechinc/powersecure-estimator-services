@@ -119,11 +119,9 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug($"Function called - ConvertEstimateTemplateToEstimate (Id: {id})");
 
-                var queryParams = req.GetQueryParameterDictionary();
-
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new EstimateTemplateService(new CosmosEstimateTemplateRepository(dbClient), new CosmosEstimateRepository(dbClient), new CosmosModuleDefinitionRepository(dbClient)).Convert(id, JObject.Parse(requestBody), queryParams);
+                (object returnValue, string message) = await new EstimateTemplateService(new CosmosEstimateTemplateRepository(dbClient), new CosmosEstimateRepository(dbClient), new CosmosModuleDefinitionRepository(dbClient), log).Convert(id, JObject.Parse(requestBody));
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

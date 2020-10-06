@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
 using System.Collections.Generic;
@@ -11,12 +12,14 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IEstimateTemplateRepository _estimateTemplateRepository;
         private readonly IEstimateRepository _estimateRepository;
         private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
+        private readonly ILogger _log;
 
-        public EstimateTemplateService(IEstimateTemplateRepository estimateTemplateRepository, IEstimateRepository estimateRepository = null, IModuleDefinitionRepository moduleDefinitionRepository = null)
+        public EstimateTemplateService(IEstimateTemplateRepository estimateTemplateRepository, IEstimateRepository estimateRepository = null, IModuleDefinitionRepository moduleDefinitionRepository = null, ILogger log = null)
         {
             _estimateTemplateRepository = estimateTemplateRepository;
             _estimateRepository = estimateRepository;
             _moduleDefinitionRepository = moduleDefinitionRepository;
+            _log = log;
         }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
@@ -40,7 +43,7 @@ namespace PowerSecure.Estimator.Services.Services
             return (deletedDocumentCount, $"{deletedDocumentCount} documents deleted");
         }
 
-        public async Task<(object, string)> Convert(string id, JObject document, IDictionary<string, string> queryParams)
+        public async Task<(object, string)> Convert(string id, JObject document)
         {
             var inputEstimate = document.ToObject<Estimate>();
 
@@ -53,6 +56,8 @@ namespace PowerSecure.Estimator.Services.Services
                 inputEstimate.SoftCostPercent = estimateTemplateProjection.SoftCostPercent;
                 inputEstimate.DesiredRateForInstall = estimateTemplateProjection.DesiredRateForInstall;
             }
+
+            _log.LogInformation("New estimate - " + JObject.FromObject(inputEstimate).ToString());
 
             var outputEstimate = JObject.Parse((await new EstimateService(_estimateRepository).Upsert(JObject.FromObject(inputEstimate))).Item1.ToString()).ToObject<Estimate>();
 
