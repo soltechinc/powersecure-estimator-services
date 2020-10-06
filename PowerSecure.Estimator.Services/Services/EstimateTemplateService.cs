@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
 using System.Collections.Generic;
@@ -13,14 +14,25 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IEstimateTemplateRepository _estimateTemplateRepository;
         private readonly IEstimateRepository _estimateRepository;
         private readonly IModuleDefinitionRepository _moduleDefinitionRepository;
+        private readonly IInstructionSetRepository _instructionSetRepository;
+        private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IBusinessOpportunityLineItemRepository _businessOpportunityLineItemRepository;
         private readonly ILogger _log;
 
-        public EstimateTemplateService(IEstimateTemplateRepository estimateTemplateRepository, IEstimateRepository estimateRepository = null, IModuleDefinitionRepository moduleDefinitionRepository = null, ILogger log = null)
+        public EstimateTemplateService(IEstimateTemplateRepository estimateTemplateRepository, ILogger log = null)
         {
             _estimateTemplateRepository = estimateTemplateRepository;
+            _log = log;
+        }
+
+        public EstimateTemplateService(IEstimateTemplateRepository estimateTemplateRepository, IEstimateRepository estimateRepository, IModuleDefinitionRepository moduleDefinitionRepository, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IBusinessOpportunityLineItemRepository businessOpportunityLineItemRepository, ILogger log)
+            : this(estimateTemplateRepository, log)
+        {
             _estimateRepository = estimateRepository;
             _moduleDefinitionRepository = moduleDefinitionRepository;
-            _log = log;
+            _instructionSetRepository = instructionSetRepository;
+            _referenceDataRepository = referenceDataRepository;
+            _businessOpportunityLineItemRepository = businessOpportunityLineItemRepository;
         }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
