@@ -62,6 +62,8 @@ namespace PowerSecure.Estimator.Services.Services
 
             var outputEstimate = JObject.Parse((await new EstimateService(_estimateRepository).Upsert(JObject.FromObject(inputEstimate, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }))).Item1.ToString()).ToObject<Estimate>();
 
+            _log.LogInformation("Created estimate - id " + outputEstimate.Id);
+
             var estimateTemplate = estimateTemplateJObject.ToObject<EstimateTemplate>();
 
             {
@@ -72,7 +74,9 @@ namespace PowerSecure.Estimator.Services.Services
                     moduleDefinition.ModuleId = null;
                     moduleDefinition.Rest.Add("boliNumber", outputEstimate.BOLINumber);
                     moduleDefinition.Rest.Add("estimateId", outputEstimate.Id);
-                    await moduleDefinitionService.Upsert(JObject.FromObject(moduleDefinition, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }));
+                    var outputModuleDefinition = JObject.Parse((await moduleDefinitionService.Upsert(JObject.FromObject(moduleDefinition, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }))).Item1.ToString()).ToObject<ModuleDefinition>();
+
+                    _log.LogInformation("Created module definition - id " + outputModuleDefinition.Id);
                 }
             }
 
