@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
@@ -57,9 +58,9 @@ namespace PowerSecure.Estimator.Services.Services
                 inputEstimate.DesiredRateForInstall = estimateTemplateProjection.DesiredRateForInstall;
             }
 
-            _log.LogInformation("New estimate - " + JObject.FromObject(inputEstimate).ToString());
+            _log.LogInformation("New estimate - " + JObject.FromObject(inputEstimate, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }).ToString());
 
-            var outputEstimate = JObject.Parse((await new EstimateService(_estimateRepository).Upsert(JObject.FromObject(inputEstimate))).Item1.ToString()).ToObject<Estimate>();
+            var outputEstimate = JObject.Parse((await new EstimateService(_estimateRepository).Upsert(JObject.FromObject(inputEstimate, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }))).Item1.ToString()).ToObject<Estimate>();
 
             var estimateTemplate = estimateTemplateJObject.ToObject<EstimateTemplate>();
 
@@ -71,7 +72,7 @@ namespace PowerSecure.Estimator.Services.Services
                     moduleDefinition.ModuleId = null;
                     moduleDefinition.Rest.Add("boliNumber", outputEstimate.BOLINumber);
                     moduleDefinition.Rest.Add("estimateId", outputEstimate.Id);
-                    await moduleDefinitionService.Upsert(JObject.FromObject(moduleDefinition));
+                    await moduleDefinitionService.Upsert(JObject.FromObject(moduleDefinition, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }));
                 }
             }
 
