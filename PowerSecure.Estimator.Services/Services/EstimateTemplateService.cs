@@ -70,8 +70,6 @@ namespace PowerSecure.Estimator.Services.Services
                 inputEstimate.DesiredRateForInstall = estimateTemplateProjection.DesiredRateForInstall;
             }
 
-            _log.LogInformation("New estimate - " + JObject.FromObject(inputEstimate, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }).ToString());
-
             var outputEstimate = JObject.Parse((await new EstimateService(_estimateRepository).Upsert(JObject.FromObject(inputEstimate, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }))).Item1.ToString()).ToObject<Estimate>();
 
             _log.LogInformation("Created estimate - id " + outputEstimate.Id);
@@ -79,13 +77,16 @@ namespace PowerSecure.Estimator.Services.Services
             var estimateTemplate = estimateTemplateJObject.ToObject<EstimateTemplate>();
 
             {
-                var moduleDefinitionService = new ModuleDefinitionService(_moduleDefinitionRepository, _estimateRepository, _log);
+                var moduleDefinitionService = new ModuleDefinitionService(_moduleDefinitionRepository, _instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository, _log);
                 foreach (var moduleDefinition in estimateTemplate.Modules)
                 {
                     moduleDefinition.Id = null;
                     moduleDefinition.ModuleId = null;
                     moduleDefinition.Rest.Add("boliNumber", outputEstimate.BOLINumber);
                     moduleDefinition.Rest.Add("estimateId", outputEstimate.Id);
+
+                    //_log.LogInformation("New module definition - " + JObject.FromObject(moduleDefinition, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }).ToString());
+
                     var outputModuleDefinition = JObject.Parse((await moduleDefinitionService.Upsert(JObject.FromObject(moduleDefinition, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }))).Item1.ToString()).ToObject<ModuleDefinition>();
 
                     _log.LogInformation("Created module definition - id " + outputModuleDefinition.Id);
