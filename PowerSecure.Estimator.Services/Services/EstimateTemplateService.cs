@@ -85,8 +85,6 @@ namespace PowerSecure.Estimator.Services.Services
                     moduleDefinition.Rest.Add("boliNumber", outputEstimate.BOLINumber);
                     moduleDefinition.Rest.Add("estimateId", outputEstimate.Id);
 
-                    //_log.LogInformation("New module definition - " + JObject.FromObject(moduleDefinition, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }).ToString());
-
                     var outputModuleDefinition = JObject.Parse((await moduleDefinitionService.Upsert(JObject.FromObject(moduleDefinition, new JsonSerializer { NullValueHandling = NullValueHandling.Ignore }))).Item1.ToString()).ToObject<ModuleDefinition>();
 
                     _log.LogInformation("Created module definition - id " + outputModuleDefinition.Id);
