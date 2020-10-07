@@ -343,7 +343,7 @@ namespace PowerSecure.Estimator.Services.Services
 
             {
                 StringBuilder str = new StringBuilder();
-                if (primitive == "instructionset")
+                if (primitive == "instructionset" || primitive == "input")
                 {
                     str.Append(parameters[0].ToString());
                 }
@@ -521,6 +521,7 @@ namespace PowerSecure.Estimator.Services.Services
                 new Dictionary<string,string>(){ ["label"] = "GreaterThanOrEqual", ["value"] = ">=", ["maxParams"] = "none", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "Identity", ["value"] = "identity", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "InstructionSet", ["value"] = "instructionSet", ["maxParams"] = "1", ["minParams"] = "1" },
+                new Dictionary<string,string>(){ ["label"] = "Input", ["value"] = "input", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "IsEmpty", ["value"] = "isempty", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "IsFalse", ["value"] = "isfalse", ["maxParams"] = "1", ["minParams"] = "1" },
                 new Dictionary<string,string>(){ ["label"] = "IsTrue", ["value"] = "istrue", ["maxParams"] = "1", ["minParams"] = "1" },
