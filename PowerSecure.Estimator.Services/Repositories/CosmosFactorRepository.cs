@@ -196,7 +196,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             var query = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId),
                             str.ToString()).AsDocumentQuery();
 
-            Factor result = (await query.ExecuteNextAsync()).Where(f => DateTime.Parse(f.startdate.ToString()) < effectiveDate)
+            Factor result = (await query.ExecuteNextAsync()).Where(f => DateTime.Parse(f.startdate.ToString()) <= effectiveDate)
                           .OrderByDescending(f => f.creationdate.ToString())
                           .FirstOrDefault();
 
