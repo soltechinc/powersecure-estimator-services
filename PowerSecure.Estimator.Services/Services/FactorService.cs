@@ -50,7 +50,7 @@ namespace PowerSecure.Estimator.Services.Services
                                 .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
             if (!document.ContainsKey("creationdate"))
             {
-                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
+                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyyTHH:mm:ss")));
             }
             return (await _factorRepository.Upsert(document), "OK");
         }
