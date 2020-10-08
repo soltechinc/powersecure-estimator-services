@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
+using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,51 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
         {
+            var list = (List<Function>)await _functionRepository.List(queryParams);
+
+            foreach(var function in list)
+            {
+                if(function.Rest != null && !function.Rest.ContainsKey("uijson"))
+                {
+                    var dict = new Dictionary<string, object>()
+                    {
+                        ["moduleTitle"] = function.Module,
+                        ["effectiveDate"] = DateTime.Parse(function.Rest["startdate"].ToString()).ToString("yyyy-MM-dd"),
+                        ["calculatedVariable"] = new Dictionary<string, object>()
+                        {
+                            ["variableName"] = function.Name,
+                            ["moduleTitle"] = function.Module
+                        },
+                        ["instructionSets"] = new List<object>()
+                        {
+                            new Dictionary<string,object>()
+                            {
+                                ["id"] = 1,
+                                ["instructionMethod"] = new Dictionary<string,object>()
+                                {
+                                    ["label"] = "Json",
+                                    ["v"] = "json",
+                                    ["maxParams"] = "1",
+                                    ["minParams"] = "1"
+                                },
+                                ["instructionParams"] = new List<object>()
+                                {
+                                    new Dictionary<string,object>()
+                                    {
+                                        ["json"] = function.Rest["instructions"].ToString(),
+                                        ["moduleTitle"] = function.Name
+                                    }
+                                },
+                                ["final"] = true
+                            }
+                        },
+                        ["id"] = function.Id
+                    };
+
+                    function.Rest.Add("uijson", dict);
+                }
+            }
+
             return (await _functionRepository.List(queryParams), "OK");
         }
 
