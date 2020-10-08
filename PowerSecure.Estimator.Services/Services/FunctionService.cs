@@ -54,7 +54,7 @@ namespace PowerSecure.Estimator.Services.Services
                                     new Dictionary<string,object>()
                                     {
                                         ["json"] = function.Rest["instructions"].ToString(),
-                                        ["moduleTitle"] = function.Name
+                                        ["moduleTitle"] = function.Module
                                     }
                                 },
                                 ["final"] = true
