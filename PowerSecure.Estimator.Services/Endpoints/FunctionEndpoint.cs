@@ -28,7 +28,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).List(queryParams);
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).List(queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Get(id, queryParams);
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).Get(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Upsert(JObject.Parse(requestBody));
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).Upsert(JObject.Parse(requestBody));
 
                 if (returnValue == null)
                 {
@@ -102,7 +102,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Delete(id, queryParams);
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).Delete(id, queryParams);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
                     return new object().ToServerErrorObjectResult(message: "Query params do not contain module name");
                 }
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).Import(env, queryParams["module"]);
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).Import(env, queryParams["module"]);
 
                 if (returnValue == null)
                 {
@@ -160,7 +160,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 log.LogInformation(requestBody);
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).UpsertFromUi(requestBody);
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).UpsertFromUi(requestBody);
 
                 if (returnValue == null)
                 {
@@ -187,7 +187,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug("Function called - GetFunctionFromUi");
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).GetFromUi(id);
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).GetFromUi(id);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -207,7 +207,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
             {
                 log.LogDebug("Function called - ListPrimitives");
 
-                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient)).ListPrimitives();
+                (object returnValue, string message) = await new FunctionService(new CosmosFunctionRepository(dbClient), log).ListPrimitives();
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

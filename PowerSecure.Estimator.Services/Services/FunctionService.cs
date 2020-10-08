@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine;
 using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
@@ -14,10 +15,12 @@ namespace PowerSecure.Estimator.Services.Services
     public class FunctionService
     {
         private readonly IFunctionRepository _functionRepository;
+        private readonly ILogger _log;
 
-        public FunctionService(IFunctionRepository functionRepository)
+        public FunctionService(IFunctionRepository functionRepository, ILogger log)
         {
             _functionRepository = functionRepository;
+            _log = log;
         }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
@@ -26,7 +29,19 @@ namespace PowerSecure.Estimator.Services.Services
 
             foreach(var function in list)
             {
-                if(function.Rest != null && !function.Rest.ContainsKey("uijson"))
+                if(function.Rest != null && !function.Rest.ContainsKey("startdate"))
+                {
+                    _log.LogWarning($"Function {function.Name} with id {function.Id} does not contain a start date.");
+                    continue;
+                }
+
+                if (function.Rest != null && !function.Rest.ContainsKey("instructions"))
+                {
+                    _log.LogWarning($"Function {function.Name} with id {function.Id} does not contain instructions.");
+                    continue;
+                }
+
+                if (function.Rest != null && !function.Rest.ContainsKey("uijson"))
                 {
                     var dict = new Dictionary<string, object>()
                     {
