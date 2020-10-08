@@ -67,7 +67,7 @@ namespace PowerSecure.Estimator.Services.Services
                 }
             }
 
-            return (await _functionRepository.List(queryParams), "OK");
+            return (list, "OK");
         }
 
         public async Task<(object, string)> Get(string id, IDictionary<string, string> queryParams)
