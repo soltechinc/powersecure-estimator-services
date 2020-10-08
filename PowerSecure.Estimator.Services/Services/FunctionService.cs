@@ -357,6 +357,10 @@ namespace PowerSecure.Estimator.Services.Services
                 {
                     str.Append(parameters[0].ToString());
                 }
+                if(primitive == "json")
+                {
+                    str.Append(JObject.Parse(JObject.Parse(parameters[0].ToString())["json"].ToString()).ToString(Newtonsoft.Json.Formatting.None));
+                }
                 else
                 {
                     str.Append($"{{\"{primitive}\":[");
