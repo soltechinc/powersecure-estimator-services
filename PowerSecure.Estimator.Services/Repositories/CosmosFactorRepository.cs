@@ -26,55 +26,7 @@ namespace PowerSecure.Estimator.Services.Repositories
             _databaseId = AppSettings.Get("databaseId");
             _collectionId = AppSettings.Get("factorsCollectionId");
         }
-
-        private static string CreateHash(string valueKey)
-        {
-            return MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(valueKey))
-                      .Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2"))).ToString();
-        }
-
-        private object CreateKey(JObject document)
-        {
-            document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
-            document["hash"] = CreateHash(document.Properties()
-                                    .Where(o => o.Name != "id" && o.Name != "hash" && !o.Name.StartsWith("_"))
-                                    .SelectMany(o => new string[] { o.Name, o.Value.ToString()
-                                    })
-                                    .OrderBy(s => s)
-                                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
-            if (!document.ContainsKey("creationdate"))
-            {
-                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
-            }
-            return document;
-        }
-
-        public async Task<object> UpsertList(JObject document)
-        {
-            JArray items = (JArray)document["items"];
-            int length = items.Count;
-            WaitHandle[] waitHandles = new WaitHandle[length];
-
-            for (int i = 0; length > i; i++)
-            {
-                var j = i;
-                var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
-                var thread = new Thread(() =>
-                {
-                    Thread.Sleep(j * 1000);
-                    Console.WriteLine("Thread{0} exits", j);
-                    handle.Set();
-                });
-                waitHandles[j] = handle;
-                thread.Start();
-                CreateKey((JObject)items[i]);
-                await Upsert((JObject)items[i]);
-            }
-            WaitHandle.WaitAll(waitHandles);
-            return document;
-        }
-
-
+        
         public async Task<object> Upsert(JObject document)
         {
             if (document.ContainsKey("id") && document["id"] != null && !string.IsNullOrEmpty(document["id"].ToString()))
@@ -197,7 +149,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                             str.ToString()).AsDocumentQuery();
 
             Factor result = (await query.ExecuteNextAsync()).Where(f => DateTime.Parse(f.startdate.ToString()) <= effectiveDate)
-                          .OrderByDescending(f => f.creationdate.ToString())
+                          .OrderByDescending(f => DateTime.Parse(f.creationdate.ToString()))
                           .FirstOrDefault();
 
             if (result == null)

@@ -36,10 +36,18 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> UpsertList(JObject document)
         {
-            return (await _factorRepository.UpsertList(document), "OK");
+            foreach(var item in (JArray)document["items"])
+            {
+                (object obj, string message) = await Upsert((JObject)item);
+                if(obj == null)
+                {
+                    return (obj, message);
+                }
+            }
+
+            return (document, "OK");
         }
-
-
+        
         public async Task<(object, string)> Upsert(JObject document)
         {
             document["key"] = string.Join('-', string.Empty, document["module"], document["returnattribute"]);
@@ -48,10 +56,21 @@ namespace PowerSecure.Estimator.Services.Services
                                 .SelectMany(o => new string[] { o.Name, o.Value.ToString() })
                                 .OrderBy(s => s)
                                 .Aggregate(new StringBuilder(), (sb, s) => sb.AppendFormat("-{0}", s)).ToString());
+
             if (!document.ContainsKey("creationdate"))
             {
                 document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("yyyy-M-dTHH:mm:ss")));
             }
+
+            if (document.ContainsKey("startdate"))
+            {
+                document["startdate"] = DateTime.Parse(document["startdate"].ToString()).ToString("yyyy-M-dT00:00:00");
+            }
+            else
+            {
+                return (null, "Factor is lacking a startdate property");
+            }
+
             return (await _factorRepository.Upsert(document), "OK");
         }
 

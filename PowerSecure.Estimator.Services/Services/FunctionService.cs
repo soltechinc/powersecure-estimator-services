@@ -33,8 +33,18 @@ namespace PowerSecure.Estimator.Services.Services
         {
             if (!document.ContainsKey("creationdate"))
             {
-                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("M/d/yyyy")));
+                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("yyyy-M-dTHH:mm:ss")));
             }
+
+            if (document.ContainsKey("startdate"))
+            {
+                document["startdate"] = DateTime.Parse(document["startdate"].ToString()).ToString("yyyy-M-dT00:00:00");
+            }
+            else
+            {
+                return (null, "Function is lacking a startdate property");
+            }
+
             if (document.ContainsKey("module"))
             {
                 document["module"] = document["module"].ToString().ToLower();
