@@ -48,7 +48,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
                     }
                 default:
                     {
-                        return objs.Select(o => o.ToResolvedParameter()).Where(o => o.ToComparable().CompareTo(up.ToInstructionSet(o, searchString).ToComparable()) == 0).ToArray();
+                        return objs.Select(o => o.ToResolvedParameter()).Where(o => up.ToInstructionSet(o, searchString).ToBoolean() == true).ToArray();
                     }
             }
         }
