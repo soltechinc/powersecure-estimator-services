@@ -126,7 +126,7 @@ namespace PowerSecure.Estimator.Services.Services
             var set = new SortedSet<string>();
             {
                 var moduleTemplateJson = await _moduleTemplateRepository.Get(moduleName, queryParams);
-                if (moduleTemplateJson != null)
+                if (moduleTemplateJson != null && queryParams.ContainsKey("id"))
                 {
                     var moduleTemplate = JObject.Parse(moduleTemplateJson.ToString()).ToObject<ModuleTemplate>();
                     if (moduleTemplate.Rest != null && moduleTemplate.Rest.TryGetValue("variableNames", out object value))
