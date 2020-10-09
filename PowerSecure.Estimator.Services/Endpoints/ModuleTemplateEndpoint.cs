@@ -83,6 +83,28 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
+        [FunctionName("CreateModuleTemplateVariableNameList")]
+        public static async Task<IActionResult> CreateVariableNameList(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "moduleTemplates/variableNames")] HttpRequest req,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug("Function called - CreateModuleTemplateVariableNameList");
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient), new CosmosFunctionRepository(dbClient), new CosmosFactorRepository(dbClient), new CosmosEstimateRepository(dbClient), new CosmosBusinessOpportunityLineItemRepository(dbClient)).CreateVariableNameList(JObject.Parse(requestBody));
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
         [FunctionName("DeleteModuleTemplate")]
         public static async Task<IActionResult> Delete(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "moduleTemplates/{id}")] HttpRequest req,
@@ -97,6 +119,35 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 var queryParams = req.GetQueryParameterDictionary();
 
                 (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).Delete(id, queryParams);
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+        [FunctionName("GetModuleTemplateVariableNames")]
+        public static async Task<IActionResult> GetVariableNames(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "moduleTemplates/variableNames/{id}")] HttpRequest req,
+            string id,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - GetModuleTemplateVariableNames (Id: {id})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).GetVariableNames(id, queryParams);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)

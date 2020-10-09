@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
+using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using PowerSecure.Estimator.Services.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -9,10 +11,23 @@ namespace PowerSecure.Estimator.Services.Services
     public class ModuleTemplateService
     {
         private readonly IModuleTemplateRepository _moduleTemplateRepository;
+        private readonly IInstructionSetRepository _instructionSetRepository;
+        private readonly IReferenceDataRepository _referenceDataRepository;
+        private readonly IEstimateRepository _estimateRepository;
+        private readonly IBusinessOpportunityLineItemRepository _businessOpportunityLineItemRepository;
 
         public ModuleTemplateService(IModuleTemplateRepository moduleTemplateRepository)
         {
             _moduleTemplateRepository = moduleTemplateRepository;
+        }
+
+        public ModuleTemplateService(IModuleTemplateRepository moduleTemplateRepository, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, IBusinessOpportunityLineItemRepository businessOpportunityLineItemRepository)
+            : this(moduleTemplateRepository)
+        {
+            _instructionSetRepository = instructionSetRepository;
+            _referenceDataRepository = referenceDataRepository;
+            _estimateRepository = estimateRepository;
+            _businessOpportunityLineItemRepository = businessOpportunityLineItemRepository;
         }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
@@ -58,6 +73,20 @@ namespace PowerSecure.Estimator.Services.Services
             int newDocumentCount = await _moduleTemplateRepository.Reset(jObj["Items"]);
 
             return (newDocumentCount, $"{newDocumentCount} documents created.");
+        }
+
+        public async Task<(object, string)> CreateVariableNameList(JObject document)
+        {
+            var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository);
+            var dict = new Dictionary<string, object>();
+            estimateService.ParseFromJson(document, dict, document["moduleTitle"].ToString());
+            return (dict.Keys.ToArray(), "OK");
+        }
+
+        public async Task<(object, string)> GetVariableNames(string id, IDictionary<string, string> queryParams)
+        {
+            return (null, null);
+            //return (await _moduleTemplateRepository.Get(id), "OK");
         }
     }
 }
