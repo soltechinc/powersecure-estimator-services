@@ -141,7 +141,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient)).GetVariableNames(id, queryParams);
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient), new CosmosFunctionRepository(dbClient)).GetVariableNames(id, queryParams);
 
                 if (returnValue == null)
                 {
