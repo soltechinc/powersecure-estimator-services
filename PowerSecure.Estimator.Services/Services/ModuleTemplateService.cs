@@ -123,7 +123,7 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> GetVariableNames(string moduleName, IDictionary<string, string> queryParams)
         {
-            var list = new List<string>();
+            var set = new SortedSet<string>();
             {
                 var moduleTemplateJson = await _moduleTemplateRepository.Get(moduleName, queryParams);
                 if (moduleTemplateJson != null)
@@ -131,15 +131,28 @@ namespace PowerSecure.Estimator.Services.Services
                     var moduleTemplate = JObject.Parse(moduleTemplateJson.ToString()).ToObject<ModuleTemplate>();
                     if (moduleTemplate.Rest != null && moduleTemplate.Rest.TryGetValue("variableNames", out object value))
                     {
-                        list.AddRange((IEnumerable<string>)value);
+                        foreach(string s in (IEnumerable<string>)value)
+                        {
+                            if(!set.Contains(s))
+                            {
+                                set.Add(s);
+                            }
+                        }
                     }
                 }
             }
             {
                 var functions = (List<Function>)await _functionRepository.List(new Dictionary<string, string>() { ["module"] = moduleName.ToLower(), ["object"] = "full" });
-                list.AddRange(functions.Select(f => $"{f.Module}.{f.Name}".ToLower()));
+
+                foreach (string s in functions.Select(f => $"{f.Module}.{f.Name}".ToLower()))
+                {
+                    if (!set.Contains(s))
+                    {
+                        set.Add(s);
+                    }
+                }
             }
-            return (list.Distinct(), "OK");
+            return (set.ToList(), "OK");
         }
     }
 }
