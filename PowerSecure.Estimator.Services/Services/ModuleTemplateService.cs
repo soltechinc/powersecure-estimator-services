@@ -79,27 +79,34 @@ namespace PowerSecure.Estimator.Services.Services
         {
             var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository);
             var dict = new Dictionary<string, object>();
-            estimateService.ParseFromJson(document, dict, document["moduleTitle"].ToString());
-            return (GetDatasheetNames(dict), "OK");
+            string moduleTitle = document["moduleTitle"].ToString().ToLower();
+            estimateService.ParseFromJson(document, dict, moduleTitle);
+            return (GetDatasheetNames(dict, moduleTitle).Distinct(), "OK");
         }
 
-        private IEnumerable<string> GetDatasheetNames(IDictionary<string,object> dict)
+        private IEnumerable<string> GetDatasheetNames(Dictionary<string,object> dict, string moduleTitle)
         {
             foreach (var pair in dict)
             {
                 switch (pair.Value)
                 {
-                    case IDictionary<string, object> nestedDict:
+                    case List<Dictionary<string, object>> nestedDictList:
                         {
-                            foreach(var name in GetDatasheetNames(nestedDict))
+                            foreach (var nestedDict in nestedDictList)
                             {
-                                yield return name;
+                                foreach (var name in GetDatasheetNames(nestedDict, moduleTitle).Distinct())
+                                {
+                                    yield return name;
+                                }
                             }
                         }
                         break;
                     default:
                         {
-                            yield return pair.Key;
+                            if (pair.Key.StartsWith(moduleTitle))
+                            {
+                                yield return pair.Key;
+                            }
                         }
                         break;
                 }
