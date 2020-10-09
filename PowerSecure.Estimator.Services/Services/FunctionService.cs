@@ -6,6 +6,7 @@ using PowerSecure.Estimator.Services.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -229,92 +230,35 @@ namespace PowerSecure.Estimator.Services.Services
             }
 
             {
-                var finalSets = new List<JObject>();
-                requestJObject.WalkNodes(PreOrder: jToken =>
-                {
-                    switch (jToken)
-                    {
-                        case JObject jObject:
-                            {
-                                if (jObject.ContainsKey("final") && (bool)jObject["final"])
-                                {
-                                    finalSets.Add(jObject);
-                                }
-                                break;
-                            }
-                    }
-                });
+                var instructionSequences = new List<JObject>(((JArray)requestJObject["instructionSets"]).Select(x => (JObject)x));
 
-                if (finalSets.Count == 0)
+                var finalIndexes = instructionSequences.Where(jObj => jObj.ContainsKey("final") && (bool)jObj["final"]).Select(jObj => jObj["id"].ToObject<int>()).ToList();
+                
+                if (finalIndexes.Count == 0)
                 {
                     return (null, "Invalid instruction set - no final set");
                 }
 
-                if (finalSets.Count > 1)
+                if (finalIndexes.Count > 1)
                 {
                     return (null, "Invalid instruction set - more than one final set");
                 }
 
-                var finalSet = finalSets[0];
-                int firstId = int.MinValue;
-                Dictionary<int, (string, List<object>)> dict = new Dictionary<int, (string, List<object>)>();
-                finalSet.WalkNodes(PreOrder: jToken =>
+                var dict = new SortedDictionary<int, (string, List<object>)>();
+                foreach (var jObject in instructionSequences)
                 {
-                    switch (jToken)
-                    {
-                        case JObject jObject:
-                            {
-                                if (!jObject.ContainsKey("id"))
-                                {
-                                    break;
-                                }
+                    ParseInstructionSetsToDictionary(jObject, dict);
+                }
 
-                                int id = jObject["id"].ToObject<int>();
-                                if (firstId == int.MinValue)
-                                {
-                                    firstId = id;
-                                }
-                                if (dict.ContainsKey(id))
-                                {
-                                    break;
-                                }
+                ResolveInstructionSetsFromDictionary(finalIndexes[0], dict);
 
-                                ParseInstructionSetsToDictionary(jObject, dict);
-                                break;
-                            }
-                    }
-                },
-                PostOrder: jToken =>
-                {
-                    switch (jToken)
-                    {
-                        case JObject jObject:
-                            {
-                                if (!jObject.ContainsKey("id"))
-                                {
-                                    break;
-                                }
-
-                                int id = jObject["id"].ToObject<int>();
-
-                                if (dict[id].Item2 == null)
-                                {
-                                    break;
-                                }
-
-                                ResolveInstructionSetsFromDictionary(id, dict);
-                                break;
-                            }
-                    }
-                });
-
-                instructionSetJObject.Add("instructions", dict[firstId].Item1);
+                instructionSetJObject.Add("instructions", dict[finalIndexes[0]].Item1);
             }
 
             return await Upsert(instructionSetJObject);
         }
 
-        private void ParseInstructionSetsToDictionary(JObject jObject, Dictionary<int, (string, List<object>)> dict)
+        private void ParseInstructionSetsToDictionary(JObject jObject, IDictionary<int, (string, List<object>)> dict)
         {
             int id = jObject["id"].ToObject<int>();
             string primitive = ((JObject)jObject["instructionMethod"])["v"].ToString();
@@ -400,9 +344,15 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        private void ResolveInstructionSetsFromDictionary(int currentId, Dictionary<int, (string, List<object>)> dict)
+        private void ResolveInstructionSetsFromDictionary(int currentId, IDictionary<int, (string, List<object>)> dict)
         {
             (string primitive, List<object> parameters) = dict[currentId];
+
+            if(parameters == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < parameters.Count; ++i)
             {
                 string resolvedParameter = ResolveParameter(parameters[i], primitive, dict);
@@ -444,12 +394,13 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        private string ResolveParameter(object parameter, string primitive, Dictionary<int, (string, List<object>)> dict)
+        private string ResolveParameter(object parameter, string primitive, IDictionary<int, (string, List<object>)> dict)
         {
             switch (parameter)
             {
                 case UnresolvedSet unresolvedSet:
                     {
+                        ResolveInstructionSetsFromDictionary(unresolvedSet.Id, dict);
                         return dict[unresolvedSet.Id].Item1;
                     }
                 case JObject jObject:
