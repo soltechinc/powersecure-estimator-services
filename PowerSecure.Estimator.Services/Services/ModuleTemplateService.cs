@@ -131,7 +131,18 @@ namespace PowerSecure.Estimator.Services.Services
                     var moduleTemplate = JObject.Parse(moduleTemplateJson.ToString()).ToObject<ModuleTemplate>();
                     if (moduleTemplate.Rest != null && moduleTemplate.Rest.TryGetValue("variableNames", out object value))
                     {
-                        foreach(string s in (IEnumerable<string>)value)
+                        IEnumerable<string> strings = null;
+                        switch(value)
+                        {
+                            case IEnumerable<string> s:
+                                strings = s;
+                                break;
+                            case JArray jArray:
+                                strings = jArray.Select(jToken => jToken.ToString());
+                                break;
+                        }
+
+                        foreach(string s in strings)
                         {
                             if(!set.Contains(s))
                             {
