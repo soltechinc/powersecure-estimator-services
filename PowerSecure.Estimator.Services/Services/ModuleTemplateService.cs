@@ -80,7 +80,30 @@ namespace PowerSecure.Estimator.Services.Services
             var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository);
             var dict = new Dictionary<string, object>();
             estimateService.ParseFromJson(document, dict, document["moduleTitle"].ToString());
-            return (dict.Keys.ToArray(), "OK");
+            return (GetDatasheetNames(dict), "OK");
+        }
+
+        private IEnumerable<string> GetDatasheetNames(IDictionary<string,object> dict)
+        {
+            foreach (var pair in dict)
+            {
+                switch (pair.Value)
+                {
+                    case IDictionary<string, object> nestedDict:
+                        {
+                            foreach(var name in GetDatasheetNames(nestedDict))
+                            {
+                                yield return name;
+                            }
+                        }
+                        break;
+                    default:
+                        {
+                            yield return pair.Key;
+                        }
+                        break;
+                }
+            }
         }
 
         public async Task<(object, string)> GetVariableNames(string id, IDictionary<string, string> queryParams)
