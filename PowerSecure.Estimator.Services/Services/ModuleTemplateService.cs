@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
+using PowerSecure.Estimator.Services.Models;
 using PowerSecure.Estimator.Services.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,17 @@ namespace PowerSecure.Estimator.Services.Services
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IEstimateRepository _estimateRepository;
         private readonly IBusinessOpportunityLineItemRepository _businessOpportunityLineItemRepository;
+        private readonly IFunctionRepository _functionRepository;
 
         public ModuleTemplateService(IModuleTemplateRepository moduleTemplateRepository)
         {
             _moduleTemplateRepository = moduleTemplateRepository;
+        }
+
+        public ModuleTemplateService(IModuleTemplateRepository moduleTemplateRepository, IFunctionRepository functionRepository)
+            : this(moduleTemplateRepository)
+        {
+            _functionRepository = functionRepository;
         }
 
         public ModuleTemplateService(IModuleTemplateRepository moduleTemplateRepository, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, IEstimateRepository estimateRepository, IBusinessOpportunityLineItemRepository businessOpportunityLineItemRepository)
@@ -113,10 +121,25 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        public async Task<(object, string)> GetVariableNames(string id, IDictionary<string, string> queryParams)
+        public async Task<(object, string)> GetVariableNames(string moduleName, IDictionary<string, string> queryParams)
         {
-            return (null, null);
-            //return (await _moduleTemplateRepository.Get(id), "OK");
+            var list = new List<string>();
+            {
+                var moduleTemplateJson = await _moduleTemplateRepository.Get(moduleName.ToLower(), queryParams);
+                if (moduleTemplateJson != null)
+                {
+                    var moduleTemplate = JObject.Parse(moduleTemplateJson.ToString()).ToObject<ModuleTemplate>();
+                    if (moduleTemplate.Rest != null && moduleTemplate.Rest.TryGetValue("variableNames", out object value))
+                    {
+                        list.AddRange((IEnumerable<string>)value);
+                    }
+                }
+            }
+            {
+                var functions = (List<Function>)await _functionRepository.List(new Dictionary<string, string>() { ["module"] = moduleName.ToLower(), ["object"] = "full" });
+                list.AddRange(functions.Select(f => $"{f.Module}.{f.Name}".ToLower()));
+            }
+            return (list.Distinct(), "OK");
         }
     }
 }
