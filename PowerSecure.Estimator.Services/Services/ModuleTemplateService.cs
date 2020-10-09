@@ -125,7 +125,7 @@ namespace PowerSecure.Estimator.Services.Services
         {
             var list = new List<string>();
             {
-                var moduleTemplateJson = await _moduleTemplateRepository.Get(moduleName.ToLower(), queryParams);
+                var moduleTemplateJson = await _moduleTemplateRepository.Get(moduleName, queryParams);
                 if (moduleTemplateJson != null)
                 {
                     var moduleTemplate = JObject.Parse(moduleTemplateJson.ToString()).ToObject<ModuleTemplate>();
