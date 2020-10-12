@@ -144,9 +144,14 @@ namespace PowerSecure.Estimator.Services.Services
 
                         foreach(string s in strings)
                         {
-                            if(!set.Contains(s))
+                            string str = s;
+                            if (str.StartsWith($"{moduleName}."))
                             {
-                                set.Add(s);
+                                str = str.Substring(str.IndexOf(".") + 1);
+                            }
+                            if(!set.Contains(str))
+                            {
+                                set.Add(str);
                             }
                         }
                     }
@@ -157,9 +162,14 @@ namespace PowerSecure.Estimator.Services.Services
 
                 foreach (string s in functions.Select(f => $"{f.Module}.{f.Name}".ToLower()))
                 {
-                    if (!set.Contains(s))
+                    string str = s;
+                    if (str.StartsWith($"{moduleName}."))
                     {
-                        set.Add(s);
+                        str = str.Substring(str.IndexOf(".") + 1);
+                    }
+                    if (!set.Contains(str))
+                    {
+                        set.Add(str);
                     }
                 }
             }
