@@ -369,32 +369,40 @@ namespace PowerSecure.Estimator.Services.Services
 
             {
                 StringBuilder str = new StringBuilder();
-                if (primitive == "instructionset" || primitive == "input")
+                switch(primitive)
                 {
-                    str.Append(parameters[0].ToString());
-                }
-                if(primitive == "json")
-                {
-                    str.Append(JObject.Parse(JObject.Parse(parameters[0].ToString())["json"].ToString()).ToString(Newtonsoft.Json.Formatting.None));
-                }
-                else
-                {
-                    str.Append($"{{\"{primitive}\":[");
-                    bool first = true;
-                    foreach (object parameter in parameters)
-                    {
-                        if (first)
+                    case "instructionset":
+                    case "input":
                         {
-                            first = false;
+                            str.Append(parameters[0].ToString());
                         }
-                        else
+                        break;
+                    case "json":
                         {
-                            str.Append(",");
+                            str.Append(JObject.Parse(JObject.Parse(parameters[0].ToString())["json"].ToString()).ToString(Newtonsoft.Json.Formatting.None));
                         }
-                        str.Append(parameter.ToString());
-                    }
-                    str.Append("]}");
+                        break;
+                    default:
+                        {
+                            str.Append($"{{\"{primitive}\":[");
+                            bool first = true;
+                            foreach (object parameter in parameters)
+                            {
+                                if (first)
+                                {
+                                    first = false;
+                                }
+                                else
+                                {
+                                    str.Append(",");
+                                }
+                                str.Append(parameter.ToString());
+                            }
+                            str.Append("]}");
+                        }
+                        break;
                 }
+
                 dict[currentId] = (str.ToString(), null);
             }
         }
