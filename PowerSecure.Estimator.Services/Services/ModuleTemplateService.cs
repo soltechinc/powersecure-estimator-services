@@ -145,7 +145,7 @@ namespace PowerSecure.Estimator.Services.Services
                         foreach(string s in strings)
                         {
                             string str = s;
-                            if (str.StartsWith($"{moduleName}."))
+                            if (str.StartsWith($"{moduleName.ToLower()}."))
                             {
                                 str = str.Substring(str.IndexOf(".") + 1);
                             }
@@ -163,7 +163,7 @@ namespace PowerSecure.Estimator.Services.Services
                 foreach (string s in functions.Select(f => $"{f.Module}.{f.Name}".ToLower()))
                 {
                     string str = s;
-                    if (str.StartsWith($"{moduleName}."))
+                    if (str.StartsWith($"{moduleName.ToLower()}."))
                     {
                         str = str.Substring(str.IndexOf(".") + 1);
                     }
