@@ -270,36 +270,9 @@ namespace PowerSecure.Estimator.Services.Services
                                             {
                                                 continue;
                                             }
-
-                                            object inputValue;
+                                            
                                             JToken inputValueFromJson = prop.Value;
-                                            switch (inputValueFromJson.Type)
-                                            {
-                                                case JTokenType.Integer:
-                                                    {
-                                                        decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
-                                                        inputValue = value;
-                                                        break;
-                                                    }
-                                                case JTokenType.Float:
-                                                    {
-                                                        decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
-                                                        inputValue = value;
-                                                        break;
-                                                    }
-                                                case JTokenType.Boolean:
-                                                    {
-                                                        bool? value = inputValueFromJson.ToObject<bool>();
-                                                        inputValue = value;
-                                                        break;
-                                                    }
-                                                default:
-                                                    {
-                                                        string value = inputValueFromJson.ToObject<string>();
-                                                        inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
-                                                        break;
-                                                    }
-                                            }
+                                            object inputValue = GetValueFromToken(inputValueFromJson);
 
                                             dict.Add($"{customItemKey}.{prop.Name.ToLower()}", inputValue);
                                         }
@@ -308,39 +281,12 @@ namespace PowerSecure.Estimator.Services.Services
                                     }
                                     else
                                     {
-                                        object inputValue;
                                         JToken inputValueFromJson = jObject.Properties().Any(prop => prop.Name == "inputValue") ? jObject["inputValue"] : jObject["quantity"];
                                         if (inputValueFromJson.Type == JTokenType.Object)
                                         {
                                             inputValueFromJson = ((JObject)inputValueFromJson)["value"];
                                         }
-                                        switch (inputValueFromJson.Type)
-                                        {
-                                            case JTokenType.Integer:
-                                                {
-                                                    decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
-                                                    inputValue = value;
-                                                    break;
-                                                }
-                                            case JTokenType.Float:
-                                                {
-                                                    decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
-                                                    inputValue = value;
-                                                    break;
-                                                }
-                                            case JTokenType.Boolean:
-                                                {
-                                                    bool? value = inputValueFromJson.ToObject<bool>();
-                                                    inputValue = value;
-                                                    break;
-                                                }
-                                            default:
-                                                {
-                                                    string value = inputValueFromJson.ToObject<string>();
-                                                    inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
-                                                    break;
-                                                }
-                                        }
+                                        object inputValue = GetValueFromToken(inputValueFromJson);
 
                                         if (jToken.Path.Contains("submoduleData"))
                                         {
@@ -977,6 +923,50 @@ namespace PowerSecure.Estimator.Services.Services
             }
 
             return false;
+        }
+
+        private object GetValueFromToken(JToken inputValueFromJson)
+        {
+            object inputValue;
+            switch (inputValueFromJson.Type)
+            {
+                case JTokenType.Integer:
+                    {
+                        decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<int>());
+                        inputValue = value;
+                        break;
+                    }
+                case JTokenType.Float:
+                    {
+                        decimal? value = Convert.ToDecimal(inputValueFromJson.ToObject<float>());
+                        inputValue = value;
+                        break;
+                    }
+                case JTokenType.Boolean:
+                    {
+                        bool? value = inputValueFromJson.ToObject<bool>();
+                        inputValue = value;
+                        break;
+                    }
+                case JTokenType.Array:
+                    {
+                        var list = new List<object>();
+                        foreach(var jToken in (JArray)inputValueFromJson)
+                        {
+                            list.Add(GetValueFromToken(jToken));
+                        }
+                        inputValue = list.ToArray();
+                    }
+                    break;
+                default:
+                    {
+                        string value = inputValueFromJson.ToObject<string>();
+                        inputValue = string.IsNullOrWhiteSpace(value) ? null : value;
+                        break;
+                    }
+            }
+
+            return inputValue;
         }
 
         public async Task<(object, string)> Clone(JObject document, string path)
