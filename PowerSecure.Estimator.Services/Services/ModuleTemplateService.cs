@@ -121,37 +121,9 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
-        public async Task<(object, string)> GetVariableNames(string moduleName, IDictionary<string, string> queryParams)
+        private async Task<IEnumerable<string>> RetrieveFunctionNames(string moduleName)
         {
             var set = new SortedSet<string>();
-            {
-                var moduleTemplateJson = await _moduleTemplateRepository.Get(moduleName, queryParams);
-                if (moduleTemplateJson != null && queryParams.ContainsKey("id"))
-                {
-                    var moduleTemplate = JObject.Parse(moduleTemplateJson.ToString()).ToObject<ModuleTemplate>();
-                    if (moduleTemplate.Rest != null && moduleTemplate.Rest.TryGetValue("variableNames", out object value))
-                    {
-                        IEnumerable<string> strings = null;
-                        switch(value)
-                        {
-                            case IEnumerable<string> s:
-                                strings = s;
-                                break;
-                            case JArray jArray:
-                                strings = jArray.Select(jToken => jToken.ToString());
-                                break;
-                        }
-
-                        foreach(string s in strings)
-                        {
-                            if(!set.Contains(s))
-                            {
-                                set.Add(s);
-                            }
-                        }
-                    }
-                }
-            }
             {
                 var functions = (List<Function>)await _functionRepository.List(new Dictionary<string, string>() { ["module"] = moduleName.ToLower(), ["object"] = "full" });
 
@@ -163,11 +135,59 @@ namespace PowerSecure.Estimator.Services.Services
                     }
                 }
             }
+            return set;
+        }
 
-            var list = new List<string>();
-            foreach(string s in set)
+        public async Task<(object, string)> GetFunctionNames(string moduleName, IDictionary<string, string> queryParams)
+        {
+            return (AddArrayExpressions(await RetrieveFunctionNames(moduleName)), "OK");
+        }
+
+        private async Task<IEnumerable<string>> RetrieveInputNames(string moduleName, IDictionary<string, string> queryParams)
+        {
+            var set = new SortedSet<string>();
             {
-                switch(s.Count(c => c == '.'))
+                var moduleTemplateJson = await _moduleTemplateRepository.Get(moduleName, queryParams);
+                if (moduleTemplateJson != null && queryParams.ContainsKey("id"))
+                {
+                    var moduleTemplate = JObject.Parse(moduleTemplateJson.ToString()).ToObject<ModuleTemplate>();
+                    if (moduleTemplate.Rest != null && moduleTemplate.Rest.TryGetValue("variableNames", out object value))
+                    {
+                        IEnumerable<string> strings = null;
+                        switch (value)
+                        {
+                            case IEnumerable<string> s:
+                                strings = s;
+                                break;
+                            case JArray jArray:
+                                strings = jArray.Select(jToken => jToken.ToString());
+                                break;
+                        }
+
+                        foreach (string s in strings)
+                        {
+                            if (!set.Contains(s))
+                            {
+                                set.Add(s);
+                            }
+                        }
+                    }
+                }
+            }
+            return set;
+        }
+
+        public async Task<(object, string)> GetInputNames(string moduleName, IDictionary<string, string> queryParams)
+        {
+            return (AddArrayExpressions(await RetrieveInputNames(moduleName, queryParams)), "OK");
+        }
+
+        private List<string> AddArrayExpressions(IEnumerable<string> strings)
+        {
+            var list = new List<string>();
+            foreach (string s in strings)
+            {
+                switch (s.Count(c => c == '.'))
                 {
                     case 1:
                         {
@@ -190,7 +210,24 @@ namespace PowerSecure.Estimator.Services.Services
                         break;
                 }
             }
-            return (list, "OK");
+            return list;
+        }
+
+        public async Task<(object, string)> GetVariableNames(string moduleName, IDictionary<string, string> queryParams)
+        {
+            var set = new SortedSet<string>();
+            foreach(string s in await RetrieveFunctionNames(moduleName))
+            {
+                set.Add(s);
+            }
+            foreach(string s in await RetrieveInputNames(moduleName, queryParams))
+            {
+                if(!set.Contains(s))
+                {
+                    set.Add(s);
+                }
+            }
+            return (set.ToList(), "OK");
         }
     }
 }

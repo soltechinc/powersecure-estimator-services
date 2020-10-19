@@ -157,6 +157,64 @@ namespace PowerSecure.Estimator.Services.Endpoints
             }
         }
 
+        [FunctionName("GetModuleTemplateFunctionNames")]
+        public static async Task<IActionResult> GetFunctionNames(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "moduleTemplates/functionNames/{id}")] HttpRequest req,
+            string id,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - GetModuleTemplateFunctionNames (Id: {id})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient), new CosmosFunctionRepository(dbClient)).GetFunctionNames(id, queryParams);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
+        [FunctionName("GetModuleTemplateInputNames")]
+        public static async Task<IActionResult> GetInputNames(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "moduleTemplates/inputNames/{id}")] HttpRequest req,
+            string id,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - GetModuleTemplateInputNames (Id: {id})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                (object returnValue, string message) = await new ModuleTemplateService(new CosmosModuleTemplateRepository(dbClient), new CosmosFunctionRepository(dbClient)).GetInputNames(id, queryParams);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
+
         [FunctionName("ImportModuleTemplates")]
         public static async Task<IActionResult> Import(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "moduleTemplates/import/{env}")] HttpRequest req,
