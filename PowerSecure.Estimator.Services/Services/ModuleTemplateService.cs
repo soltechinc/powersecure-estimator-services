@@ -144,14 +144,9 @@ namespace PowerSecure.Estimator.Services.Services
 
                         foreach(string s in strings)
                         {
-                            string str = s;
-                            if (str.StartsWith($"{moduleName.ToLower()}."))
+                            if(!set.Contains(s))
                             {
-                                str = str.Substring(str.IndexOf(".") + 1);
-                            }
-                            if(!set.Contains(str))
-                            {
-                                set.Add(str);
+                                set.Add(s);
                             }
                         }
                     }
@@ -162,18 +157,40 @@ namespace PowerSecure.Estimator.Services.Services
 
                 foreach (string s in functions.Select(f => $"{f.Module}.{f.Name}".ToLower()))
                 {
-                    string str = s;
-                    if (str.StartsWith($"{moduleName.ToLower()}."))
+                    if (!set.Contains(s))
                     {
-                        str = str.Substring(str.IndexOf(".") + 1);
-                    }
-                    if (!set.Contains(str))
-                    {
-                        set.Add(str);
+                        set.Add(s);
                     }
                 }
             }
-            return (set.ToList(), "OK");
+
+            var list = new List<string>();
+            foreach(string s in set)
+            {
+                switch(s.Count(c => c == '.'))
+                {
+                    case 1:
+                        {
+                            list.Add(s);
+                            list.Add(s.Replace(".", "[]."));
+                        }
+                        break;
+                    case 2:
+                        {
+                            list.Add(s);
+                            list.Add(s.Substring(0, s.LastIndexOf(".")) + "[]." + s.Substring(s.LastIndexOf(".") + 1));
+                            list.Add(s.Substring(0, s.IndexOf(".")) + "[]." + s.Substring(s.IndexOf(".") + 1));
+                            list.Add(s.Replace(".", "[]."));
+                        }
+                        break;
+                    default:
+                        {
+                            list.Add(s);
+                        }
+                        break;
+                }
+            }
+            return (list, "OK");
         }
     }
 }

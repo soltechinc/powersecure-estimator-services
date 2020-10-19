@@ -11,19 +11,28 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine.Primitives
 
         public object Invoke(object[] parameters, IReferenceDataRepository referenceDataRepository)
         {
-            if (parameters.Length == 1)
+            object[] resolvedParameters = parameters.Select(o => o.ToResolvedParameter()).ToArray();
+
+            int decimalLength = 2;
+
+            if (resolvedParameters.Length > 1)
             {
-                var d = parameters[0].ToDecimal();
-                if (d == null)
-                {
-                    return 0.ToStringLiteral();
-                }
-                else
-                {
-                    return d.Value.ToString("N2").ToStringLiteral();
-                }
+                var d = resolvedParameters[1].ToDecimal();
+                decimalLength = d.HasValue ? (int)d.Value : 2;
             }
-            return parameters.ToDecimal().Select(d => d.HasValue ? d.Value.ToString("N2") : "0").ToStringLiteral().Select(o => (object)o).ToArray();
+
+            switch(resolvedParameters[0])
+            {
+                case object[] objs:
+                    {
+                        return objs.ToDecimal().Select(d => d.HasValue ? d.Value.ToString($"N{decimalLength}") : "0").ToStringLiteral().Select(o => (object)o).ToArray();
+                    }
+                default:
+                    {
+                        var d = resolvedParameters[0].ToDecimal();
+                        return d.HasValue ? d.Value.ToString($"N{decimalLength}").ToStringLiteral() : 0.ToStringLiteral();
+                    }
+            }
         }
 
         public (bool Success, string Message) Validate(JToken jToken)
