@@ -26,9 +26,9 @@ namespace PowerSecure.Estimator.Services.Services
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)
         {
-            if(queryParams.ContainsKey("name") && queryParams.ContainsKey("module") && queryParams["name"].StartsWith($"{queryParams["module"]}."))
+            if(queryParams.ContainsKey("name") && !queryParams.ContainsKey("module"))
             {
-                queryParams["name"] = queryParams["name"].Substring(queryParams["name"].IndexOf(".") + 1);
+                queryParams.Add("module", queryParams["name"].Substring(0, queryParams["name"].IndexOf(".")));
             }
             
             var list = (List<Function>)await _functionRepository.List(queryParams);
