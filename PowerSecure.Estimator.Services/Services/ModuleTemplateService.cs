@@ -218,13 +218,13 @@ namespace PowerSecure.Estimator.Services.Services
             var set = new SortedSet<string>();
             foreach(string s in await RetrieveFunctionNames(moduleName))
             {
-                set.Add(s);
+                set.Add(s.Substring(s.IndexOf(".") + 1));
             }
             foreach(string s in await RetrieveInputNames(moduleName, queryParams))
             {
-                if(!set.Contains(s))
+                if(!set.Contains(s.Substring(s.IndexOf(".") + 1)))
                 {
-                    set.Add(s);
+                    set.Add(s.Substring(s.IndexOf(".") + 1));
                 }
             }
             return (set.ToList(), "OK");
