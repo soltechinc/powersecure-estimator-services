@@ -315,7 +315,7 @@ namespace PowerSecure.Estimator.Services.Services
                             }
                             else
                             {
-                                return $"{valueObj["moduleTitle"].ToString().ToLower()}.{valueObj["variableName"].ToString().ToLower()}";
+                                return valueObj["variableName"].ToString().ToLower();
                             }
                         }
                     default:
@@ -328,21 +328,11 @@ namespace PowerSecure.Estimator.Services.Services
             }
             else if (instructionParam.ContainsKey("moduleTitle") && instructionParam.ContainsKey("variableName"))
             {
-                return $"{instructionParam["moduleTitle"].ToString().ToLower()}.{instructionParam["variableName"].ToString().ToLower()}";
+                return instructionParam["variableName"].ToString().ToLower();
             }
             else if (instructionParam.ContainsKey("moduleTitle") && instructionParam.ContainsKey("name"))
             {
-                string moduleTitle;
-                if (instructionParam["moduleTitle"].Type == JTokenType.Object)
-                {
-                    moduleTitle = ((JObject)instructionParam["moduleTitle"])["moduleTitle"].ToString();
-                }
-                else
-                {
-                    moduleTitle = instructionParam["moduleTitle"].ToString();
-                }
-
-                return $"{moduleTitle.ToLower()}.{instructionParam["name"].ToString().ToLower()}";
+                return instructionParam["name"].ToString().ToLower();
             }
             else
             {
@@ -446,7 +436,7 @@ namespace PowerSecure.Estimator.Services.Services
 
                                         if (pair.Value is JObject variableInput)
                                         {
-                                            str.Append($"[\"${pair.Key.ToLower()}\",\"{variableInput["moduleTitle"].ToString().ToLower()}.{variableInput["variableName"].ToString().ToLower()}\"]");
+                                            str.Append($"[\"${pair.Key.ToLower()}\",\"{variableInput["variableName"].ToString().ToLower()}\"]");
                                         }
                                         else
                                         {
@@ -458,7 +448,7 @@ namespace PowerSecure.Estimator.Services.Services
                                     JToken returnAttribute = jObject["returnattribute"];
                                     if (returnAttribute is JObject returnAttributeInput)
                                     {
-                                        str.Append($"\"{returnAttributeInput["moduleTitle"].ToString().ToLower()}.{returnAttributeInput["variableName"].ToString().ToLower()}\"");
+                                        str.Append($"\"{returnAttributeInput["variableName"].ToString().ToLower()}\"");
                                     }
                                     else
                                     {
