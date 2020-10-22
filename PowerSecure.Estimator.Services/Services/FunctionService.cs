@@ -101,12 +101,12 @@ namespace PowerSecure.Estimator.Services.Services
         {
             if (!document.ContainsKey("creationdate"))
             {
-                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("yyyy-M-dTHH:mm:ss")));
+                document.Add("creationdate", JToken.FromObject(DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")));
             }
 
             if (document.ContainsKey("startdate"))
             {
-                document["startdate"] = DateTime.Parse(document["startdate"].ToString()).ToString("yyyy-M-dT00:00:00");
+                document["startdate"] = DateTime.Parse(document["startdate"].ToString()).ToString("yyyy-MM-ddT00:00:00");
             }
             else
             {
