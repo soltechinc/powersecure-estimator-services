@@ -46,7 +46,7 @@ namespace PowerSecure.Estimator.Services.ActionResults
 
         private static IActionResult ResultFromStatusCode(object obj, int count, string message, HttpStatusCode httpStatusCode)
         {
-            return new ObjectResult(JsonConvert.SerializeObject(new { Items = obj, Count = count, Message = message, Status = ((int)httpStatusCode) })) { StatusCode = (int)httpStatusCode };
+            return new ObjectResult(JsonConvert.SerializeObject(new { Items = obj, Count = count, Message = message, Status = ((int)httpStatusCode) }, new JsonSerializerSettings() { DateFormatString = "yyyy-M-dTHH:mm:ss" })) { StatusCode = (int)httpStatusCode };
         }
 
         private static int Count(this IEnumerable e)
