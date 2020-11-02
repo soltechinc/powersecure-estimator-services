@@ -621,9 +621,16 @@ namespace PowerSecure.Estimator.Services.Services
                                             options.Add(option);
                                         }
 
-                                        if (options.Count == 2 && options[0]["text"] == "--No Selection--" && string.IsNullOrEmpty(options[0]["value"]))
+                                        if (options.Count == 2 && options[0]["text"] == "--No Selection--")
                                         {
-                                            options.RemoveAt(0);
+                                            if (string.IsNullOrEmpty(options[0]["value"]))
+                                            {
+                                                options.RemoveAt(0);
+                                            }
+                                            else if (string.IsNullOrWhiteSpace(options[0]["value"]))
+                                            {
+                                                options[0]["value"] = string.Empty;
+                                            }
                                         }
 
                                         jObject["options"] = JToken.FromObject(options);
