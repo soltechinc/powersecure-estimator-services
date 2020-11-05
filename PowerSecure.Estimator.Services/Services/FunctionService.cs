@@ -34,7 +34,9 @@ namespace PowerSecure.Estimator.Services.Services
             
             var list = (List<Function>)await _functionRepository.List(queryParams);
 
-            foreach(var function in list)
+            bool reportUiJson = !((queryParams.TryGetValue("uijson", out string value) && value.ToLower() == "false"));
+
+            foreach (var function in list)
             {
                 if(function.Rest != null && !function.Rest.ContainsKey("startdate"))
                 {
@@ -48,18 +50,20 @@ namespace PowerSecure.Estimator.Services.Services
                     continue;
                 }
 
-                if (function.Rest != null && !function.Rest.ContainsKey("uijson"))
+                if (function.Rest != null)
                 {
-                    var dict = new Dictionary<string, object>()
+                    if(reportUiJson && !function.Rest.ContainsKey("uijson"))
                     {
-                        ["moduleTitle"] = function.Module,
-                        ["effectiveDate"] = DateTime.Parse(function.Rest["startdate"].ToString()).ToString("yyyy-MM-dd"),
-                        ["calculatedVariable"] = new Dictionary<string, object>()
+                        var dict = new Dictionary<string, object>()
                         {
-                            ["variableName"] = function.Name,
-                            ["moduleTitle"] = function.Module
-                        },
-                        ["instructionSets"] = new List<object>()
+                            ["moduleTitle"] = function.Module,
+                            ["effectiveDate"] = DateTime.Parse(function.Rest["startdate"].ToString()).ToString("yyyy-MM-dd"),
+                            ["calculatedVariable"] = new Dictionary<string, object>()
+                            {
+                                ["variableName"] = function.Name,
+                                ["moduleTitle"] = function.Module
+                            },
+                            ["instructionSets"] = new List<object>()
                         {
                             new Dictionary<string,object>()
                             {
@@ -82,10 +86,15 @@ namespace PowerSecure.Estimator.Services.Services
                                 ["final"] = true
                             }
                         },
-                        ["id"] = function.Id
-                    };
+                            ["id"] = function.Id
+                        };
 
-                    function.Rest.Add("uijson", dict);
+                        function.Rest.Add("uijson", dict);
+                    }
+                    else if (!reportUiJson && function.Rest.ContainsKey("uijson"))
+                    {
+                        function.Rest.Remove("uijson");
+                    }
                 }
             }
 
