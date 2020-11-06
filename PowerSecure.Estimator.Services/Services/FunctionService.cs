@@ -445,7 +445,7 @@ namespace PowerSecure.Estimator.Services.Services
 
                                         if (pair.Value is JObject variableInput)
                                         {
-                                            str.Append($"[\"${pair.Key.ToLower()}\",\"{variableInput["variableName"].ToString().ToLower()}\"]");
+                                            str.Append($"[\"${pair.Key.ToLower()}\",\"{ResolveParameter(ParseValueFromInstructionParam(variableInput), primitive, dict)}\"]");
                                         }
                                         else
                                         {
@@ -457,7 +457,7 @@ namespace PowerSecure.Estimator.Services.Services
                                     JToken returnAttribute = jObject["returnattribute"];
                                     if (returnAttribute is JObject returnAttributeInput)
                                     {
-                                        str.Append($"\"{returnAttributeInput["variableName"].ToString().ToLower()}\"");
+                                        str.Append($"\"{ResolveParameter(ParseValueFromInstructionParam(returnAttributeInput),primitive,dict)}\"");
                                     }
                                     else
                                     {
