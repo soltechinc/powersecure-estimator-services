@@ -1120,6 +1120,25 @@ namespace PowerSecure.Estimator.Services.Services
             }
         }
 
+        public async Task<(object, string)> Lookup(IDictionary<string, string> queryParams, ILogger log)
+        {
+            if (!queryParams.TryGetValue("key", out string value) || string.IsNullOrEmpty(value))
+            {
+                return (null,string.Empty);
+            }
+
+            string datasheetKey = $"all.{queryParams["key"]}";
+            var datasheet = JObject.FromObject(new Dictionary<string, object>() { [datasheetKey] = null });
+            (object returnedObj, string _) = await Evaluate(datasheet, log);
+            var returnedDatasheet = (JObject)returnedObj;
+            if(returnedDatasheet[datasheetKey] != null && returnedDatasheet[datasheetKey].Type != JTokenType.Null)
+            {
+                return (returnedDatasheet[datasheetKey].ToString(), "OK");
+            }
+
+            return (_referenceDataRepository.Lookup(string.Empty, new (string, string)[] { ("module", "all") }, DateTime.Now, queryParams["key"]), "OK");
+        }
+
         private sealed class Utf8StringWriter : StringWriter
         {
             private readonly Encoding encoding = Encoding.UTF8;

@@ -77,8 +77,22 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 var queryParams = req.GetQueryParameterDictionary();
 
-                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Get(id, queryParams);
-                return returnValue.ToOkObjectResult(message: message);
+                if (id.ToLower() == "lookup")
+                {
+                    (object returnValue, string message) = await new EstimateService(new CosmosFunctionRepository(dbClient), new CosmosFactorRepository(dbClient), new CosmosEstimateRepository(dbClient), new CosmosBusinessOpportunityLineItemRepository(dbClient)).Lookup(queryParams, log);
+
+                    if (returnValue == null)
+                    {
+                        return new object().ToNotFoundObjectResult();
+                    }
+
+                    return returnValue.ToOkObjectResult(message: message);
+                }
+                else
+                { 
+                    (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Get(id, queryParams);
+                    return returnValue.ToOkObjectResult(message: message);
+                }
             }
             catch (Exception ex)
             {
