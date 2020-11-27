@@ -85,6 +85,7 @@ namespace PowerSecure.Estimator.Services.Services
                     estimateService.ParseFromJson(document, dataSheet, moduleTitle);
                 }
                 dataSheet.Add("all.effectivedate", effectiveDate.ToString("M/d/yyyy"));
+                _log.LogInformation("Estimate keys to evaluate: " + JToken.FromObject(keysToEvaluate));
                 var resultDataSheet = new RulesEngine().EvaluateDataSheet(dataSheet, keysToEvaluate, effectiveDate, Primitive.Load(), _instructionSetRepository, _referenceDataRepository, _log, new HashSet<string>());
                 var dataCacheDict = new Dictionary<string, object>();
                 foreach (var instructionSetName in instructionSetNames)
