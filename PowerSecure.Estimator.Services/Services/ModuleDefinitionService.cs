@@ -87,6 +87,8 @@ namespace PowerSecure.Estimator.Services.Services
                 dataSheet.Add("all.effectivedate", effectiveDate.ToString("M/d/yyyy"));
                 _log.LogInformation("Estimate keys to evaluate: " + JToken.FromObject(dataSheet));
                 var resultDataSheet = new RulesEngine().EvaluateDataSheet(dataSheet, keysToEvaluate, effectiveDate, Primitive.Load(), _instructionSetRepository, _referenceDataRepository, _log, new HashSet<string>());
+
+                _log.LogInformation("Result after evaluate: " + JToken.FromObject(resultDataSheet));
                 var dataCacheDict = new Dictionary<string, object>();
                 foreach (var instructionSetName in instructionSetNames)
                 {
@@ -100,12 +102,12 @@ namespace PowerSecure.Estimator.Services.Services
                     document.Add("datacache", JToken.FromObject(dataCacheDict));
                 }
 
-                document.UpdateKeyWithValue("materialCost", dataSheet[$"{moduleTitle}.estimatematerialcost"]);
-                document.UpdateKeyWithValue("laborCost", dataSheet[$"{moduleTitle}.estimatelaborcost"]);
-                document.UpdateKeyWithValue("totalCost", dataSheet[$"{moduleTitle}.estimatetotalcost"]);
-                document.UpdateKeyWithValue("materialUseTax", dataSheet[$"{moduleTitle}.estimatematerialusetax"]);
-                document.UpdateKeyWithValue("totalCostWithTax", dataSheet[$"{moduleTitle}.estimatecostwithusetax"]);
-                document.UpdateKeyWithValue("sellPrice", dataSheet[$"{moduleTitle}.estimatesellprice"]);
+                document.UpdateKeyWithValue("materialCost", resultDataSheet[$"{moduleTitle}.estimatematerialcost"]);
+                document.UpdateKeyWithValue("laborCost", resultDataSheet[$"{moduleTitle}.estimatelaborcost"]);
+                document.UpdateKeyWithValue("totalCost", resultDataSheet[$"{moduleTitle}.estimatetotalcost"]);
+                document.UpdateKeyWithValue("materialUseTax", resultDataSheet[$"{moduleTitle}.estimatematerialusetax"]);
+                document.UpdateKeyWithValue("totalCostWithTax", resultDataSheet[$"{moduleTitle}.estimatecostwithusetax"]);
+                document.UpdateKeyWithValue("sellPrice", resultDataSheet[$"{moduleTitle}.estimatesellprice"]);
             }
 
             var retValue = (await _moduleDefinitionRepository.Upsert(document), "OK");
