@@ -157,7 +157,7 @@ namespace PowerSecure.Estimator.Services.Services
 
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public async Task<(object, string)> Import(string env, string module)
+        public async Task<(object, string)> Reset(string env, string module)
         {
             string envSetting = $"{env}-url";
             string url = AppSettings.Get(envSetting);
@@ -177,6 +177,28 @@ namespace PowerSecure.Estimator.Services.Services
             int newDocumentCount = await _functionRepository.Reset(module, jObj["Items"]);
 
             return (newDocumentCount, $"{newDocumentCount} documents created.");
+        }
+
+        public async Task<(object, string)> Import(string env, string module)
+        {
+            string envSetting = $"{env}-url";
+            string url = AppSettings.Get(envSetting);
+            if (url == null)
+            {
+                return (null, $"Unable to find environment setting: {envSetting}");
+            }
+
+            string returnValue = await _httpClient.GetStringAsync($"{url}/api/functions/?module={module}&object=full");
+            var jObj = JObject.Parse(returnValue);
+
+            if (jObj["Status"].ToString() != "200")
+            {
+                return (null, "Error when calling list api");
+            }
+
+            int newDocumentCount = await _functionRepository.Import(jObj["Items"]);
+
+            return (newDocumentCount, $"{newDocumentCount} documents updated.");
         }
 
         public async Task<(object, string)> UpsertFromUi(string requestBody)

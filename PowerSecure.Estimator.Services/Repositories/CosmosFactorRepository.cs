@@ -160,6 +160,39 @@ namespace PowerSecure.Estimator.Services.Repositories
             return result.ReturnValue;
         }
 
+        public async Task<int> Import(JToken jToken)
+        {
+            int count = 0;
+            foreach (var child in jToken.Children())
+            {
+                if (child.Type != JTokenType.Object)
+                {
+                    continue;
+                }
+
+                var document = (JObject)child;
+
+                {
+                    var doc = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = false })
+                        .Where(x => x.Module == document["module"].ToString())
+                        .Where(x => x.Id == document["id"].ToString()).AsEnumerable().FirstOrDefault();
+
+                    if (doc != null)
+                    {
+                        await _dbClient.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: document["id"].ToString()), document, new RequestOptions { PartitionKey = new PartitionKey(document["module"].ToString()) });
+                    }
+                    else
+                    {
+                        await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), document);
+                    }
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+
         public async Task<int> Reset(string module, JToken jToken)
         {
             var documentQuery = _dbClient.CreateDocumentQuery<Factor>(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), new FeedOptions { EnableCrossPartitionQuery = false })
@@ -180,20 +213,7 @@ namespace PowerSecure.Estimator.Services.Repositories
                 await _dbClient.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId: _databaseId, collectionId: _collectionId, documentId: id), new RequestOptions { PartitionKey = new PartitionKey(module) });
             }
 
-            int count = 0;
-            foreach (var child in jToken.Children())
-            {
-                if (child.Type != JTokenType.Object)
-                {
-                    continue;
-                }
-
-                await _dbClient.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseId: _databaseId, collectionId: _collectionId), (JObject)child);
-
-                count++;
-            }
-
-            return count;
+            return await Import(jToken);
         }
     }
 }

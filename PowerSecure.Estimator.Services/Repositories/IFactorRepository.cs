@@ -16,6 +16,8 @@ namespace PowerSecure.Estimator.Services.Repositories
 
         Task<int> Reset(string module, JToken jToken);
 
+        Task<int> Import(JToken jToken);
+
         Task<object> Lookup(IDictionary<string, string> queryParams);
     }
 }
