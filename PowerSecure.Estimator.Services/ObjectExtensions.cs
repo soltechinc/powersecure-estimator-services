@@ -60,3 +60,34 @@ namespace PowerSecure.Estimator.Services.ActionResults
         }
     }
 }
+
+
+namespace PowerSecure.Estimator.Services
+{
+    public static class ObjectExtensions
+    { 
+        public static string UnwrapString(this object obj)
+        {
+            if(obj == null)
+            {
+                return string.Empty;
+            }
+
+            return UnwrapString(obj.ToString());
+        }
+
+        public static string UnwrapString(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            if (str.StartsWith("$"))
+            {
+                return str.Substring(1);
+            }
+            return str;
+        }
+    }
+}

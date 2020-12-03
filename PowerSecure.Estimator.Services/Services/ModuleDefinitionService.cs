@@ -120,7 +120,7 @@ namespace PowerSecure.Estimator.Services.Services
             document.UpdateKeyWithValue("materialUseTax", resultDataSheet[$"{moduleTitle}.estimatematerialusetax"]);
             document.UpdateKeyWithValue("totalCostWithTax", resultDataSheet[$"{moduleTitle}.estimatecostwithusetax"]);
             document.UpdateKeyWithValue("sellPrice", resultDataSheet[$"{moduleTitle}.estimatesellprice"]);
-            document.UpdateKeyWithValue("description", resultDataSheet[$"{moduleTitle}.estimatedescription"]);
+            document.UpdateKeyWithValue("description", resultDataSheet[$"{moduleTitle}.estimatedescription"].UnwrapString());
         }
 
         private async Task UpdateEstimateDocument(JObject moduleDefinitionDocument)

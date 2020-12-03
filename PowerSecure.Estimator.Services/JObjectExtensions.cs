@@ -10,14 +10,16 @@ namespace PowerSecure.Estimator.Services
             {
                 value = 0;
             }
+            
+            var valueJToken = JToken.FromObject(value.ToString().UnwrapString());
 
             if (document.ContainsKey(key))
             {
-                document[key] = JToken.FromObject(value);
+                document[key] = valueJToken;
             }
             else
             {
-                document.Add(key, JToken.FromObject(value));
+                document.Add(key, valueJToken);
             }
 
             return document;

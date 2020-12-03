@@ -616,8 +616,8 @@ namespace PowerSecure.Estimator.Services.Services
                                         {
                                             var option = new Dictionary<string, string>();
                                             var optionsParts = (object[])returnedOption;
-                                            option.Add("text", UnwrapString(optionsParts[0].ToString()));
-                                            option.Add("value", UnwrapString(optionsParts[1].ToString()));
+                                            option.Add("text", optionsParts[0].ToString().UnwrapString());
+                                            option.Add("value", optionsParts[1].ToString().UnwrapString());
                                             options.Add(option);
                                         }
 
@@ -648,7 +648,7 @@ namespace PowerSecure.Estimator.Services.Services
                                         {
                                             case JTokenType.String:
                                                 {
-                                                    jObject[jObjKey] = UnwrapString(valueJToken.ToObject<string>());
+                                                    jObject[jObjKey] = valueJToken.ToObject<string>().UnwrapString();
                                                 }
                                                 break;
                                             default:
@@ -699,7 +699,7 @@ namespace PowerSecure.Estimator.Services.Services
                                             {
                                                 case JTokenType.String:
                                                     {
-                                                        jObject[jObjKey] = UnwrapString(valueJToken.ToObject<string>());
+                                                        jObject[jObjKey] = valueJToken.ToObject<string>().UnwrapString();
                                                     }
                                                     break;
                                                 default:
@@ -762,7 +762,7 @@ namespace PowerSecure.Estimator.Services.Services
                                         {
                                             case JTokenType.String:
                                                 {
-                                                    property.Value = UnwrapString(valueJToken.ToObject<string>());
+                                                    property.Value = valueJToken.ToObject<string>().UnwrapString();
                                                 }
                                                 break;
                                             default:
@@ -816,7 +816,7 @@ namespace PowerSecure.Estimator.Services.Services
                                             {
                                                 case JTokenType.String:
                                                     {
-                                                        obj.Add(itemName, UnwrapString(valueJToken.ToObject<string>()));
+                                                        obj.Add(itemName, valueJToken.ToObject<string>().UnwrapString());
                                                     }
                                                     break;
                                                 default:
@@ -845,7 +845,7 @@ namespace PowerSecure.Estimator.Services.Services
                                                 {
                                                     case JTokenType.String:
                                                         {
-                                                            items[i].Add(itemName, UnwrapString(valueJToken.ToObject<string>()));
+                                                            items[i].Add(itemName, valueJToken.ToObject<string>().UnwrapString());
                                                         }
                                                         break;
                                                     default:
@@ -870,20 +870,6 @@ namespace PowerSecure.Estimator.Services.Services
                         }
                 }
             });
-        }
-
-        private static string UnwrapString(string str)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-
-            if (str.StartsWith("$"))
-            {
-                return str.Substring(1);
-            }
-            return str;
         }
 
         private static bool IsCalculated(JObject jObject)
