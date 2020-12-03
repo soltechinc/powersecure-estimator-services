@@ -55,98 +55,107 @@ namespace PowerSecure.Estimator.Services.Services
             {
                 document["moduleId"] = Guid.NewGuid().ToString();
             }
-            {
-                if (document.Properties().Any(x => x.Name == "datacache"))
-                {
-                    document.Remove("datacache");
-                }
-                string moduleTitle = document["moduleTitle"].ToString().ToLower();
-                DateTime effectiveDate = document.Properties().Any(x => x.Name == "effectiveDate") ? DateTime.Parse(document["effectiveDate"].ToString()) : DateTime.Now;
-                string cachedInstructionSets = (string)_referenceDataRepository.Lookup("factor", new List<(string, string)> { ("module", moduleTitle) }.ToArray(), effectiveDate, "instructionsetcache");
 
-                var instructionSetNames = cachedInstructionSets == null ? new string[0] : cachedInstructionSets.Split(',').Select(x => $"{moduleTitle}.{x.ToLower().Trim()}");
-                var dataSheet = new Dictionary<string, object>
+            UpdateModuleDefinitionWithEstimateRollups(document);
+
+            var retValue = (await _moduleDefinitionRepository.Upsert(document), "OK");
+
+            await UpdateEstimateDocument(JObject.Parse(retValue.Item1.ToString()));
+
+            return retValue;
+        }
+
+        private void UpdateModuleDefinitionWithEstimateRollups(JObject document)
+        {
+            if (document.Properties().Any(x => x.Name == "datacache"))
+            {
+                document.Remove("datacache");
+            }
+            string moduleTitle = document["moduleTitle"].ToString().ToLower();
+            DateTime effectiveDate = document.Properties().Any(x => x.Name == "effectiveDate") ? DateTime.Parse(document["effectiveDate"].ToString()) : DateTime.Now;
+            string cachedInstructionSets = (string)_referenceDataRepository.Lookup("factor", new List<(string, string)> { ("module", moduleTitle) }.ToArray(), effectiveDate, "instructionsetcache");
+
+            var instructionSetNames = cachedInstructionSets == null ? new string[0] : cachedInstructionSets.Split(',').Select(x => $"{moduleTitle}.{x.ToLower().Trim()}");
+            var dataSheet = new Dictionary<string, object>
                 {
                     { $"{moduleTitle}.estimatematerialcost", null },
                     { $"{moduleTitle}.estimatelaborcost", null },
                     { $"{moduleTitle}.estimatetotalcost", null },
                     { $"{moduleTitle}.estimatematerialusetax", null },
                     { $"{moduleTitle}.estimatecostwithusetax", null },
-                    { $"{moduleTitle}.estimatesellprice", null }
+                    { $"{moduleTitle}.estimatesellprice", null },
+                    { $"{moduleTitle}.estimatedescription", null }
                 };
-                foreach (var instructionSetName in instructionSetNames)
-                {
-                    dataSheet.Add(instructionSetName, null);
-                }
-                var keysToEvaluate = dataSheet.Keys.ToArray();
-                {
-                    var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository);
-                    estimateService.IncludeEstimateData(document, dataSheet, moduleTitle);
-                    estimateService.ParseFromJson(document, dataSheet, moduleTitle);
-                }
-                dataSheet.Add("all.effectivedate", effectiveDate.ToString("M/d/yyyy"));
-                _log.LogInformation("Estimate keys to evaluate: " + JToken.FromObject(dataSheet));
-                var resultDataSheet = new RulesEngine().EvaluateDataSheet(dataSheet, effectiveDate, Primitive.Load(), _instructionSetRepository, _referenceDataRepository, _log);
-
-                _log.LogInformation("Result after evaluate: " + JToken.FromObject(resultDataSheet));
-                var dataCacheDict = new Dictionary<string, object>();
-                foreach (var instructionSetName in instructionSetNames)
-                {
-                    if (resultDataSheet.ContainsKey(instructionSetName) && resultDataSheet[instructionSetName] != null)
-                    {
-                        dataCacheDict.Add(instructionSetName, resultDataSheet[instructionSetName]);
-                    }
-                }
-                if (dataCacheDict.Count > 0)
-                {
-                    document.Add("datacache", JToken.FromObject(dataCacheDict));
-                }
-
-                document.UpdateKeyWithValue("materialCost", resultDataSheet[$"{moduleTitle}.estimatematerialcost"]);
-                document.UpdateKeyWithValue("laborCost", resultDataSheet[$"{moduleTitle}.estimatelaborcost"]);
-                document.UpdateKeyWithValue("totalCost", resultDataSheet[$"{moduleTitle}.estimatetotalcost"]);
-                document.UpdateKeyWithValue("materialUseTax", resultDataSheet[$"{moduleTitle}.estimatematerialusetax"]);
-                document.UpdateKeyWithValue("totalCostWithTax", resultDataSheet[$"{moduleTitle}.estimatecostwithusetax"]);
-                document.UpdateKeyWithValue("sellPrice", resultDataSheet[$"{moduleTitle}.estimatesellprice"]);
-            }
-
-            var retValue = (await _moduleDefinitionRepository.Upsert(document), "OK");
-            var moduleDefinitionDocument = JObject.Parse(retValue.Item1.ToString());
-
+            foreach (var instructionSetName in instructionSetNames)
             {
-                string boliNumber = moduleDefinitionDocument.Properties().Any(x => x.Name == "boliNumber") ? moduleDefinitionDocument["boliNumber"].ToString() : null;
-                string estimateId = moduleDefinitionDocument.Properties().Any(x => x.Name == "estimateId") ? moduleDefinitionDocument["estimateId"].ToString() : null;
-                string moduleId = moduleDefinitionDocument.Properties().Any(x => x.Name == "moduleId") ? moduleDefinitionDocument["moduleId"].ToString() : null;
+                dataSheet.Add(instructionSetName, null);
+            }
+            var keysToEvaluate = dataSheet.Keys.ToArray();
+            {
+                var estimateService = new EstimateService(_instructionSetRepository, _referenceDataRepository, _estimateRepository, _businessOpportunityLineItemRepository);
+                estimateService.IncludeEstimateData(document, dataSheet, moduleTitle);
+                estimateService.ParseFromJson(document, dataSheet, moduleTitle);
+            }
+            dataSheet.Add("all.effectivedate", effectiveDate.ToString("M/d/yyyy"));
+            _log.LogInformation("Estimate keys to evaluate: " + JToken.FromObject(dataSheet));
+            var resultDataSheet = new RulesEngine().EvaluateDataSheet(dataSheet, effectiveDate, Primitive.Load(), _instructionSetRepository, _referenceDataRepository, _log);
 
-                if (boliNumber != null && estimateId != null && moduleId != null)
+            _log.LogInformation("Result after evaluate: " + JToken.FromObject(resultDataSheet));
+            var dataCacheDict = new Dictionary<string, object>();
+            foreach (var instructionSetName in instructionSetNames)
+            {
+                if (resultDataSheet.ContainsKey(instructionSetName) && resultDataSheet[instructionSetName] != null)
                 {
-                    bool found = false;
-                    Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
-
-                    if (estimate.Modules == null)
-                    {
-                        estimate.Modules = new List<ModuleDefinition>();
-                    }
-
-                    for (int i = 0; i < estimate.Modules.Count; ++i)
-                    {
-                        if (estimate.Modules[i].ModuleId == moduleId)
-                        {
-                            estimate.Modules[i] = moduleDefinitionDocument.ToObject<ModuleDefinition>();
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found)
-                    {
-                        estimate.Modules.Add(moduleDefinitionDocument.ToObject<ModuleDefinition>());
-                    }
-
-                    await _estimateRepository.Upsert(JObject.FromObject(estimate));
+                    dataCacheDict.Add(instructionSetName, resultDataSheet[instructionSetName]);
                 }
             }
-            return retValue;
+            if (dataCacheDict.Count > 0)
+            {
+                document.Add("datacache", JToken.FromObject(dataCacheDict));
+            }
+
+            document.UpdateKeyWithValue("materialCost", resultDataSheet[$"{moduleTitle}.estimatematerialcost"]);
+            document.UpdateKeyWithValue("laborCost", resultDataSheet[$"{moduleTitle}.estimatelaborcost"]);
+            document.UpdateKeyWithValue("totalCost", resultDataSheet[$"{moduleTitle}.estimatetotalcost"]);
+            document.UpdateKeyWithValue("materialUseTax", resultDataSheet[$"{moduleTitle}.estimatematerialusetax"]);
+            document.UpdateKeyWithValue("totalCostWithTax", resultDataSheet[$"{moduleTitle}.estimatecostwithusetax"]);
+            document.UpdateKeyWithValue("sellPrice", resultDataSheet[$"{moduleTitle}.estimatesellprice"]);
+            document.UpdateKeyWithValue("description", resultDataSheet[$"{moduleTitle}.estimatedescription"]);
+        }
+
+        private async Task UpdateEstimateDocument(JObject moduleDefinitionDocument)
+        {
+            string boliNumber = moduleDefinitionDocument.Properties().Any(x => x.Name == "boliNumber") ? moduleDefinitionDocument["boliNumber"].ToString() : null;
+            string estimateId = moduleDefinitionDocument.Properties().Any(x => x.Name == "estimateId") ? moduleDefinitionDocument["estimateId"].ToString() : null;
+            string moduleId = moduleDefinitionDocument.Properties().Any(x => x.Name == "moduleId") ? moduleDefinitionDocument["moduleId"].ToString() : null;
+
+            if (boliNumber != null && estimateId != null && moduleId != null)
+            {
+                bool found = false;
+                Estimate estimate = JObject.Parse(((Document)_estimateRepository.Get(boliNumber, new Dictionary<string, string> { ["id"] = estimateId }).GetAwaiter().GetResult()).ToString()).ToObject<Estimate>();
+
+                if (estimate.Modules == null)
+                {
+                    estimate.Modules = new List<ModuleDefinition>();
+                }
+
+                for (int i = 0; i < estimate.Modules.Count; ++i)
+                {
+                    if (estimate.Modules[i].ModuleId == moduleId)
+                    {
+                        estimate.Modules[i] = moduleDefinitionDocument.ToObject<ModuleDefinition>();
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    estimate.Modules.Add(moduleDefinitionDocument.ToObject<ModuleDefinition>());
+                }
+
+                await _estimateRepository.Upsert(JObject.FromObject(estimate));
+            }
         }
 
         public async Task<(object, string)> Delete(string id, IDictionary<string, string> queryParams)
