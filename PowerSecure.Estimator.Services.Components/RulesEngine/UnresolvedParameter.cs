@@ -6,6 +6,7 @@ using PowerSecure.Estimator.Services.Components.RulesEngine.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
@@ -37,27 +38,47 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             CallStack = parentParameter.CallStack;
         }
 
-        public object ToInstructionSet(object parameter, string searchString)
+        private string ToReplaceableValue(object parameter)
         {
-            string value;
             switch (parameter)
             {
                 case string s:
                     {
-                        value = $"\"{s.ToStringLiteral()}\"";
-                        break;
+                        return $"\"{s.ToStringLiteral()}\"";
                     }
                 case bool b:
                     {
-                        value = parameter.ToString().ToLower();
-                        break;
+                        return parameter.ToString().ToLower();
+                    }
+                case object[] objs:
+                    {
+                        var str = new StringBuilder();
+                        foreach(object obj in objs)
+                        {
+                            if(str.Length == 0)
+                            {
+                                str.Append("[");
+                                str.Append(ToReplaceableValue(obj));
+                            }
+                            else
+                            {
+                                str.Append(",");
+                                str.Append(ToReplaceableValue(obj));
+                            }
+                        }
+                        str.Append("]");
+                        return str.ToString();
                     }
                 default:
                     {
-                        value = parameter.ToString();
-                        break;
+                        return parameter.ToString();
                     }
             }
+        }
+
+        public object ToInstructionSet(object parameter, string searchString)
+        {
+            string value = ToReplaceableValue(parameter);
 
             searchString = $"\"{searchString}\"";
 

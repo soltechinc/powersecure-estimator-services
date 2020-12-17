@@ -175,5 +175,39 @@ namespace PowerSecure.Estimator.Services.Endpoints
                 return new object().ToServerErrorObjectResult();
             }
         }
+
+        [FunctionName("ResetFactors")]
+        public static async Task<IActionResult> Reset(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "factors/reset/{env}")] HttpRequest req,
+            string env,
+            [CosmosDB(ConnectionStringSetting = "dbConnection")] DocumentClient dbClient,
+            ILogger log)
+        {
+            try
+            {
+                log.LogDebug($"Function called - ResetFactors (Env: {env})");
+
+                var queryParams = req.GetQueryParameterDictionary();
+
+                if (!queryParams.ContainsKey("module"))
+                {
+                    return new object().ToServerErrorObjectResult(message: "Query params do not contain module name");
+                }
+
+                (object returnValue, string message) = await new FactorService(new CosmosFactorRepository(dbClient)).Reset(env, queryParams["module"]);
+
+                if (returnValue == null)
+                {
+                    return new object().ToServerErrorObjectResult(message: message);
+                }
+
+                return returnValue.ToOkObjectResult(message: message);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Caught exception");
+                return new object().ToServerErrorObjectResult();
+            }
+        }
     }
 }
