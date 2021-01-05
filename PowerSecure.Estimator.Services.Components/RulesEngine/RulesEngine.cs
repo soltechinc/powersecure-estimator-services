@@ -10,6 +10,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 {
     public class RulesEngine
     {
+        public class UnresolvedKey
+        {
+            public readonly static UnresolvedKey Instance = new UnresolvedKey();
+        }
+
         public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log)
         {
             log.LogInformation("Data sheet to calculate: " + JToken.FromObject(dataSheet));
@@ -25,7 +30,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     {
                         foreach (var submoduleParameter in submodule)
                         {
-                            if (submoduleParameter.Value == null)
+                            if (submoduleParameter.Value == UnresolvedKey.Instance)
                             {
                                 missingParameters.Add(parameter.Key.Trim().ToLower());
                                 addedMissingParam = true;
@@ -42,7 +47,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                         }
                     }
                 }
-                else if (parameter.Value == null)
+                else if (parameter.Value == UnresolvedKey.Instance)
                 {
                     missingParameters.Add(parameter.Key.Trim().ToLower());
                 }
@@ -66,7 +71,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             {
                 if (keysToEvaluate.Contains(parameter.Key))
                 {
-                    if (parameter.Value == null)
+                    if (parameter.Value == UnresolvedKey.Instance)
                     {
                         missingParameters.Add(parameter.Key.Trim().ToLower());
                     }

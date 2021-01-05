@@ -146,7 +146,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                 {
                                     string key = str.Trim().ToLower();
 
-                                    if (!Parameters.ContainsKey(key))
+                                    if (!Parameters.ContainsKey(key) || Parameters[key] == RulesEngine.UnresolvedKey.Instance)
                                     {
                                         if (key.Contains("[]"))
                                         {
@@ -294,7 +294,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                 foreach (var module in modules.ToList())
                                                 {
-                                                    if (!module.ContainsKey(moduleDataKey) || module[moduleDataKey] == null)
+                                                    if (!module.ContainsKey(moduleDataKey) || module[moduleDataKey] == RulesEngine.UnresolvedKey.Instance)
                                                     {
                                                         foreach (var k in Parameters.Keys)
                                                         {
@@ -328,11 +328,11 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
                                                         if (!moduleParameters.ContainsKey(moduleDataKey))
                                                         {
-                                                            moduleParameters.Add(moduleDataKey, null);
+                                                            moduleParameters.Add(moduleDataKey, RulesEngine.UnresolvedKey.Instance);
                                                         }
                                                         if (!module.ContainsKey(moduleDataKey))
                                                         {
-                                                            module.Add(moduleDataKey, null);
+                                                            module.Add(moduleDataKey, RulesEngine.UnresolvedKey.Instance);
                                                         }
 
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(moduleParameters, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
@@ -340,13 +340,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         {
                                                             if (returnedKey.Contains("."))
                                                             {
-                                                                if (returnedDataSheet.ContainsKey(returnedKey) && returnedDataSheet[returnedKey] != null)
+                                                                if (returnedDataSheet.ContainsKey(returnedKey) && returnedDataSheet[returnedKey] != RulesEngine.UnresolvedKey.Instance)
                                                                 {
                                                                     if (!module.ContainsKey(returnedKey))
                                                                     {
                                                                         module.Add(returnedKey, returnedDataSheet[returnedKey]);
                                                                     }
-                                                                    else if (module[returnedKey] == null)
+                                                                    else if (module[returnedKey] == RulesEngine.UnresolvedKey.Instance)
                                                                     {
                                                                         module[returnedKey] = returnedDataSheet[returnedKey];
                                                                     }
@@ -367,7 +367,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         }
                                                     }
 
-                                                    if (module.ContainsKey(moduleDataKey) && module[moduleDataKey] != null)
+                                                    if (module.ContainsKey(moduleDataKey) && module[moduleDataKey] != RulesEngine.UnresolvedKey.Instance)
                                                     {
                                                         moduleDataList.Add(module[moduleDataKey]);
                                                     }
@@ -399,7 +399,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         continue;
                                                     }
 
-                                                    if (!submodule.ContainsKey(submoduleDataKey) || submodule[submoduleDataKey] == null)
+                                                    if (!submodule.ContainsKey(submoduleDataKey) || submodule[submoduleDataKey] == RulesEngine.UnresolvedKey.Instance)
                                                     {
                                                         var submoduleDataSheet = new Dictionary<string, object>(Parameters);
                                                         submoduleDataSheet.Remove(submoduleKey);
@@ -417,19 +417,19 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         }
                                                         if (!submodule.ContainsKey(submoduleDataKey))
                                                         {
-                                                            submoduleDataSheet.Add(submoduleDataKey, null);
-                                                            submodule.Add(submoduleDataKey, null);
+                                                            submoduleDataSheet.Add(submoduleDataKey, RulesEngine.UnresolvedKey.Instance);
+                                                            submodule.Add(submoduleDataKey, RulesEngine.UnresolvedKey.Instance);
                                                         }
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
                                                         foreach (var returnedKey in submodule.Keys.ToList())
                                                         {
-                                                            if (returnedDataSheet[returnedKey] != null)
+                                                            if (returnedDataSheet[returnedKey] != RulesEngine.UnresolvedKey.Instance)
                                                             {
                                                                 if (!submodule.ContainsKey(returnedKey))
                                                                 {
                                                                     submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
                                                                 }
-                                                                else if (submodule[returnedKey] == null)
+                                                                else if (submodule[returnedKey] == RulesEngine.UnresolvedKey.Instance)
                                                                 {
                                                                     submodule[returnedKey] = returnedDataSheet[returnedKey];
                                                                 }
@@ -437,13 +437,13 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         }
                                                         foreach (var returnedKey in returnedDataSheet.Keys)
                                                         {
-                                                            if (returnedDataSheet[returnedKey] != null && !submodule.Keys.Contains(returnedKey))
+                                                            if (returnedDataSheet[returnedKey] != RulesEngine.UnresolvedKey.Instance && !submodule.Keys.Contains(returnedKey))
                                                             {
                                                                 if (!Parameters.ContainsKey(returnedKey))
                                                                 {
                                                                     Parameters.Add(returnedKey, returnedDataSheet[returnedKey]);
                                                                 }
-                                                                else if (Parameters[returnedKey] == null)
+                                                                else if (Parameters[returnedKey] == RulesEngine.UnresolvedKey.Instance)
                                                                 {
                                                                     Parameters[returnedKey] = returnedDataSheet[returnedKey];
                                                                 }
@@ -451,7 +451,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         }
                                                     }
 
-                                                    if (submodule.ContainsKey(submoduleDataKey) && submodule[submoduleDataKey] != null)
+                                                    if (submodule.ContainsKey(submoduleDataKey) && submodule[submoduleDataKey] != RulesEngine.UnresolvedKey.Instance)
                                                     {
                                                         submoduleDataList.Add(submodule[submoduleDataKey]);
                                                     }
@@ -473,11 +473,21 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                             if (instructionSet == null)
                                             {
                                                 Log?.LogWarning($"Attempted to find instruction set {key} but failed");
-
+                                                if(Parameters.ContainsKey(key))
+                                                {
+                                                    Parameters[key] = null;
+                                                }
                                                 return null;
                                             }
 
-                                            Parameters.Add(key, instructionSet);
+                                            if (!Parameters.ContainsKey(key))
+                                            {
+                                                Parameters.Add(key, instructionSet);
+                                            }
+                                            else
+                                            {
+                                                Parameters[key] = instructionSet;
+                                            }
                                         }
                                     }
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
