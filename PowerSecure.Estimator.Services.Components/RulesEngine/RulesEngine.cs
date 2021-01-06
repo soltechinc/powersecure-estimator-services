@@ -17,6 +17,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
 
         public IDictionary<string, object> EvaluateDataSheet(IDictionary<string, object> dataSheet, DateTime effectiveDate, IDictionary<string, IFunction> functions, IInstructionSetRepository instructionSetRepository, IReferenceDataRepository referenceDataRepository, ILogger log)
         {
+            dataSheet.Apply(x => x.Item2 ?? UnresolvedKey.Instance);
             log.LogInformation("Data sheet to calculate: " + JToken.FromObject(dataSheet));
 
             var missingParameters = new HashSet<string>();
@@ -57,6 +58,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
             dataSheet = EvaluateDataSheet(dataSheet, missingParameters, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, new HashSet<string>());
 
             log.LogInformation("Returned data sheet: " + JToken.FromObject(dataSheet));
+            dataSheet.Apply(x => x.Item2 == RulesEngine.UnresolvedKey.Instance ? null : x.Item2);
             return dataSheet;
         }
 
