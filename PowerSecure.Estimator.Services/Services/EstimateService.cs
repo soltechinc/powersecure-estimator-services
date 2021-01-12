@@ -1087,10 +1087,12 @@ namespace PowerSecure.Estimator.Services.Services
                     transform.Load(xsltReader, new XsltSettings(true, true), new XmlUrlResolver());
                 }
 
+                var argList = new XsltArgumentList();
+                argList.AddParam("current-date", "", String.Format("{0}/{1}/{2}", DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Year));
                 using (var inputDocReader = new XmlNodeReader(JsonConvert.DeserializeXmlNode(new JObject { { "Items", new JArray(inputJsonObject) } }.ToString())))
                 using (var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Encoding = Encoding.UTF8 }))
                 {
-                    transform.Transform(inputDocReader, xmlWriter);
+                    transform.Transform(inputDocReader, argList, xmlWriter);
                 }
 
                 using (var memoryStream = new MemoryStream())
