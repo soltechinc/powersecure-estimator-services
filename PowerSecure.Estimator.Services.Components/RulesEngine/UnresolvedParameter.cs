@@ -336,6 +336,28 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                         }
 
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(moduleParameters, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
+                                                        
+                                                        foreach(var returnedKey in returnedDataSheet.Keys)
+                                                        {
+                                                            if(returnedDataSheet[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                                                            {
+                                                                continue;
+                                                            }
+
+                                                            if(returnedKey.StartsWith($"{moduleKey}."))
+                                                            {
+                                                                if (!module.ContainsKey(returnedKey))
+                                                                {
+                                                                    module.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                }
+                                                                else if (module[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                                                                {
+                                                                    module[returnedKey] = returnedDataSheet[returnedKey];
+                                                                }
+                                                            }
+                                                        }
+                                                        
+                                                        /*
                                                         foreach (var returnedKey in module.Keys.ToList())
                                                         {
                                                             if (returnedKey.Contains("."))
@@ -356,7 +378,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             {
                                                                 module.Remove(returnedKey);
                                                             }
-                                                        }
+                                                        }*/
 
                                                         foreach (var k in module.Keys.ToList())
                                                         {
@@ -421,6 +443,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                             submodule.Add(submoduleDataKey, RulesEngine.UnresolvedKey.Instance);
                                                         }
                                                         var returnedDataSheet = new RulesEngine().EvaluateDataSheet(submoduleDataSheet, keysToEvaluate, EffectiveDate, Functions, InstructionSetRepository, ReferenceDataRepository, Log, CallStack);
+                                                        /*
                                                         foreach (var returnedKey in submodule.Keys.ToList())
                                                         {
                                                             if (returnedDataSheet[returnedKey] != RulesEngine.UnresolvedKey.Instance)
@@ -434,10 +457,27 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                     submodule[returnedKey] = returnedDataSheet[returnedKey];
                                                                 }
                                                             }
-                                                        }
+                                                        }*/
+
                                                         foreach (var returnedKey in returnedDataSheet.Keys)
                                                         {
-                                                            if (returnedDataSheet[returnedKey] != RulesEngine.UnresolvedKey.Instance && !submodule.Keys.Contains(returnedKey))
+                                                            if(returnedDataSheet[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                                                            {
+                                                                continue;
+                                                            }
+
+                                                            if(returnedKey.StartsWith($"{submoduleKey}."))
+                                                            {
+                                                                if (!submodule.ContainsKey(returnedKey))
+                                                                {
+                                                                    submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                }
+                                                                else if (submodule[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                                                                {
+                                                                    submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                                                }
+                                                            }
+                                                            else
                                                             {
                                                                 if (!Parameters.ContainsKey(returnedKey))
                                                                 {
@@ -448,6 +488,18 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                                                     Parameters[returnedKey] = returnedDataSheet[returnedKey];
                                                                 }
                                                             }
+                                                            /*
+                                                            if (returnedDataSheet[returnedKey] != RulesEngine.UnresolvedKey.Instance && !submodule.Keys.Contains(returnedKey))
+                                                            {
+                                                                if (!Parameters.ContainsKey(returnedKey))
+                                                                {
+                                                                    Parameters.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                                                }
+                                                                else if (Parameters[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                                                                {
+                                                                    Parameters[returnedKey] = returnedDataSheet[returnedKey];
+                                                                }
+                                                            }*/
                                                         }
                                                     }
 
