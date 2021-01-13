@@ -545,6 +545,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                                     if (Parameters[key] is IInstructionSet childInstructionSet)
                                     {
                                         Parameters[key] = childInstructionSet?.Evaluate(Parameters, Functions, ReferenceDataRepository, InstructionSetRepository, EffectiveDate, Log, CallStack);
+                                        Log?.LogInformation($"Datasheet {key} evaluated to value {Parameters[key] ?? "{null}"}");
                                     }
 
                                     if (Parameters[key] is object[] o && o.Length == 2
