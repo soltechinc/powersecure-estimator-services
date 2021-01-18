@@ -119,6 +119,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                 { //submodule evaluation
                     var baseDataSheet = new Dictionary<string, object>(dataSheet);
                     baseDataSheet.Remove(key);
+                    string submodulePrefix = $"{key}.";
                     foreach (var submodule in submodules)
                     {
                         var submoduleDataSheet = new Dictionary<string, object>(baseDataSheet);
@@ -134,19 +135,51 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                             }
                         }
                         var returnedDataSheet = EvaluateDataSheet(submoduleDataSheet, submodule.Keys, effectiveDate, functions, instructionSetRepository, referenceDataRepository, log, callStack);
-                        foreach (var submoduleKey in submodule.Keys.ToList())
+                        foreach(var returnedKey in returnedDataSheet.Keys.ToList())
                         {
-                            submodule[submoduleKey] = returnedDataSheet[submoduleKey];
+                            if (returnedDataSheet[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                            {
+                                continue;
+                            }
+
+                            if (returnedKey.StartsWith(submodulePrefix))
+                            {
+                                if (!submodule.ContainsKey(returnedKey))
+                                {
+                                    submodule.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                    log?.LogDebug($"Datasheet {returnedKey} evaluated to value {submodule[returnedKey] ?? "{null}"}");
+                                }
+                                else if (submodule[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                                {
+                                    submodule[returnedKey] = returnedDataSheet[returnedKey];
+                                    log?.LogDebug($"Datasheet {returnedKey} evaluated to value {submodule[returnedKey] ?? "{null}"}");
+                                }
+                            }
+                            else
+                            {
+                                if (!parameters.ContainsKey(returnedKey))
+                                {
+                                    parameters.Add(returnedKey, returnedDataSheet[returnedKey]);
+                                    log?.LogDebug($"Datasheet {returnedKey} evaluated to value {parameters[returnedKey] ?? "{null}"}");
+                                }
+                                else if (parameters[returnedKey] == RulesEngine.UnresolvedKey.Instance)
+                                {
+                                    parameters[returnedKey] = returnedDataSheet[returnedKey];
+                                    log?.LogDebug($"Datasheet {returnedKey} evaluated to value {parameters[returnedKey] ?? "{null}"}");
+                                }
+                            }
                         }
                     }
 
                     if (parameters.ContainsKey(key))
                     {
                         parameters[key] = dataSheet[key];
+                        log?.LogDebug($"Datasheet {key} evaluated to value {parameters[key] ?? "{null}"}");
                     }
                     else
                     {
                         parameters.Add(key, dataSheet[key]);
+                        log?.LogDebug($"Datasheet {key} evaluated to value {parameters[key] ?? "{null}"}");
                     }
                 }
                 else if (!parameters.ContainsKey(key))
@@ -158,6 +191,7 @@ namespace PowerSecure.Estimator.Services.Components.RulesEngine
                     }
 
                     parameters.Add(key, instructionSet?.Evaluate(parameters, functions, referenceDataRepository, instructionSetRepository, effectiveDate, log, callStack));
+                    log?.LogDebug($"Datasheet {key} evaluated to value {parameters[key] ?? "{null}"}");
                 }
 
                 dataSheet[key] = parameters[key];
