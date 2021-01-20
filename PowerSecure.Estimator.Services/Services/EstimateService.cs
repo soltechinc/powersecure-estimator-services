@@ -962,10 +962,71 @@ namespace PowerSecure.Estimator.Services.Services
             return inputValue;
         }
 
-        public async Task<(object, string)> Clone(JObject document, string path, ILogger log)
+        public async Task<(object, string)> CloneVersion(JObject document, ILogger log)
         {
-            log.LogInformation(document.ToString());
-            document = (JObject)WalkForRevisionAndVersion(document, path);
+            //log.LogInformation(document.ToString());
+
+            if (document.Properties().Any(x => x.Name == "versionDate"))
+            {
+                document["versionDate"] = GetFormattedTime();
+            }
+            else
+            {
+                document.Add("versionDate", GetFormattedTime());
+            }
+
+            if (document.Properties().Any(x => x.Name == "versionNumber"))
+            {
+                document["versionNumber"] = IncrementString(document["versionNumber"].ToString());
+            }
+            else
+            {
+                document.Add("versionNumber", "0");
+            }
+
+            if (document.Properties().Any(x => x.Name == "revisionDate"))
+            {
+                document["revisionDate"] = GetFormattedTime();
+            }
+            else
+            {
+                document.Add("revisionDate", GetFormattedTime());
+            }
+
+            if (document.Properties().Any(x => x.Name == "revisionNumber"))
+            {
+                document["revisionNumber"] = ChangeStringToZero(document["revisionNumber"].ToString());
+            }
+            else
+            {
+                document.Add("revisionNumber", "0");
+            }
+
+            return (await _estimateRepository.Clone(document), "OK");
+        }
+
+        public async Task<(object, string)> CloneRevision(JObject document, ILogger log)
+        {
+            //log.LogInformation(document.ToString());
+
+            if (document.Properties().Any(x => x.Name == "revisionDate"))
+            {
+                document["revisionDate"] = GetFormattedTime();
+            }
+            else
+            {
+                document.Add("revisionDate", GetFormattedTime());
+            }
+
+            if (document.Properties().Any(x => x.Name == "revisionNumber"))
+            {
+                document["revisionNumber"] = IncrementString(document["revisionNumber"].ToString());
+            }
+            else
+            {
+                document.Add("revisionNumber", "0");
+            }
+            
             return (await _estimateRepository.Clone(document), "OK");
         }
 
@@ -982,68 +1043,13 @@ namespace PowerSecure.Estimator.Services.Services
         {
             var prefix = Regex.Match(value, "^\\D+").Value;
             var number = Regex.Replace(value, "^\\D+", "");
-            var i = int.Parse(number);
-            var zero = 0;
-            i = zero;
-            var newString = prefix + i.ToString(new string('0', number.Length));
+            var newString = prefix + 0.ToString(new string('0', number.Length));
             return newString;
         }
 
-        private static JToken SetTime()
+        private static JToken GetFormattedTime()
         {
             return DateTime.Today.GetDateTimeFormats('d')[0];
-        }
-
-        private static JToken WalkForRevisionAndVersion(JToken node, string path)
-        {
-            switch (node.Type)
-            {
-                case JTokenType.Object:
-                    foreach (var child in node.Children<JProperty>())
-                    {
-                        string childValue = child.Value.ToString();
-                        string childName = child.Name.ToLower().ToString();
-                        bool isPath = childName.Contains(path);
-                        bool hasNum = childValue.Any(char.IsDigit);
-                        bool isDate = DateTime.TryParse(childValue, out DateTime date);
-                        switch (path)
-                        {
-                            case "revision":
-                                if (isPath && hasNum)
-                                {
-                                    if (isDate)
-                                    {
-                                        child.Value = SetTime();
-                                    }
-                                    else
-                                    {
-                                        child.Value = IncrementString(childValue);
-                                    }
-                                }
-                                break;
-                            case "version":
-                                if (isPath && hasNum)
-                                {
-                                    child.Value = IncrementString(childValue);
-                                }
-                                else if (childName.Contains("revision"))
-                                {
-                                    if (isDate)
-                                    {
-                                        child.Value = SetTime();
-                                    }
-                                    else
-                                    {
-                                        child.Value = ChangeStringToZero(childValue);
-                                    }
-                                }
-                                break;
-                        }
-                        WalkForRevisionAndVersion(child, path);
-                    }
-                    break;
-            }
-            return node;
         }
 
         public async Task<(object, string)> List(IDictionary<string, string> queryParams)

@@ -133,11 +133,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogDebug("Function called - CloneEstimate");
+                log.LogDebug("Function called - CloneVersion");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), "version", log);
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).CloneVersion(JObject.Parse(requestBody), log);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -156,11 +156,11 @@ namespace PowerSecure.Estimator.Services.Endpoints
         {
             try
             {
-                log.LogDebug("Function called - CloneEstimate");
+                log.LogDebug("Function called - CloneRevision");
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), "revision", log);
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).CloneRevision(JObject.Parse(requestBody), log);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
