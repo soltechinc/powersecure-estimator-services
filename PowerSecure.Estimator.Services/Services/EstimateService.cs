@@ -962,9 +962,9 @@ namespace PowerSecure.Estimator.Services.Services
             return inputValue;
         }
 
-        public async Task<(object, string)> Clone(JObject document, string path)
+        public async Task<(object, string)> Clone(JObject document, string path, ILogger log)
         {
-            path = path.Split('/').Last();
+            log.LogInformation(document.ToString());
             document = (JObject)WalkForRevisionAndVersion(document, path);
             return (await _estimateRepository.Clone(document), "OK");
         }

@@ -137,7 +137,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), req.Path.Value);
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), "version", log);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
@@ -160,7 +160,7 @@ namespace PowerSecure.Estimator.Services.Endpoints
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), req.Path.Value);
+                (object returnValue, string message) = await new EstimateService(new CosmosEstimateRepository(dbClient)).Clone(JObject.Parse(requestBody), "revision", log);
                 return returnValue.ToOkObjectResult(message: message);
             }
             catch (Exception ex)
