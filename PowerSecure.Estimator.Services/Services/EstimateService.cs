@@ -68,7 +68,9 @@ namespace PowerSecure.Estimator.Services.Services
                 dataSheet.Add("all.effectivedate", DateTime.Now.ToString("M/d/yyyy"));
             }
 
-            new RulesEngine().EvaluateDataSheet(dataSheet, DateTime.Now, _functions, _instructionSetRepository, _referenceDataRepository, log);
+            var effectiveDate = DateTime.Parse(dataSheet["all.effectivedate"].ToString());
+
+            new RulesEngine().EvaluateDataSheet(dataSheet, effectiveDate, _functions, _instructionSetRepository, _referenceDataRepository, log);
 
             if (!hasModuleTitle || uiInputs.Properties().Any(prop => prop.Name.ToLower() == "datasheet"))
             {
